@@ -112,7 +112,7 @@ public:
   find_material_ix_or_throw(std::string const &path,
                             std::string const &name) const -> uint32_t {
 
-    auto it = std::ranges::find_if(store, [&](material const &mtl) {
+    auto it = std::ranges::find_if(store, [&path, &name](material const &mtl) {
       return mtl.path == path && mtl.name == name;
     });
 

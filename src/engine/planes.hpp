@@ -107,14 +107,14 @@ public:
   // system
   // @return true if any point in this is behind all planes in 'pns'
   inline auto is_any_point_in_volume(planes const &pns) const -> bool {
-    return std::ranges::any_of(world_points, [&](glm::vec4 const &point) {
+    return std::ranges::any_of(world_points, [&pns](glm::vec4 const &point) {
       return pns.is_point_in_volume(point);
     });
   }
 
   // assumes update planes to world coordinate system
   inline auto is_point_in_volume(glm::vec4 const &point) const -> bool {
-    return std::ranges::all_of(world_planes, [&](glm::vec4 const &plane) {
+    return std::ranges::all_of(world_planes, [&point](glm::vec4 const &plane) {
       return glm::dot(plane, point) <= 0;
     });
   }
@@ -130,7 +130,8 @@ public:
     // return are_in_collision_with_sphere_sat(position, radius);
 
     glm::vec4 const point{position, 1.0f};
-    return std::ranges::all_of(world_planes, [&](glm::vec4 const &plane) {
+    return std::ranges::all_of(world_planes, [point,
+                                              radius](glm::vec4 const &plane) {
       return glm::dot(point, plane) <= radius * glm::length(glm::vec3{plane});
       // note: division by length of plane normal is necessary because normal
       //       may not be unit vector due to scaling. division moved to the

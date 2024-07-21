@@ -446,7 +446,7 @@ private:
     }
 
     // apply deleted and new objects from 'update()' and 'resolve_collisions()'
-    objects.apply_freed_instances([&](object *o) {
+    objects.apply_freed_instances([](object *o) {
       if (o->is_static) {
         grid.remove_static(o);
       }
@@ -458,7 +458,7 @@ private:
     application_on_update_done();
 
     // apply changes done by application
-    objects.apply_freed_instances([&](object *o) {
+    objects.apply_freed_instances([](object *o) {
       if (o->is_static) {
         grid.remove_static(o);
       }

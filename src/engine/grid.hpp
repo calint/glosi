@@ -78,16 +78,16 @@ public:
   // called from engine
   inline auto add(object *o) -> void {
     o->overlaps_cells =
-        for_each_cell_object_is_in(o, [&](cell &c) { c.add(o); });
+        for_each_cell_object_is_in(o, [o](cell &c) { c.add(o); });
   }
 
   inline auto add_static(object *o) -> void {
     o->overlaps_cells =
-        for_each_cell_object_is_in(o, [&](cell &c) { c.add_static(o); });
+        for_each_cell_object_is_in(o, [o](cell &c) { c.add_static(o); });
   }
 
   inline auto remove_static(object *o) -> void {
-    for_each_cell_object_is_in(o, [&](cell &c) { c.remove_static(o); });
+    for_each_cell_object_is_in(o, [o](cell &c) { c.remove_static(o); });
   }
 
   inline auto print() const -> void {
