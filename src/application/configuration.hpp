@@ -77,7 +77,7 @@ static uint32_t constexpr cb_asteroid = 1u << 2u;
 static uint32_t constexpr cb_power_up = 1u << 3u;
 static uint32_t constexpr cb_ufo = 1u << 4u;
 static uint32_t constexpr cb_ufo_bullet = 1u << 5u;
-static uint32_t constexpr cb_boulder = 1u << 6u;
+static uint32_t constexpr cb_static_object = 1u << 6u;
 
 // settings
 static uint32_t constexpr asteroids_per_level = 2;
@@ -97,7 +97,7 @@ static float constexpr asteroid_medium_split_agl_vel_rnd = glm::radians(200.0f);
 static float constexpr asteroid_small_scale = 0.75f;
 
 static float constexpr ship_turn_rate = glm::radians(120.0f);
-static float constexpr ship_speed = 6;
+static float constexpr ship_speed = 10;
 static float constexpr ship_bullet_speed = 17;
 
 static float constexpr bullet_fragment_agl_vel_rnd = glm::radians(360.0f);

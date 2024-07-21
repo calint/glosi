@@ -22,13 +22,13 @@ enum class state { init, asteroids, ufo };
 static state state = state::init;
 static uint32_t level = 1;
 static std::atomic_int32_t score{0};
-static int32_t score_prv = 0;
 static std::atomic_uint32_t asteroids_alive{0};
 static std::atomic_uint32_t ufos_alive{0};
 static std::atomic_uint32_t object_id{0};
 // note: used when 'debug_multiplayer' is true to give objects unique numbers
 
-static object *hero = nullptr;
+class ship;
+static ship *hero = nullptr;
 
 // glob indexes
 // note: set by 'application_init()' when loading models and used by objects
@@ -46,14 +46,15 @@ static uint32_t glob_ix_sphere = 0;
 static uint32_t glob_ix_skydome = 0;
 static uint32_t glob_ix_ufo = 0;
 static uint32_t glob_ix_ufo_bullet = 0;
+static uint32_t glob_ix_landing_pad = 0;
 
 // objects
 #include "objects/asteroid_large.hpp"
-#include "objects/boulder.hpp"
 #include "objects/cube.hpp"
 #include "objects/fragment.hpp"
 #include "objects/ship.hpp"
 #include "objects/sphere.hpp"
+#include "objects/static_object.hpp"
 #include "objects/tetra.hpp"
 #include "objects/ufo.hpp"
 
@@ -125,50 +126,35 @@ static inline auto application_init() -> void {
   glob_ix_ufo = globs.load("assets/obj/asteroids/ufo.obj", nullptr);
   glob_ix_ufo_bullet =
       globs.load("assets/obj/asteroids/ufo_bullet.obj", nullptr);
-
   glob_ix_skydome = globs.load("assets/obj/skydome.obj", nullptr);
+  glob_ix_landing_pad =
+      globs.load("assets/obj/landing_pad.obj", "assets/obj/landing_pad_bp.obj");
 
-  if (!is_performance_test) {
-    // setup scene
+  // the dome
+  // object *skydome = new (objects.alloc()) object{};
+  // skydome->glob_ix(glob_ix_skydome);
+  // float const skydome_scale = length(vec2{grid_size / 2, grid_size / 2});
+  // skydome->bounding_radius = skydome_scale;
+  // skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
 
-    // the dome
-    object *skydome = new (objects.alloc()) object{};
-    skydome->glob_ix(glob_ix_skydome);
-    float const skydome_scale = length(vec2{grid_size / 2, grid_size / 2});
-    skydome->bounding_radius = skydome_scale;
-    skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
+  create_scene();
 
-    create_scene();
+  if (net.enabled) {
+    // multiplayer mode
+    ship *p1 = new (objects.alloc()) ship{};
+    p1->position.x = -5;
+    p1->net_state = &net.states[1];
+    hero = p1;
 
-    if (net.enabled) {
-      // multiplayer mode
-      ship *p1 = new (objects.alloc()) ship{};
-      p1->position.x = -5;
-      p1->net_state = &net.states[1];
-      hero = p1;
-
-      ship *p2 = new (objects.alloc()) ship{};
-      p2->position.x = 5;
-      p2->net_state = &net.states[2];
-    } else {
-      // single player mode
-      ship *p = new (objects.alloc()) ship{};
-      p->net_state = &net.states[1];
-      hero = p;
-      // create_ufo();
-    }
+    ship *p2 = new (objects.alloc()) ship{};
+    p2->position.x = 5;
+    p2->net_state = &net.states[2];
   } else {
-    switch (performance_test_type) {
-    case 1:
-      create_cubes(objects_count);
-      break;
-    case 2:
-      create_spheres(objects_count);
-      break;
-    default:
-      throw exception{std::format("unknown 'performance_test_type' '{}'",
-                                  performance_test_type)};
-    }
+    // single player mode
+    ship *p = new (objects.alloc()) ship{};
+    p->net_state = &net.states[1];
+    hero = p;
+    // create_ufo();
   }
 
   background_color = {0, 0, 0};
@@ -217,12 +203,10 @@ static inline auto application_on_update_done() -> void {
 
 // engine interface
 static inline auto application_on_render_done() -> void {
-  if (score != score_prv) {
-    std::array<char, 32> buf;
-    score_prv = score;
-    sprintf(buf.data(), "score: %06d", score_prv);
-    hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 60, 10);
-  }
+  std::array<char, 128> buf;
+  int s = score;
+  sprintf(buf.data(), "fuel: %03d  score: %06d", int32_t(hero->fuel), s);
+  hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 20, 10);
 }
 
 // engine interface
@@ -268,14 +252,26 @@ static inline auto create_ufo() -> void {
 }
 
 static inline auto create_scene() -> void {
-  boulder *o = new (objects.alloc()) boulder{};
-  o->is_static = true;
-  o->position = vec3{-3, 0, 0};
-  o->glob_ix(glob_ix_asteroid_large);
-  o->scale = vec3{1};
-  o->bounding_radius = o->glob().bounding_radius * o->scale.x;
-  o->mass = 1500;
-  grid.add_static(o);
+  {
+    static_object *o = new (objects.alloc()) static_object{};
+    o->is_static = true;
+    o->position = vec3{-3, 0, 0};
+    o->glob_ix(glob_ix_asteroid_large);
+    o->scale = vec3{1};
+    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
+    o->mass = 1500;
+    grid.add_static(o);
+  }
+  {
+    static_object *o = new (objects.alloc()) static_object{};
+    o->is_static = true;
+    o->position = vec3{0, 0, 10};
+    o->glob_ix(glob_ix_landing_pad);
+    o->scale = vec3{1};
+    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
+    o->mass = 1500;
+    grid.add_static(o);
+  }
 }
 
 // some additional shaders

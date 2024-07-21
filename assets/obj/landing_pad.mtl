@@ -1,12 +1,12 @@
-# Blender 4.2.0 MTL File: 'bounding_sphere.blend'
+# Blender 4.2.0 MTL File: 'landing_pad.blend'
 # www.blender.org
 
-newmtl Material.001
+newmtl Material
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.307964 0.975426 1.000000
+Kd 0.090008 0.800702 0.047296
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.450000
-d 0.200000
-illum 9
+d 1.000000
+illum 2

@@ -22,9 +22,16 @@ static uint32_t constexpr bullet_levels_length =
 static uint32_t bullet_levels_index = 0;
 
 class ship final : public object {
+  static constexpr float fuel_consumption_per_sec = 1;
+  static constexpr float fuel_capacity = 100;
+
   uint64_t ready_to_fire_at_ms = 0;
+  vec3 previous_position{};
+  vec3 previous_velocity{};
 
 public:
+  float fuel = fuel_capacity;
+
   inline ship() {
     if (debug_multiplayer) {
       uint32_t const oid = ++object_id;
@@ -39,7 +46,7 @@ public:
     mass = 150;
     collision_bits = cb_hero;
     collision_mask =
-        cb_asteroid | cb_power_up | cb_ufo | cb_ufo_bullet | cb_boulder;
+        cb_asteroid | cb_power_up | cb_ufo | cb_ufo_bullet | cb_static_object;
   }
 
   inline ~ship() override {
@@ -50,9 +57,13 @@ public:
   }
 
   inline auto update() -> bool override {
+    previous_position = position;
+    previous_velocity = velocity;
     if (!object::update()) {
       return false;
     }
+
+    velocity.z += 3.0f * frame_context.dt;
 
     game_area_roll(position);
 
@@ -70,6 +81,7 @@ public:
       velocity +=
           ship_speed * vec3{-sin(angle.y), 0, -cos(angle.y)} * frame_context.dt;
       glob_ix(glob_ix_ship_engine_on);
+      fuel -= fuel_consumption_per_sec * frame_context.dt;
     }
     if (keys & key_a) {
       angular_velocity.y = ship_turn_rate;
@@ -93,6 +105,9 @@ public:
       // note: -.000001f because of the math of 'look at'
     }
 
+    printf("speed: %f  vel: %f,%f,%f  angle.y: %f\n", length(velocity),
+           velocity.x, velocity.y, velocity.z, degrees(angle.y));
+
     return true;
   }
 
@@ -108,6 +123,24 @@ public:
         ++bullet_levels_index;
       }
       return true;
+    }
+
+    if (o->glob_ix() == glob_ix_landing_pad) {
+      if (length(velocity) < 3 && angle.y < radians(20.0f) &&
+          angle.y > radians(-20.0f)) {
+
+        if (fuel < fuel_capacity) {
+          fuel += 10.0f * frame_context.dt;
+        }
+
+        position = previous_position;
+        velocity.x /= 2;
+        velocity.y /= 2;
+        velocity.z = -velocity.z / 2;
+        angle.y = -angle.y / 2;
+        return true;
+      }
+      return false;
     }
 
     angle.y += radians(rnd1(45));
