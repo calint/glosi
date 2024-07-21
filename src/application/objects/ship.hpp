@@ -106,9 +106,6 @@ public:
       // note: -.000001f because of the math of 'look at'
     }
 
-    printf("speed: %f  vel: %f,%f,%f  angle.y: %f\n", length(velocity),
-           velocity.x, velocity.y, velocity.z, degrees(angle.y));
-
     return true;
   }
 
@@ -127,8 +124,10 @@ public:
     }
 
     if (o->glob_ix() == glob_ix_landing_pad) {
-      if (length(velocity) < 4.0f && angle.y < radians(25.0f) &&
-          angle.y > radians(-25.0f)) {
+      float const agl = normalize_angle_rad(angle.y);
+      printf("speed: %f  angle.y: %f\n", length(velocity), degrees(agl));
+      if (length(velocity) < 4.0f && agl < radians(25.0f) &&
+          agl > radians(-25.0f)) {
 
         if (fuel < fuel_capacity) {
           fuel += 10.0f * frame_context.dt;
@@ -138,7 +137,7 @@ public:
         velocity.x /= 2;
         velocity.y /= 2;
         velocity.z = -velocity.z / 2;
-        angle.y = -angle.y / 2;
+        angle.y = -agl / 2;
         return true;
       }
       return false;
@@ -181,5 +180,10 @@ private:
       blt->velocity.z += rnd1(bl.bullet_spread);
     }
     ready_to_fire_at_ms = frame_context.ms + bl.fire_interval_ms;
+  }
+
+  static inline auto constexpr normalize_angle_rad(float const angle) -> float {
+    return glm::mod(angle + glm::pi<float>(), glm::two_pi<float>()) -
+           glm::pi<float>();
   }
 };

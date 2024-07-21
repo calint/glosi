@@ -158,7 +158,7 @@ static inline auto application_init() -> void {
   background_color = {0, 0, 0};
 
   // setup light and camera
-  ambient_light = normalize(vec3{1, 1, 1});
+  ambient_light = normalize(vec3{2, 10, 1});
 
   camera.type = camera::type::ORTHOGONAL;
   camera.position = {0, 50, 0};
@@ -203,8 +203,9 @@ static inline auto application_on_update_done() -> void {
 static inline auto application_on_render_done() -> void {
   std::array<char, 128> buf;
   int s = score;
-  sprintf(buf.data(), "fuel: %03d  score: %06d", int32_t(hero->fuel), s);
-  hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 20, 10);
+  sprintf(buf.data(), "%03d %02u %06d", int32_t(hero->fuel),
+          uint32_t(length(hero->velocity)), s);
+  hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 60, 10);
 }
 
 // engine interface
