@@ -22,8 +22,8 @@ static uint32_t constexpr bullet_levels_length =
 static uint32_t bullet_levels_index = 0;
 
 class ship final : public object {
-  static constexpr float fuel_consumption_per_sec = 1;
-  static constexpr float fuel_capacity = 100;
+  static float constexpr fuel_consumption_per_sec = 1.0f;
+  static float constexpr fuel_capacity = 100.0f;
 
   uint64_t ready_to_fire_at_ms = 0;
   vec3 previous_position{};
@@ -63,7 +63,9 @@ public:
       return false;
     }
 
-    velocity.z += 3.0f * frame_context.dt;
+    float const dt = frame_context.dt;
+
+    velocity.z += 3.0f * dt;
 
     game_area_roll(position);
 
@@ -77,11 +79,10 @@ public:
     uint64_t const keys = net_state->keys;
 
     // handle ship controls
-    if (keys & key_w) {
-      velocity +=
-          ship_speed * vec3{-sin(angle.y), 0, -cos(angle.y)} * frame_context.dt;
+    if (keys & key_w && fuel > 0) {
+      fuel -= fuel_consumption_per_sec * dt;
+      velocity += ship_speed * vec3{-sin(angle.y), 0, -cos(angle.y)} * dt;
       glob_ix(glob_ix_ship_engine_on);
-      fuel -= fuel_consumption_per_sec * frame_context.dt;
     }
     if (keys & key_a) {
       angular_velocity.y = ship_turn_rate;
@@ -126,8 +127,8 @@ public:
     }
 
     if (o->glob_ix() == glob_ix_landing_pad) {
-      if (length(velocity) < 3 && angle.y < radians(20.0f) &&
-          angle.y > radians(-20.0f)) {
+      if (length(velocity) < 4.0f && angle.y < radians(25.0f) &&
+          angle.y > radians(-25.0f)) {
 
         if (fuel < fuel_capacity) {
           fuel += 10.0f * frame_context.dt;
