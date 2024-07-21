@@ -14,6 +14,7 @@ static auto create_asteroids(uint32_t num) -> void;
 static auto create_ufo() -> void;
 static auto create_cubes(uint32_t num) -> void;
 static auto create_spheres(uint32_t num) -> void;
+static auto create_scene() -> void;
 
 // game state
 enum class state { init, asteroids, ufo };
@@ -48,6 +49,7 @@ static uint32_t glob_ix_ufo_bullet = 0;
 
 // objects
 #include "objects/asteroid_large.hpp"
+#include "objects/boulder.hpp"
 #include "objects/cube.hpp"
 #include "objects/fragment.hpp"
 #include "objects/ship.hpp"
@@ -135,6 +137,8 @@ static inline auto application_init() -> void {
     float const skydome_scale = length(vec2{grid_size / 2, grid_size / 2});
     skydome->bounding_radius = skydome_scale;
     skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
+
+    create_scene();
 
     if (net.enabled) {
       // multiplayer mode
@@ -261,6 +265,17 @@ static inline auto create_ufo() -> void {
   u->angle = {radians(-65.0f), 0, 0};
   u->angular_velocity = {0, radians(90.0f), 0};
   u->velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
+}
+
+static inline auto create_scene() -> void {
+  boulder *o = new (objects.alloc()) boulder{};
+  o->is_static = true;
+  o->position = vec3{-3, 0, 0};
+  o->glob_ix(glob_ix_asteroid_large);
+  o->scale = vec3{1};
+  o->bounding_radius = o->glob().bounding_radius * o->scale.x;
+  o->mass = 1500;
+  grid.add_static(o);
 }
 
 // some additional shaders

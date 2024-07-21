@@ -19,7 +19,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "glos build",
+      "preLaunchTask": "glosi build",
       "miDebuggerPath": "gdb"
     }
   ]

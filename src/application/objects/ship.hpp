@@ -38,7 +38,8 @@ public:
     bounding_radius = glob().bounding_radius * scale.x;
     mass = 150;
     collision_bits = cb_hero;
-    collision_mask = cb_asteroid | cb_power_up | cb_ufo | cb_ufo_bullet;
+    collision_mask =
+        cb_asteroid | cb_power_up | cb_ufo | cb_ufo_bullet | cb_boulder;
   }
 
   inline ~ship() override {

@@ -71,12 +71,13 @@ static uint32_t constexpr objects_count =
 
 // collision bits
 static uint32_t constexpr cb_none = 0;
-static uint32_t constexpr cb_hero = 1U << 0U;
-static uint32_t constexpr cb_hero_bullet = 1U << 1U;
-static uint32_t constexpr cb_asteroid = 1U << 2U;
-static uint32_t constexpr cb_power_up = 1U << 3U;
-static uint32_t constexpr cb_ufo = 1U << 4U;
-static uint32_t constexpr cb_ufo_bullet = 1U << 5U;
+static uint32_t constexpr cb_hero = 1u << 0u;
+static uint32_t constexpr cb_hero_bullet = 1u << 1u;
+static uint32_t constexpr cb_asteroid = 1u << 2u;
+static uint32_t constexpr cb_power_up = 1u << 3u;
+static uint32_t constexpr cb_ufo = 1u << 4u;
+static uint32_t constexpr cb_ufo_bullet = 1u << 5u;
+static uint32_t constexpr cb_boulder = 1u << 6u;
 
 // settings
 static uint32_t constexpr asteroids_per_level = 2;

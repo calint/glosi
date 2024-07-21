@@ -143,9 +143,10 @@ public:
   }
 
   // deallocates the instances that have been freed
-  inline auto apply_free() -> void {
+  inline auto apply_free(auto &&callback) -> void {
     for (type **it = del_bgn_; it < del_ptr_; ++it) {
       type *inst_deleted = *it;
+      callback(inst_deleted);
       alloc_ptr_--;
       type *inst_to_move = *alloc_ptr_;
       inst_to_move->alloc_ptr = inst_deleted->alloc_ptr;

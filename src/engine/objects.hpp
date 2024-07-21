@@ -28,7 +28,10 @@ public:
   uint32_t collision_mask = 0; // ...
 private:
   bool overlaps_cells = false; // used by grid to flag cell overlap
+public:
+  bool is_static = false; // immovable object
   // -- cell::update
+private:
   std::atomic_flag lock = ATOMIC_FLAG_INIT;
   uint32_t updated_at_tick = 0; // used by cell to avoid updating twice
 public:
@@ -247,7 +250,9 @@ public:
     allocated_list_end_ = store_.allocated_list_end();
   }
 
-  inline auto apply_freed_instances() -> void { store_.apply_free(); }
+  inline auto apply_freed_instances(auto &&callback) -> void {
+    store_.apply_free(callback);
+  }
 
 private:
   o1store<object, objects_count, 0, false, threaded_grid,

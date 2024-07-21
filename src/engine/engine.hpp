@@ -413,7 +413,11 @@ private:
     grid.clear();
 
     // add all allocated objects to the grid
-    objects.for_each([](object *o) { grid.add(o); });
+    objects.for_each([](object *o) {
+      if (!o->is_static) {
+        grid.add(o);
+      }
+    });
 
     // update frame context used throughout the frame
     //  in multiplayer mode use 'dt' and 'ms' from server
@@ -442,14 +446,23 @@ private:
     }
 
     // apply deleted and new objects from 'update()' and 'resolve_collisions()'
-    objects.apply_freed_instances();
+    objects.apply_freed_instances([&](object *o) {
+      if (o->is_static) {
+        grid.remove_static(o);
+      }
+    });
+
     objects.apply_allocated_instances();
 
     // callback application
     application_on_update_done();
 
     // apply changes done by application
-    objects.apply_freed_instances();
+    objects.apply_freed_instances([&](object *o) {
+      if (o->is_static) {
+        grid.remove_static(o);
+      }
+    });
     objects.apply_allocated_instances();
 
     // update signals from network or local

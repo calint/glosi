@@ -1,6 +1,8 @@
-[x] o1store: cache line aligned allocation when custom instance size
-[x] o1store: check alignment of '*all' calloc to match object size
-    => use std::aligned_alloc and std::free
+[x] static object: position, angle, scale do not change
+[x] grid: static vs moving
+[x]   cell.add_static(object*);
+[x]   cell.remove_static(object*);
+[ ] gravitos: amiga game "gravity" inspired game
 [ ] font with transparency to be used in the hud
 [ ] component slices in the monolithic object
     cache line aligned of multiple 64B (cache line size)
@@ -29,7 +31,6 @@
               then added to store while single threaded
         => no need for synchronization because same object will not be processed in more
            than one thread
-[ ] grid: static vs moving vs bullets vs scenery objects
 [ ] assets embedded in static executable with the goal of a one file, no dependencies unit
     => map<path,data>
 [ ] collision detection of convex volume vs convex volume using separating axis theorem
@@ -86,6 +87,9 @@
 [ ] shader: mtx_wvp * mtx_mw   is it better with mtx_mwvp?
 [ ] consider: https://github.com/alugowski/task-thread-pool for simple multithreading
 ------------------------------------------------------------------------------------------
+[x] o1store: cache line aligned allocation when custom instance size
+[x] o1store: check alignment of '*all' calloc to match object size
+    => use std::aligned_alloc and std::free
 [x] object: when glob_ix changes invalidate bounding planes
 [x] use io stream rather than 'token'
 [x] struct vertex: use glm::vecX instead of float[]

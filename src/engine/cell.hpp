@@ -31,15 +31,16 @@ class cell final {
     bool is_collision = false;
   };
 
-  std::vector<entry> entry_list{};
+  std::vector<entry> entry_list{};        // moving objects
+  std::vector<entry> static_entry_list{}; // static objects
   std::vector<collision> check_collisions_list{};
+  std::vector<collision> check_collisions_list_static{};
 
-public:
-  // called from grid
-  inline auto update() const -> void {
+  inline auto
+  update_objects_in_vector(std::vector<entry> const &list) const -> void {
     uint32_t const frame_num = uint32_t(frame_context.frame_num);
     // note: ok to truncate because only equality is checked
-    for (entry const &ce : entry_list) {
+    for (entry const &ce : list) {
       if (threaded_grid) {
         // multithreaded mode
         if (ce.object->overlaps_cells) [[unlikely]] {
@@ -78,6 +79,13 @@ public:
     }
   }
 
+public:
+  // called from grid
+  inline auto update() const -> void {
+    update_objects_in_vector(entry_list);
+    update_objects_in_vector(static_entry_list);
+  }
+
   inline auto resolve_collisions() -> void {
     make_check_collisions_list();
     process_check_collisions_list();
@@ -99,6 +107,18 @@ public:
       ce.object->render();
       ++metrics.rendered_objects;
     }
+
+    for (entry const &ce : static_entry_list) {
+      if (ce.object->overlaps_cells) [[unlikely]] {
+        // check if object has been rendered by another cell
+        if (ce.object->rendered_at_tick == frame_num) {
+          continue;
+        }
+        ce.object->rendered_at_tick = frame_num;
+      }
+      ce.object->render();
+      ++metrics.rendered_objects;
+    }
   }
 
   // called from grid (from only one thread)
@@ -110,9 +130,31 @@ public:
                             o->collision_mask, o);
   }
 
+  // called from grid (from only one thread)
+  inline auto add_static(object *o) -> void {
+    static_entry_list.emplace_back(o->position, o->bounding_radius,
+                                   o->collision_bits, o->collision_mask, o);
+  }
+
+  inline auto remove_static(object *o) -> void {
+    auto it = std::find_if(static_entry_list.begin(), static_entry_list.end(),
+                           [o](entry const &ce) { return ce.object == o; });
+    assert(it != static_entry_list.end());
+    std::swap(*it, static_entry_list.back());
+    static_entry_list.pop_back();
+  }
+
   inline auto print() const -> void {
     uint32_t i = 0;
     for (entry const &ce : entry_list) {
+      if (i++) {
+        printf(", ");
+      }
+      printf("%s", ce.object->name.c_str());
+    }
+    printf("\n");
+    printf("static: ");
+    for (entry const &ce : static_entry_list) {
       if (i++) {
         printf(", ");
       }
@@ -125,22 +167,41 @@ public:
     return uint32_t(entry_list.size());
   }
 
+  inline auto static_objects_count() const -> uint32_t {
+    return uint32_t(static_entry_list.size());
+  }
+
 private:
   // called from one thread
   inline auto make_check_collisions_list() -> void {
     check_collisions_list.clear();
+    check_collisions_list_static.clear();
 
+    // check static objects vs moving objects
     uint32_t const len = uint32_t(entry_list.size());
+    uint32_t const len_statics = uint32_t(static_entry_list.size());
+    for (uint32_t i = 0; i < len_statics; ++i) {
+      entry const &e1 = static_entry_list[i];
+      for (uint32_t j = 0; j < len; ++j) {
+        entry const &e2 = entry_list[j];
+        bool const notify1 = e1.collision_mask & e2.collision_bits;
+        bool const notify2 = e2.collision_mask & e1.collision_bits;
+        if ((notify1 || notify2) && bounding_spheres_are_in_collision(e1, e2)) {
+          check_collisions_list.emplace_back(e1.object, e2.object, notify1,
+                                             notify2);
+        }
+      }
+    }
+
     if (len < 2) {
       return;
     }
 
+    // check moving objects vs moving objects
     for (uint32_t i = 0; i < len - 1; ++i) {
+      entry const &e1 = entry_list[i];
       for (uint32_t j = i + 1; j < len; ++j) {
-
-        entry const &e1 = entry_list[i];
         entry const &e2 = entry_list[j];
-
         bool const notify1 = e1.collision_mask & e2.collision_bits;
         bool const notify2 = e2.collision_mask & e1.collision_bits;
         if ((notify1 || notify2) && bounding_spheres_are_in_collision(e1, e2)) {

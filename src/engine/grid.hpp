@@ -77,37 +77,23 @@ public:
 
   // called from engine
   inline auto add(object *o) -> void {
-    float constexpr gw = grid_cell_size * grid_columns;
-    float constexpr gh = grid_cell_size * grid_rows;
+    o->overlaps_cells =
+        for_each_cell_object_is_in(o, [&](cell &c) { c.add(o); });
+  }
 
-    float const r = o->bounding_radius;
+  inline auto add_static(object *o) -> void {
+    o->overlaps_cells =
+        for_each_cell_object_is_in(o, [&](cell &c) { c.add_static(o); });
+  }
 
-    // calculate min max x and z in cell array
-    float const xl = gw / 2 + o->position.x - r;
-    float const xr = gw / 2 + o->position.x + r;
-    float const zt = gh / 2 + o->position.z - r;
-    float const zb = gh / 2 + o->position.z + r;
-
-    uint32_t const xil = clamp(int32_t(xl / grid_cell_size), grid_columns - 1);
-    uint32_t const xir = clamp(int32_t(xr / grid_cell_size), grid_columns - 1);
-    uint32_t const zit = clamp(int32_t(zt / grid_cell_size), grid_rows - 1);
-    uint32_t const zib = clamp(int32_t(zb / grid_cell_size), grid_rows - 1);
-
-    // add to cells
-    for (uint32_t z = zit; z <= zib; ++z) {
-      for (uint32_t x = xil; x <= xir; ++x) {
-        cell &c = cells[z][x];
-        c.add(o);
-      }
-    }
-
-    o->overlaps_cells = (xil != xir || zit != zib);
+  inline auto remove_static(object *o) -> void {
+    for_each_cell_object_is_in(o, [&](cell &c) { c.remove_static(o); });
   }
 
   inline auto print() const -> void {
     for (auto const &row : cells) {
       for (cell const &c : row) {
-        printf(" %04u ", c.objects_count());
+        printf(" %04u/%04u ", c.objects_count(), c.static_objects_count());
       }
       printf("\n");
     }
@@ -136,6 +122,35 @@ private:
       return max;
     }
     return uint32_t(i);
+  }
+
+  // @return true if object overlaps cells
+  inline auto for_each_cell_object_is_in(object *o, auto &&func) -> bool {
+    float constexpr gw = grid_cell_size * grid_columns;
+    float constexpr gh = grid_cell_size * grid_rows;
+
+    float const r = o->bounding_radius;
+
+    // calculate min max x and z in cell array
+    float const xl = gw / 2 + o->position.x - r;
+    float const xr = gw / 2 + o->position.x + r;
+    float const zt = gh / 2 + o->position.z - r;
+    float const zb = gh / 2 + o->position.z + r;
+
+    uint32_t const xil = clamp(int32_t(xl / grid_cell_size), grid_columns - 1);
+    uint32_t const xir = clamp(int32_t(xr / grid_cell_size), grid_columns - 1);
+    uint32_t const zit = clamp(int32_t(zt / grid_cell_size), grid_rows - 1);
+    uint32_t const zib = clamp(int32_t(zb / grid_cell_size), grid_rows - 1);
+
+    // add to cells
+    for (uint32_t z = zit; z <= zib; ++z) {
+      for (uint32_t x = xil; x <= xir; ++x) {
+        cell &c = cells[z][x];
+        func(c);
+      }
+    }
+
+    return xil != xir || zit != zib;
   }
 };
 
