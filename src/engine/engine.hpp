@@ -150,7 +150,7 @@ class engine final {
 public:
   inline auto init() -> void {
     // set random number generator seed for deterministic behaviour
-    srand(0);
+    srand(random_seed);
 
     // initiate subsystems, order matters
     metrics.init();

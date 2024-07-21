@@ -29,6 +29,9 @@ static bool constexpr hud_enabled = true;
 // platform cache line size
 static size_t constexpr cache_line_size_B = 64;
 
+// seed for random number generator
+static int constexpr random_seed = 2;
+
 // ----------------------------------------------------------------------
 // application configuration
 // ----------------------------------------------------------------------

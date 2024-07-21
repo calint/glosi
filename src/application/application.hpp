@@ -12,7 +12,7 @@ using namespace glm;
 static auto application_init_shaders() -> void;
 static auto create_asteroids(uint32_t num) -> void;
 static auto create_ufo() -> void;
-static auto create_scene() -> void;
+static auto load_map(std::filesystem::path path) -> void;
 
 // game state
 enum class state { init, asteroids, ufo };
@@ -135,22 +135,25 @@ static inline auto application_init() -> void {
   // skydome->bounding_radius = skydome_scale;
   // skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
 
-  create_scene();
+  load_map("assets/maps/level_1.txt");
 
   if (net.enabled) {
     // multiplayer mode
     ship *p1 = new (objects.alloc()) ship{};
     p1->position.x = -5;
     p1->net_state = &net.states[1];
+    p1->position.z = 15;
     hero = p1;
 
     ship *p2 = new (objects.alloc()) ship{};
     p2->position.x = 5;
+    p2->position.z = 15;
     p2->net_state = &net.states[2];
   } else {
     // single player mode
     ship *p = new (objects.alloc()) ship{};
     p->net_state = &net.states[1];
+    p->position.z = 15;
     hero = p;
     // create_ufo();
   }
@@ -229,28 +232,47 @@ static inline auto create_ufo() -> void {
   u->velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
 }
 
-static inline auto create_scene() -> void {
-  {
-    // cave walls
-    static_object *o = new (objects.alloc()) static_object{};
-    o->is_static = true;
-    o->position = vec3{-3, 0, 0};
-    o->glob_ix(glob_ix_asteroid_large);
-    o->scale = vec3{1};
-    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
-    o->mass = 1500;
-    grid.add_static(o);
+static inline auto load_map(std::filesystem::path path) -> void {
+  printf(" * loading map from '%s'\n", path.string().c_str());
+
+  std::ifstream file{path};
+  if (!file) {
+    throw exception{
+        std::format("cannot open file '{}'", path.string().c_str())};
   }
-  {
-    // landing pad
-    static_object *o = new (objects.alloc()) static_object{};
-    o->is_static = true;
-    o->position = vec3{0, 0, 20};
-    o->glob_ix(glob_ix_landing_pad);
-    o->scale = vec3{1};
-    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
-    o->mass = 1500;
-    grid.add_static(o);
+  uint32_t const glob_ix[] = {glob_ix_asteroid_large, glob_ix_asteroid_medium,
+                              glob_ix_asteroid_small, glob_ix_landing_pad};
+  std::string line{};
+  while (std::getline(file, line)) {
+    std::istringstream line_stream{line};
+    std::string token{};
+    line_stream >> token;
+    if (token == "solid") {
+      static_object *o = new (objects.alloc()) static_object{};
+      o->is_static = true;
+      line_stream >> o->position.x;
+      line_stream >> o->position.y;
+      line_stream >> o->position.z;
+
+      float agl = 0;
+      line_stream >> agl;
+      o->angle.x = radians(agl);
+      line_stream >> agl;
+      o->angle.y = radians(agl);
+      line_stream >> agl;
+      o->angle.z = radians(agl);
+
+      line_stream >> o->scale.x;
+      line_stream >> o->scale.y;
+      line_stream >> o->scale.z;
+
+      uint32_t ix = 0;
+      line_stream >> ix;
+      o->glob_ix(glob_ix[ix]);
+      o->bounding_radius = o->glob().bounding_radius * o->scale.x;
+      o->mass = 1000;
+      grid.add_static(o);
+    }
   }
 }
 

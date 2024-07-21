@@ -125,22 +125,22 @@ public:
 
     if (o->glob_ix() == glob_ix_landing_pad) {
       float const agl = normalize_angle_rad(angle.y);
-      printf("speed: %f  angle.y: %f\n", length(velocity), degrees(agl));
+      // printf("speed: %f  angle.y: %f\n", length(velocity), degrees(agl));
+      position = previous_position;
+      velocity.x /= 2;
+      velocity.y /= 2;
+      velocity.z = -velocity.z / 2;
+      angle.y = -agl / 2;
       if (length(velocity) < 4.0f && agl < radians(25.0f) &&
           agl > radians(-25.0f)) {
 
         if (fuel < fuel_capacity) {
           fuel += 10.0f * frame_context.dt;
         }
-
-        position = previous_position;
-        velocity.x /= 2;
-        velocity.y /= 2;
-        velocity.z = -velocity.z / 2;
-        angle.y = -agl / 2;
         return true;
       }
-      return false;
+      score -= 10;
+      return true;
     }
 
     angle.y += radians(rnd1(45));
