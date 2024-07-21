@@ -1,0 +1,71 @@
+# reset to last commit
+git reset --hard HEAD
+
+# tag with date and time
+TAG=$(date "+%Y-%m-%d--%H-%M") && git tag $TAG && git push origin $TAG
+
+# to view profile data
+gprof glos -pg
+
+# to view a core dump
+ulimit -c unlimited
+# run the program to crash
+# on ubuntu dump is at 
+ll /var/lib/apport/coredump/
+# use gdb
+gdb glos /var/lib/apport/coredump/core._home_c_w_glos_glos.1000.a5eca36c-81b5-42ad-bcb0-6f602625ec20.3305893.268365950
+# type 'bt' for stacktrace
+
+# cache hits statistics
+ :: echo -1 | sudo tee /proc/sys/kernel/perf_event_paranoid
+-1
+ :: cat /proc/sys/kernel/perf_event_paranoid
+-1
+
+perf stat -B -e cache-references,cache-misses,branches,branch-misses,cycles,instructions,faults,migrations ./glos 
+perf record -B -e cache-references,cache-misses,branches,branch-misses,cycles,instructions,faults,migrations ./glos 
+
+valgrind --tool=cachegrind --cache-sim=yes ./glos
+kcachegrind 
+
+cat stacktrace | awk '{print $2}'|cut -c 2-9 | while read addr; do
+	addr2line -e glos $addr
+done
+
+# in case compiler optimizes away stores to an object prior to new in place
+-flifetime-dse=1 ; fixes o1store::alloc()...inst->alloc_ptr optimization issue
+
+#pragma once
+#include <execinfo.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define stacktrace_depth 128
+void stacktrace_print(FILE *f) {
+  void *array[stacktrace_depth];
+  const int size = backtrace(array, stacktrace_depth);
+  char **strings = backtrace_symbols(array, size);
+  for (int i = 0; i < size; i++) {
+    fprintf(f, "%s\n", strings[i]);
+  }
+  free(strings);
+}
+
+
+#pragma once
+// object
+//   |
+//   +--- actor
+//   |      |
+//   |      +--- ninja
+//   |      |
+//   |      +--- santa
+//   |
+//   +--- projectile
+//   |       |
+//   |       |
+//   |       |
+
+#define type_actor {'a',0,0,0,0,0,0,0}
+#define type_ninja {'a','a',0,0,0,0,0,0}
+#define type_santa {'a','b',0,0,0,0,0,0}
+#define type_bullet {'b',0,0,0,0,0,0,0}

@@ -1,0 +1,1 @@
+-flifetime-dse=1 ; fixes o1store::alloc()...inst->alloc_ptr optimization issue

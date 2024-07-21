@@ -1,0 +1,503 @@
+[x] o1store: cache line aligned allocation when custom instance size
+[x] o1store: check alignment of '*all' calloc to match object size
+    => use std::aligned_alloc and std::free
+[ ] font with transparency to be used in the hud
+[ ] component slices in the monolithic object
+    cache line aligned of multiple 64B (cache line size)
+    updating a component on a query of objects would be cache friendly
+[ ] support spaces in path names
+[ ] use c++ random number generator rather than rand()
+[ ] rand() is not thread-safe
+[ ] if object overlaps grid horizontally then there is no need for synchronization 
+    since a thread processes a whole row
+[ ] spawn asteroids outside the viewport
+[ ] object: make all public functions thread safe in case inter thread calls occur?
+[ ] release and continue with sandbox game in 'glosi'
+[ ]   glosi: "atoms" bonded by "springs" instead of rigid body physics
+[ ]   render cull cells
+[ ]   render cull objects
+[x]   fix multithreading issues
+[ ]     in multiplayer threaded grid
+        if objects max bounding radius is less than half a grid cell size then threading
+        can be done in deterministic way
+        => process multithreaded grid even rows then odd rows
+        => processed rows runs in parallel with the cells requesting random numbers
+           in a non-deterministic way
+           => each row has a random number generator
+        => order of object creation matters and diverges
+           => each row buffers the objects created during the multithreaded phase
+              then added to store while single threaded
+        => no need for synchronization because same object will not be processed in more
+           than one thread
+[ ] grid: static vs moving vs bullets vs scenery objects
+[ ] assets embedded in static executable with the goal of a one file, no dependencies unit
+    => map<path,data>
+[ ] collision detection of convex volume vs convex volume using separating axis theorem
+    => current method appropriate for intended application
+[ ] glob::load: optimize ranges by merging non-textured materials since all
+    material info is saved in the vertices
+    => texture_id stored in range
+    => keep with the thought that material properties will be used at rendering
+[ ] shaders: make uniform and attribute locations dynamic
+[ ] optimize rendering
+[ ] render list to avoid data races when update thread runs in parallel
+[ ] collision detection: large sphere vs "pointy" convex volume gives false positives
+    when the sphere is in front of the "pointy" part because the planes outside the object
+    give false positive with distance to plane being closer to sphere than radius
+    => more planes can be added to the "pointy" object
+    => sat method (separating axis theorem) using normals for projection axis
+       has edge cases and does give false positives
+    => one more test on axis from sphere position to closest point in volume
+       => works in 2D but not in 3D
+[ ] planes: bool for the case where scaling is uniform to optimize collision detection
+    with sphere by removing the division by the length of the normal vector
+[ ] texture: transparent textures
+[ ] hud: resolve issue with colors
+[ ] use "moving towards each other" vector to cull collision detection
+[ ] look at std::aligned_alloc to align o1store
+[ ] object: consider making all members private
+[ ] cell.update does what object::update does since it always returns true
+[ ] bounding box. OBB 3 normals, width, height
+    check if point is inside: 3 dot products + additions and comparisons
+[ ] use string_view instead of const char*
+[ ] object::get_updated_Mmw_matrix: also compare with frame_context.frame_num in
+    a non synchronized statement
+[ ] planes::update_model_to_world could save frame_num from context to shorten
+    the decision if cached values are valid
+[ ] objects.free(): what if destructors created new objects
+[ ] net_server: read/write instead of recv(...,0) and send(...,0)
+[ ] net_server: record client signals and then replay the session
+[ ] object: update Mmw if it will be rendered
+[ ] object render culling using camera frustum, position and bounding sphere
+[ ] grid cell render culling
+[ ] cmake or premake and automatically download dependencies using git submodules
+[ ] net_server as separate application
+[ ] constexpr everything
+[ ] fix itm (initiate-then-modify) anti-pattern
+[ ] note about the absolute texture path in mtl files
+[-] object size and content is not cache friendly. consider components
+    => monolithic object with cache friendly "slices" as used by the subsystems
+[ ] multiple collision detection convex volumes per object
+[ ] collision detection: collision_context such as collision normal, plane etc
+[ ] collision reaction: tiny random added to 'dt' for each object to avoid
+    mathematical precision example: "o>  o  <o"   "ooo" instead of  "o<  o  >o"
+[ ] object: checked_collisions make minimum size of vector to e.g. 8
+[ ] camera: update matrix only if necessary
+[ ] shader: mtx_wvp * mtx_mw   is it better with mtx_mwvp?
+[ ] consider: https://github.com/alugowski/task-thread-pool for simple multithreading
+------------------------------------------------------------------------------------------
+[x] object: when glob_ix changes invalidate bounding planes
+[x] use io stream rather than 'token'
+[x] struct vertex: use glm::vecX instead of float[]
+[x] convert token.h
+    => removed. using stream
+[-] use glDebugMessageCallback
+    => not available in opengl es3
+[x] consider making application.cpp into application.hpp
+    => good enough for small applications considering compile time
+[x] time rendering and output in the metrics
+[x] struct vertex used for sizeof only
+    => and offsetof when glVertexAttribPointer
+[x] metrics.render_begin() and end() in render()
+[x] use offsetof(MyStruct, member1) when glVertexAttribPointer
+[x] exceptions rather than std::abort()
+[x] use source_location rather than __FILE__ and __LINE__
+[x] performance test, multithreaded grid, cubes
+    :: valgrind --tool=cachegrind --cache-sim=yes ./glos
+    ==1154883== 
+    ==1154883== I refs:        61,393,398,538
+    ==1154883== I1  misses:           599,480
+    ==1154883== LLi misses:           250,788
+    ==1154883== I1  miss rate:           0.00%
+    ==1154883== LLi miss rate:           0.00%
+    ==1154883== 
+    ==1154883== D refs:        18,681,628,968  (15,509,434,382 rd   + 3,172,194,586 wr)
+    ==1154883== D1  misses:        81,013,231  (    62,294,278 rd   +    18,718,953 wr)
+    ==1154883== LLd misses:        53,518,027  (    42,876,376 rd   +    10,641,651 wr)
+    ==1154883== D1  miss rate:            0.4% (           0.4%     +           0.6%  )
+    ==1154883== LLd miss rate:            0.3% (           0.3%     +           0.3%  )
+    ==1154883== 
+    ==1154883== LL refs:           81,612,711  (    62,893,758 rd   +    18,718,953 wr)
+    ==1154883== LL misses:         53,768,815  (    43,127,164 rd   +    10,641,651 wr)
+    ==1154883== LL miss rate:             0.1% (           0.1%     +           0.3%  )
+
+[x] performance test, multithreaded grid, spheres
+    :: valgrind --tool=cachegrind --cache-sim=yes ./glos
+    ==1152702== 
+    ==1152702== I refs:        29,031,645,607
+    ==1152702== I1  misses:           541,467
+    ==1152702== LLi misses:           130,158
+    ==1152702== I1  miss rate:           0.00%
+    ==1152702== LLi miss rate:           0.00%
+    ==1152702== 
+    ==1152702== D refs:         8,816,352,065  (7,344,697,937 rd   + 1,471,654,128 wr)
+    ==1152702== D1  misses:        33,470,670  (   28,173,651 rd   +     5,297,019 wr)
+    ==1152702== LLd misses:        18,020,789  (   16,524,250 rd   +     1,496,539 wr)
+    ==1152702== D1  miss rate:            0.4% (          0.4%     +           0.4%  )
+    ==1152702== LLd miss rate:            0.2% (          0.2%     +           0.1%  )
+    ==1152702== 
+    ==1152702== LL refs:           34,012,137  (   28,715,118 rd   +     5,297,019 wr)
+    ==1152702== LL misses:         18,150,947  (   16,654,408 rd   +     1,496,539 wr)
+    ==1152702== LL miss rate:             0.0% (          0.0%     +           0.1%  )
+
+[x] glob.load_* can only be called once
+    => friend class globs and made private functions
+[x] cell::resolve_collisions: consider/try making a vector of objects to check collisions
+    with if bounding spheres in collision considering cache coherence
+[x] o1store: nice exit when objects exceeded capacity
+[x] examine plane representation Ax + By + Cz + D = 0 where w is D
+    then get distance: dot(plane, point);
+[-] move texures into materials, materials into globs, globs into engine
+    => would introduce circular reference engine->globs->glob->engine->globs
+    => glos namespace contains the instances of the components without any
+       circular references
+       only one engine runs so globals in glos namespace for composition of
+       the system is ok
+[-] window, shaders into engine
+[-] cell overlapping objects placed in a global cell to eliminate
+    synchronization at update, collision detection etc
+    => or a grid with double the cell size until one top cell
+    => does not work due to collision detection between "overlapping" objects
+       and non-overlapping objects is not done
+[x] cell: break up 'resolve_collisions' for better cache coherence
+    -----------------------------------------------------------
+    valgrind --tool=cachegrind --cache-sim=yes ./glos
+    -----------------------------------------------------------
+    ==3368870== 
+    ==3368870== I refs:        9,567,611,166
+    ==3368870== I1  misses:          457,295
+    ==3368870== LLi misses:          106,724
+    ==3368870== I1  miss rate:          0.00%
+    ==3368870== LLi miss rate:          0.00%
+    ==3368870== 
+    ==3368870== D refs:        2,933,193,489  (2,415,200,981 rd   + 517,992,508 wr)
+    ==3368870== D1  misses:       18,754,872  (   14,776,128 rd   +   3,978,744 wr)
+    ==3368870== LLd misses:        9,458,301  (    6,927,473 rd   +   2,530,828 wr)
+    ==3368870== D1  miss rate:           0.6% (          0.6%     +         0.8%  )
+    ==3368870== LLd miss rate:           0.3% (          0.3%     +         0.5%  )
+    ==3368870== 
+    ==3368870== LL refs:          19,212,167  (   15,233,423 rd   +   3,978,744 wr)
+    ==3368870== LL misses:         9,565,025  (    7,034,197 rd   +   2,530,828 wr)
+    ==3368870== LL miss rate:            0.1% (          0.1%     +         0.5%  )
+    -----------------------------------------------------------
+    comparison with prior breakup of 'handle_collisions' glos-2024-01-14-02-37
+    -----------------------------------------------------------
+    ==3371940== 
+    ==3371940== I refs:        17,896,490,605
+    ==3371940== I1  misses:           956,683
+    ==3371940== LLi misses:           213,131
+    ==3371940== I1  miss rate:           0.01%
+    ==3371940== LLi miss rate:           0.00%
+    ==3371940== 
+    ==3371940== D refs:         5,178,528,448  (4,823,660,976 rd   + 354,867,472 wr)
+    ==3371940== D1  misses:        41,213,458  (   29,875,516 rd   +  11,337,942 wr)
+    ==3371940== LLd misses:        27,700,185  (   19,883,865 rd   +   7,816,320 wr)
+    ==3371940== D1  miss rate:            0.8% (          0.6%     +         3.2%  )
+    ==3371940== LLd miss rate:            0.5% (          0.4%     +         2.2%  )
+    ==3371940== 
+    ==3371940== LL refs:           42,170,141  (   30,832,199 rd   +  11,337,942 wr)
+    ==3371940== LL misses:         27,913,316  (   20,096,996 rd   +   7,816,320 wr)
+    ==3371940== LL miss rate:             0.1% (          0.1%     +         2.2%  )
+    -----------------------------------------------------------
+    perf stat -d ./glos
+    -----------------------------------------------------------
+    Performance counter stats for './glos':
+
+            616 905,71 msec task-clock                       #    6,658 CPUs utilized             
+            379 432      context-switches                 #  615,057 /sec                      
+                38 032      cpu-migrations                   #   61,650 /sec                      
+                22 944      page-faults                      #   37,192 /sec                      
+    2 234 163 704 167      cycles                           #    3,622 GHz                         (62,38%)
+    393 098 299 249      stalled-cycles-frontend          #   17,59% frontend cycles idle        (62,41%)
+    571 769 616 481      stalled-cycles-backend           #   25,59% backend cycles idle         (62,49%)
+    3 808 685 436 504      instructions                     #    1,70  insn per cycle            
+                                                    #    0,15  stalled cycles per insn     (62,51%)
+    281 079 361 553      branches                         #  455,628 M/sec                       (62,54%)
+        1 666 367 449      branch-misses                    #    0,59% of all branches             (62,60%)
+    1 174 450 945 236      L1-dcache-loads                  #    1,904 G/sec                       (62,59%)
+        5 861 070 616      L1-dcache-load-misses            #    0,50% of all L1-dcache accesses   (62,51%)
+    <not supported>      LLC-loads                                                             
+    <not supported>      LLC-load-misses                                                       
+
+        92,651151520 seconds time elapsed
+
+        599,536929000 seconds user
+        15,263751000 seconds sys
+    ----------------------------------------------------------- 
+    comparison with glos-2024-01-14-02-37
+    -----------------------------------------------------------
+    Performance counter stats for './glos':
+
+            162 456,94 msec task-clock                       #    6,606 CPUs utilized             
+                98 735      context-switches                 #  607,761 /sec                      
+                8 146      cpu-migrations                   #   50,143 /sec                      
+                25 042      page-faults                      #  154,145 /sec                      
+    585 101 244 750      cycles                           #    3,602 GHz                         (62,51%)
+    118 614 533 784      stalled-cycles-frontend          #   20,27% frontend cycles idle        (62,43%)
+    157 045 302 977      stalled-cycles-backend           #   26,84% backend cycles idle         (62,49%)
+    943 975 824 297      instructions                     #    1,61  insn per cycle            
+                                                    #    0,17  stalled cycles per insn     (62,42%)
+        74 609 143 343      branches                         #  459,255 M/sec                       (62,54%)
+        434 160 738      branch-misses                    #    0,58% of all branches             (62,58%)
+    270 653 566 710      L1-dcache-loads                  #    1,666 G/sec                       (62,59%)
+        2 232 709 466      L1-dcache-load-misses            #    0,82% of all L1-dcache accesses   (62,50%)
+    <not supported>      LLC-loads                                                             
+    <not supported>      LLC-load-misses                                                       
+
+        24,591022168 seconds time elapsed
+
+        157,625824000 seconds user
+        4,291702000 seconds sys
+    -----------------------------------------------------------
+    with checked and detected collisions list
+    -----------------------------------------------------------
+        Performance counter stats for './glos':
+
+            184 532,28 msec task-clock                       #    6,563 CPUs utilized             
+            103 370      context-switches                 #  560,173 /sec                      
+                9 602      cpu-migrations                   #   52,034 /sec                      
+                22 865      page-faults                      #  123,908 /sec                      
+    668 681 898 756      cycles                           #    3,624 GHz                         (62,56%)
+    117 275 028 868      stalled-cycles-frontend          #   17,54% frontend cycles idle        (62,53%)
+    151 633 836 165      stalled-cycles-backend           #   22,68% backend cycles idle         (62,29%)
+    1 133 099 743 488      instructions                     #    1,69  insn per cycle            
+                                                    #    0,13  stalled cycles per insn     (62,35%)
+        83 680 196 457      branches                         #  453,472 M/sec                       (62,40%)
+        491 196 775      branch-misses                    #    0,59% of all branches             (62,66%)
+    350 050 152 874      L1-dcache-loads                  #    1,897 G/sec                       (62,62%)
+        1 816 093 223      L1-dcache-load-misses            #    0,52% of all L1-dcache accesses   (62,64%)
+    <not supported>      LLC-loads                                                             
+    <not supported>      LLC-load-misses                                                       
+
+        28,115203777 seconds time elapsed
+
+        179,326068000 seconds user
+        4,739171000 seconds sys
+    -----------------------------------------------------------
+    ==4120280== 
+    ==4120280== I refs:        7,390,203,553
+    ==4120280== I1  misses:          436,886
+    ==4120280== LLi misses:           97,033
+    ==4120280== I1  miss rate:          0.01%
+    ==4120280== LLi miss rate:          0.00%
+    ==4120280== 
+    ==4120280== D refs:        2,271,563,652  (1,865,762,901 rd   + 405,800,751 wr)
+    ==4120280== D1  misses:       16,272,259  (   12,921,750 rd   +   3,350,509 wr)
+    ==4120280== LLd misses:        7,673,113  (    5,504,511 rd   +   2,168,602 wr)
+    ==4120280== D1  miss rate:           0.7% (          0.7%     +         0.8%  )
+    ==4120280== LLd miss rate:           0.3% (          0.3%     +         0.5%  )
+    ==4120280== 
+    ==4120280== LL refs:          16,709,145  (   13,358,636 rd   +   3,350,509 wr)
+    ==4120280== LL misses:         7,770,146  (    5,601,544 rd   +   2,168,602 wr)
+    ==4120280== LL miss rate:            0.1% (          0.1%     +         0.5%  )
+    -----------------------------------------------------------
+[x] reorganize order and align members as expected to be accessed in the subsystems aware of the
+    cache lines (64B)
+[x] review engine source
+[x]   cell
+[x]   object
+[x]   planes
+[x]   camera
+[x]   engine
+[x]   glob
+[x]   grid
+[x]   hud
+[x]   material
+[x]   metrics
+[x]   net_server
+[x]   net
+[x]   o1store
+[x]   sdl
+[x]   shaders
+[x]   texture
+[x]   token
+[x]   windows
+[x] sanitize
+[x]   thread
+[x]   memory
+[x] object: updated_at_tick and rendered_at_tick is uint64_t. uint32_t enough for purpose?
+[x] profile
+[x] sanitize
+[x] glob::load: better printout
+[x] ? racing condition on net.states between where render thread and update thread
+    => it is ok. current signals are copied to net.states and the object
+       references those signals
+[x] volume::planes - ability to store some extra points without normals for use
+    in collision detection
+[x] accessing global frame_context from threads is 1.8% of profiling 
+    time without rendering on a threaded grid
+    => misread
+[x] halt development and tidy up
+[x]   'unsigned' instead of 'int' where size cannot be negative
+      => in 64 bit architecture 'int' instead of 'unsigned' should be considered
+[x]   use size_t for sizes and indexes (assumes 64 bit architecture)
+[x]   review application code
+[x]   print out source location when std::abort()
+[x]   class private members at the bottom of the declaration
+[x]   use uint32_t instead of unsigned int32_t etc
+      => class members fixed. in code less relevant
+[-]   consider a more standard source layout without depending on include order
+      => source in hpp and the concept of the program being one file is kept
+[x]   use gl_element_array_buffer (where appropriate)
+[x]   use glm::sin, cos etc
+[x]   consider verbose self documenting code
+[x]   move object::volume into physics
+      => moved into object
+[x]   review and delete obsolete notes
+[x]   ref& const, bool const, etc
+[x]     arguments
+[x]     code
+[x]   ++i instead of i++
+[x]   friend cell to object?
+      => and grid
+[x]   const correctness
+[x]   const everything
+[x] clang-tidy
+[x] try using cell_entry{pos,radius,collbits,collmsk} instead of object pointer for 
+    better cache utilization in hot path
+    => first impl 10% improvement in 'upd_ms' for the 64K objects grid
+[x] metrics gives a large first fps when vsync is on
+    => seems like SDL2 issue
+[x] consider inverting meaning of bool return value from 'update' and 'on_collision'
+[x] use unique_ptr instead of new and delete
+    => o1store for objects
+[x] net: when server disconnects there is no print out
+    => use fflush(stdout); before terminating
+    => fflush(stderr)
+[x] engine: review mutexes and why initial waiting for render can hang without the 'if'
+    => bug in predicate
+[x] engine: frame_context.ms in network mode should be from server
+[x] frame_context: 64 bit ms time
+[x] implement sample game
+[x] use a build system instead of make.sh
+    => and also make.sh
+[x] rename 'node' to something better
+    => moved into object
+[x] use object Mmw when updating volume::planes
+[x] glo: after upload to gpu buffers can be deleted
+[x] glo: load obj and planes in a consistent way
+[x] glo: upgrade to glGenVertexArrays (opengl es3)
+[?] move init() and free() into constructor and destructor
+    => it might be better to know exactly when init and free is done
+[x] shaders: move program activation from 'main' to 'program'
+[x] glos.get_by_index instead of name in constructors of game objects
+[x] node.glo maybe should be an index instead of a pointer in case glos
+    are loaded during game play and vector reallocates
+[x] move 'collision_bits' and 'collision_mask' to 'object' and solve circular
+    reference by implementation moving the implementation outside the 'grid_ifc'
+    => no circular references
+    => 'grid_ifc' removed and implementation added to 'object'
+[x] render on separate thread
+    => update loop on other thread, render loop in main thread
+[-] grid_ifc: hash_set instead of vector for checked_collisions
+    => degrades performance from 27 fps to 18 fps in test case
+[-] o1store: new objects list that is applied after update
+    causing allocated list to be stable during update and collision_resolution
+    => 'objects' made 'o1store' private and handles list end limit
+[x] c++ conversion
+[x]   replace dynp, dyni, dynf with vector
+[x]   replace str with string
+[x] namespaces
+[x] hpp files included by main.cpp
+[x] convert structs to classes
+[x] use glm library for math
+[x] multithreaded grid update
+    => initial try with futures and async lambda degrades performance by 50%
+    => try with ~25K objects
+    std::for_each(std::execution::par_unseq,...) gives 7 fps instead of 5 fps
+    => with less objects (<1K) par_unseq degrades performance by 50%
+    => incrementing metrics attributes have a big impact on performance when multithreading
+       turning those metrics off doubles the performance. why so expensive?
+       with metrics turned of in cell::resolve_collisions multithreaded
+       performance gain is 3x compared to single threaded (with no rendering)
+[x] deleted objects list created during 'update'
+------------------------------------------------------------------
+[x] dynamic pointer vector
+[x] texturing
+[x] obj format
+[x]   colors
+[x]   texture coords
+[x]   materials
+[ ]     global
+[x]   textures
+[x]   render
+[x]   scene
+[x]     to objects
+[ ]     center/scale/position
+[x]   faces to ccw
+[x] draw bounding volume
+[x]   sphere
+[-]   box
+[x]   planes
+[x] multiple materials in render
+[x] collision detection 
+[x]   bounding volume
+[x]     sphere
+[x]       vs sphere
+[x]       vs plane
+[-]       vs box
+[x]     planes
+[-]       vs box
+[x]       vs planes
+[-]     box
+[-]       vs box
+[-]     line
+[-]       vs sphere
+[-]       planes 
+[-]     empty/solids
+[-]       boolean ops
+[o] collision physics/animatics
+[x]   sphere vs sphere
+[-]   box vs box
+[ ]   sphere vs plane
+[-]   sphere vs box
+[ ]   planes vs planes
+[x] grid
+[x]   render
+[ ]     cull
+[x]   update
+[x]   multicore
+[x] keyshub
+[x]   client
+[x]   server
+[x]   multiplayer
+[x] camera
+[x]   projection
+[x]     orthonormal
+[x]     perspective
+[x]   look-at
+[ ]   click select
+[x]   follow
+[ ]     pd regulator
+[ ]     pid regulator
+[ ]   script
+[ ]     path
+[ ]     focus
+[x] hud
+[x]   console
+[x] draw text
+[x] mouse
+[x]   fps controls
+[ ]   alternative controls
+[x] light sources
+[x]   ambient
+[ ] shadow map
+[ ]   render to texture
+[x]   use several programs
+[ ]   ortho
+[ ]     zoom zbuf render to encompass view frustum
+[ ]   persp
+[ ] hierarchial objects
+[ ]   cached matrices
+[ ]     model-to-local
+[ ]     local-to-world
+[ ]   collisions
+[ ]     root object bounding volume, recursive
+[ ]     objects individually of hierarchy
+[x] draw grid
+[x]   sky dome
+[x]   ground plane
+[x] 3D newton conservation with spheres
+[x]   1D cradle
+[x]   2D
+[x]   3D

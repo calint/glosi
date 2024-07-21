@@ -1,0 +1,33 @@
+-----------------------------------------------------------------------------------
+2024-07-16: performance test mode: cubes
+            multithreaded grid, rendering off, hud off
+-----------------------------------------------------------------------------------
+Performance counter stats for './glos':
+
+        287 925,08 msec task-clock                       #    6,698 CPUs utilized             
+           134 541      context-switches                 #  467,278 /sec                      
+            16 920      cpu-migrations                   #   58,765 /sec                      
+            23 573      page-faults                      #   81,872 /sec                      
+ 1 029 500 899 184      cycles                           #    3,576 GHz                         (35,72%)
+    27 182 944 710      stalled-cycles-frontend          #    2,64% frontend cycles idle        (35,74%)
+ 1 537 810 035 856      instructions                     #    1,49  insn per cycle            
+                                                  #    0,02  stalled cycles per insn     (35,74%)
+   136 567 344 968      branches                         #  474,316 M/sec                       (35,75%)
+       897 288 752      branch-misses                    #    0,66% of all branches             (35,76%)
+   644 767 302 002      L1-dcache-loads                  #    2,239 G/sec                       (35,73%)
+     3 246 693 565      L1-dcache-load-misses            #    0,50% of all L1-dcache accesses   (35,71%)
+   <not supported>      LLC-loads                                                             
+   <not supported>      LLC-load-misses                                                       
+    14 850 961 396      L1-icache-loads                  #   51,579 M/sec                       (35,72%)
+        82 623 674      L1-icache-load-misses            #    0,56% of all L1-icache accesses   (35,71%)
+       768 807 688      dTLB-loads                       #    2,670 M/sec                       (35,70%)
+       406 715 806      dTLB-load-misses                 #   52,90% of all dTLB cache accesses  (35,70%)
+         3 299 792      iTLB-loads                       #   11,461 K/sec                       (35,70%)
+         4 111 111      iTLB-load-misses                 #  124,59% of all iTLB cache accesses  (35,68%)
+     1 741 928 564      L1-dcache-prefetches             #    6,050 M/sec                       (35,70%)
+   <not supported>      L1-dcache-prefetch-misses                                             
+
+      42,985627669 seconds time elapsed
+
+     279,547707000 seconds user
+       7,810406000 seconds sys

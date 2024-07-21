@@ -1,0 +1,1 @@
+materials exported from blender specify textures with absolute paths that need to be edited

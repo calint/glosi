@@ -1,0 +1,72 @@
+sön  7 jul 2024 01:33:10 CEST
+/home/c/w/glos/qa/lint/../../src/main.cpp:10:1: warning: a trailing return type is disallowed for this function declaration [fuchsia-trailing-return]
+   10 | auto main(int argc, char *argv[]) -> int {
+      | ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:10:6: warning: an exception may be thrown in function 'main' which should not throw exceptions [bugprone-exception-escape]
+   10 | auto main(int argc, char *argv[]) -> int {
+      |      ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:10:6: warning: declaration must be enclosed within the 'LIBC_NAMESPACE' namespace [llvmlibc-implementation-in-namespace]
+/home/c/w/glos/qa/lint/../../src/main.cpp:12:20: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+   12 |   if (argc > 1 && *argv[1] == 's') {
+      |                    ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:14:11: warning: no header providing "glos::net_server" is directly included [misc-include-cleaner]
+    9 | 
+   10 | auto main(int argc, char *argv[]) -> int {
+   11 | 
+   12 |   if (argc > 1 && *argv[1] == 's') {
+   13 |     // instance is server
+   14 |     glos::net_server.init();
+      |           ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:18:12: warning: no header providing "EXIT_SUCCESS" is directly included [misc-include-cleaner]
+    9 | 
+   10 | auto main(int argc, char *argv[]) -> int {
+   11 | 
+   12 |   if (argc > 1 && *argv[1] == 's') {
+   13 |     // instance is server
+   14 |     glos::net_server.init();
+   15 |     glos::net_server.run();
+   16 |     glos::net_server.free();
+   17 | 
+   18 |     return EXIT_SUCCESS;
+      |            ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:22:3: warning: do not call c-style vararg functions [cppcoreguidelines-pro-type-vararg,hicpp-vararg]
+   22 |   printf("\nprogram glos\n\n");
+      |   ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:22:3: warning: no header providing "printf" is directly included [misc-include-cleaner]
+    9 | 
+   10 | auto main(int argc, char *argv[]) -> int {
+   11 | 
+   12 |   if (argc > 1 && *argv[1] == 's') {
+   13 |     // instance is server
+   14 |     glos::net_server.init();
+   15 |     glos::net_server.run();
+   16 |     glos::net_server.free();
+   17 | 
+   18 |     return EXIT_SUCCESS;
+   19 |   }
+   20 | 
+   21 |   // instance is client
+   22 |   printf("\nprogram glos\n\n");
+      |   ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:22:3: warning: use 'std::println' instead of 'printf' [modernize-use-std-print]
+    6 |   printf("\nprogram glos\n\n");
+      |   ^~~~~~ ~~~~~~~~~~~~~~~~~~~~
+      |   std::println "\nprogram glos\n"
+/home/c/w/glos/qa/lint/../../src/main.cpp:24:21: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+   24 |   if (argc > 1 and *argv[1] == 'c') {
+      |                     ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:26:11: warning: no header providing "glos::net" is directly included [misc-include-cleaner]
+    9 |     glos::net.enabled = true;
+      |           ^
+/home/c/w/glos/qa/lint/../../src/main.cpp:29:24: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+   29 |       glos::net.host = argv[2];
+      |                        ^
+sön  7 jul 2024 01:33:48 CEST
+sön  7 jul 2024 01:34:09 CEST
+sön  7 jul 2024 01:35:59 CEST
+sön  7 jul 2024 01:36:31 CEST
+sön  7 jul 2024 01:36:49 CEST
+sön  7 jul 2024 01:37:17 CEST
+sön  7 jul 2024 01:37:45 CEST
+sön  7 jul 2024 01:38:48 CEST
+sön  7 jul 2024 01:38:50 CEST
