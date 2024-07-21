@@ -12,8 +12,6 @@ using namespace glm;
 static auto application_init_shaders() -> void;
 static auto create_asteroids(uint32_t num) -> void;
 static auto create_ufo() -> void;
-static auto create_cubes(uint32_t num) -> void;
-static auto create_spheres(uint32_t num) -> void;
 static auto create_scene() -> void;
 
 // game state
@@ -222,27 +220,6 @@ static inline auto create_asteroids(uint32_t const num) -> void {
   }
 }
 
-static inline auto create_cubes(uint32_t const num) -> void {
-  float constexpr v = cube_speed;
-  float constexpr d = game_area_max_x - game_area_min_x;
-  for (uint32_t i = 0; i < num; ++i) {
-    cube *o = new (objects.alloc()) cube{};
-    o->position = {rnd1(d), 0, rnd1(d)};
-    o->velocity = {rnd1(v), 0, rnd1(v)};
-    o->angular_velocity.y = radians(20.0f);
-  }
-}
-
-static inline auto create_spheres(uint32_t const num) -> void {
-  float constexpr v = sphere_speed;
-  float constexpr d = game_area_max_x - game_area_min_x;
-  for (uint32_t i = 0; i < num; ++i) {
-    sphere *o = new (objects.alloc()) sphere{};
-    o->position = {rnd1(d), 0, rnd1(d)};
-    o->velocity = {rnd1(v), 0, rnd1(v)};
-  }
-}
-
 static inline auto create_ufo() -> void {
   ufo *u = new (objects.alloc()) ufo{};
   u->position = {-grid_size / 2, 0, -grid_size / 2};
@@ -253,6 +230,7 @@ static inline auto create_ufo() -> void {
 
 static inline auto create_scene() -> void {
   {
+    // cave walls
     static_object *o = new (objects.alloc()) static_object{};
     o->is_static = true;
     o->position = vec3{-3, 0, 0};
@@ -263,9 +241,10 @@ static inline auto create_scene() -> void {
     grid.add_static(o);
   }
   {
+    // landing pad
     static_object *o = new (objects.alloc()) static_object{};
     o->is_static = true;
-    o->position = vec3{0, 0, 10};
+    o->position = vec3{0, 0, 20};
     o->glob_ix(glob_ix_landing_pad);
     o->scale = vec3{1};
     o->bounding_radius = o->glob().bounding_radius * o->scale.x;
