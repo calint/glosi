@@ -165,15 +165,11 @@ static inline auto application_init() -> void {
     o->position = {0.0f, 0.0f, -5.0f};
     o->scale = {2.0f, 1.0f, 0.5f};
     o->angular_velocity = {0, radians(5.0f), 0};
-    o->glob_ix(glob_ix_cube);
-    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
 
     o = new (objects.alloc()) cube{};
     o->position = {0.0f, 0.0f, -10.0f};
     o->scale = {2.0f, 2.0f, 2.0f};
     o->angular_velocity = {0, radians(5.0f), 0};
-    o->glob_ix(glob_ix_cube);
-    o->bounding_radius = o->glob().bounding_radius * o->scale.x;
   }
 
   background_color = {0, 0, 0};

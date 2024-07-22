@@ -50,7 +50,7 @@ public:
 
         // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
 
-        bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
+        // bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
         bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
 
         glm::mat3 const N =
@@ -62,9 +62,13 @@ public:
         world_planes.clear();
         world_planes.reserve(normals.size());
         for (glm::vec3 const &normal : normals) {
-          // normal needs to be normalized when the model is scaled
-          glm::vec3 const world_normal =
-              is_scaled ? glm::normalize(N * normal) : N * normal;
+          // glm::vec3 const world_normal =
+          //     is_scaled ? glm::normalize(N * normal) : N * normal;
+          // note: normal needs to be normalized when the model is scaled
+
+          glm::vec3 const world_normal = N * normal;
+          // note: distorts normals when scaled but in this case only the
+          // information if it is behind or in front of a plane is needed
 
           world_planes.emplace_back(glm::vec4{world_normal, 0});
           // note: D component (distance to plane from origin along the normal)
