@@ -143,19 +143,23 @@ static inline auto application_init() -> void {
     p1->position.x = -5;
     p1->net_state = &net.states[1];
     p1->position.z = 15;
-    hero = p1;
+    if (net.player_ix == 1) {
+      hero = p1;
+    }
 
     ship *p2 = new (objects.alloc()) ship{};
     p2->position.x = 5;
     p2->position.z = 15;
     p2->net_state = &net.states[2];
+    if (net.player_ix == 2) {
+      hero = p2;
+    }
   } else {
     // single player mode
     ship *p = new (objects.alloc()) ship{};
     p->net_state = &net.states[1];
     p->position.z = 15;
     hero = p;
-    // create_ufo();
   }
 
   background_color = {0, 0, 0};
@@ -165,8 +169,9 @@ static inline auto application_init() -> void {
 
   camera.type = camera::type::ORTHOGONAL;
   camera.position = {0, 50, 0};
-  camera.look_at = {0, 0, -.000001f};
-  // note: -.000001f because of the math of 'look at'
+  camera.look_at = {0, 0, -0.000001f};
+  // note: -0.000001f because of the math of 'look at' does not handle x and z
+  //       being equal camera_follow_object = hero;
   camera.ortho_min_x = -game_area_half_x;
   camera.ortho_min_y = -game_area_half_z;
   camera.ortho_max_x = game_area_half_x;
@@ -180,6 +185,11 @@ static inline auto application_on_update_done() -> void {
   if (is_performance_test) {
     return;
   }
+
+  // camera.position = {hero->position.x, 50, hero->position.z};
+  // camera.look_at = {hero->position.x, 0, hero->position.z - 0.00001f};
+  // note: -0.00001f because of look_at does not work properly when x and z are
+  //       equal
 
   switch (state) {
   case state::init:
