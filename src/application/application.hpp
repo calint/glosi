@@ -271,7 +271,6 @@ static inline auto load_map(std::filesystem::path path) -> void {
       o->glob_ix(glob_ix[ix]);
       o->bounding_radius = o->glob().bounding_radius * o->scale.x;
       o->mass = 1000;
-      grid.add_static(o);
     }
   }
 }

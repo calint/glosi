@@ -216,10 +216,7 @@ private:
 
 class objects final {
 public:
-  inline auto init() -> void {
-    // initiate list size and end pointer
-    apply_allocated_instances();
-  }
+  inline auto init() -> void {}
 
   inline auto free() -> void {
     for_each([](object *o) { o->~object(); });
@@ -242,12 +239,19 @@ public:
     }
   }
 
-  inline auto apply_allocated_instances() -> void {
+  inline auto apply_allocated_instances(auto &&callback) -> void {
     // retrieve the end of list because during objects' 'update' and
     //  'on_collision' new objects might be created which would change the
     //   end-of-list pointer
+    object **alloc_iter = store_.allocated_list() + allocated_list_len_;
+    object **const alloc_end = store_.allocated_list_end();
+    while (alloc_iter < alloc_end) {
+      object *o = *alloc_iter;
+      callback(o);
+      ++alloc_iter;
+    }
     allocated_list_len_ = store_.allocated_list_len();
-    allocated_list_end_ = store_.allocated_list_end();
+    allocated_list_end_ = alloc_end;
   }
 
   inline auto apply_freed_instances(auto &&callback) -> void {
@@ -259,7 +263,7 @@ private:
           objects_instance_size_B, cache_line_size_B>
       store_{};
   object **allocated_list_end_ = nullptr;
-  size_t allocated_list_len_ = 0;
+  uint32_t allocated_list_len_ = 0;
 };
 
 static objects objects{};

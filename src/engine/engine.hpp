@@ -244,7 +244,11 @@ void main() {
     application_init();
 
     // apply new objects create at 'application_init()'
-    objects.apply_allocated_instances();
+    objects.apply_allocated_instances([](object *o) {
+      if (o->is_static) {
+        grid.add_static(o);
+      }
+    });
 
     printf("\nglobs: %u   vertex data: %zu B  texture data: %zu B\n\n",
            metrics.allocated_globs, metrics.buffered_vertex_data,
@@ -452,7 +456,11 @@ private:
       }
     });
 
-    objects.apply_allocated_instances();
+    objects.apply_allocated_instances([](object *o) {
+      if (o->is_static) {
+        grid.add_static(o);
+      }
+    });
 
     // callback application
     application_on_update_done();
@@ -463,7 +471,11 @@ private:
         grid.remove_static(o);
       }
     });
-    objects.apply_allocated_instances();
+    objects.apply_allocated_instances([](object *o) {
+      if (o->is_static) {
+        grid.add_static(o);
+      }
+    });
 
     // update signals from network or local
     if (net.enabled) {

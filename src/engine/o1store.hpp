@@ -162,8 +162,8 @@ public:
   inline auto allocated_list() const -> type ** { return alloc_bgn_; }
 
   // @return length of list of allocated instances
-  inline auto allocated_list_len() const -> size_t {
-    return size_t(alloc_ptr_ - alloc_bgn_);
+  inline auto allocated_list_len() const -> uint32_t {
+    return uint32_t(alloc_ptr_ - alloc_bgn_);
   }
 
   // @return one past the end of allocated instances list

@@ -30,4 +30,12 @@ public:
   }
 
   inline auto update() -> bool override { return true; }
+
+  inline auto on_collision(object *o) -> bool override {
+    if (debug_multiplayer) {
+      printf("%lu: %lu: %s collision with %s\n", frame_context.frame_num,
+             frame_context.ms, name.c_str(), o->name.c_str());
+    }
+    return false;
+  }
 };
