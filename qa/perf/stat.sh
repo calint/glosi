@@ -1,2 +1,2 @@
 #!/bin/sh
-perf stat --delay 3000 -d -d -d ./glos
+perf stat --delay 3000 -d -d -d ./glosi
