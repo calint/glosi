@@ -1,4 +1,4 @@
-[ ] static_object map
+[x] static_object map
 [ ] cartoon physics:
     at collision detection, when a point is in volume, select the plane with
     least distance to point as collision plane
