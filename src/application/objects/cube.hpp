@@ -16,7 +16,7 @@ public:
     }
     glob_ix(glob_ix_cube);
     scale = {1.0f, 1.0f, 1.0f};
-    bounding_radius = glob().bounding_radius * scale.x;
+    bounding_radius = glob().bounding_radius;
     mass = 10;
     collision_bits = cb_power_up;
     collision_mask = cb_power_up;
