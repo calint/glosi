@@ -57,14 +57,5 @@ experimental 3d multiplayer game framework using simple data layer 2 and opengl 
   - F7: hud on/off
   - F8: render grid cells on/off
 
-![starting multiplayer mode](https://github.com/calint/glos/assets/1920811/ed27167b-525e-4696-8a0c-2cb2fb52ec14)
 
-![multiplayer mode](https://github.com/calint/glos/assets/1920811/697dbe55-b3b0-41ef-8bfa-ab67666291c8)
-
-![single player mode](https://github.com/calint/glos/assets/1920811/96a27e30-d180-4f6b-930c-cf49b2c09d98)
-
-![single player mode](https://github.com/calint/glos/assets/1920811/e39000d0-8bc9-4070-9454-46bb5ae6e4ab)
-
-## todo
-* another sample game in a 3D sandbox-like environment
-* and much more in [todo.txt](https://github.com/calint/glos/blob/master/notes/todo.txt)
+## [todo](https://github.com/calint/glos/blob/master/notes/todo.txt)
