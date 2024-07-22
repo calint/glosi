@@ -56,4 +56,4 @@ experimental 3d multiplayer game framework using simple data layer 2 and opengl 
   - F8: render grid cells on/off
 
 
-## [todo](https://github.com/calint/glosi/blob/master/notes/todo.txt)
+## [todo](https://github.com/calint/glosi/blob/main/notes/todo.txt)
