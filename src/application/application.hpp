@@ -135,21 +135,21 @@ static inline auto application_init() -> void {
   // skydome->bounding_radius = skydome_scale;
   // skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
 
-  load_map("assets/maps/level_1.txt");
+  load_map("assets/maps/level_1.map");
 
   if (net.enabled) {
     // multiplayer mode
     ship *p1 = new (objects.alloc()) ship{};
     p1->position.x = -5;
+    p1->position.z = 0;
     p1->net_state = &net.states[1];
-    p1->position.z = 15;
     if (net.player_ix == 1) {
       hero = p1;
     }
 
     ship *p2 = new (objects.alloc()) ship{};
     p2->position.x = 5;
-    p2->position.z = 15;
+    p2->position.z = 0;
     p2->net_state = &net.states[2];
     if (net.player_ix == 2) {
       hero = p2;
@@ -157,8 +157,8 @@ static inline auto application_init() -> void {
   } else {
     // single player mode
     ship *p = new (objects.alloc()) ship{};
+    p->position.z = 0;
     p->net_state = &net.states[1];
-    p->position.z = 15;
     hero = p;
   }
 
@@ -242,7 +242,7 @@ static inline auto create_ufo() -> void {
   u->velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
 }
 
-static inline auto load_map(std::filesystem::path path) -> void {
+static inline auto load_static_object_list(std::filesystem::path path) -> void {
   printf(" * loading map from '%s'\n", path.string().c_str());
 
   std::ifstream file{path};
@@ -282,6 +282,61 @@ static inline auto load_map(std::filesystem::path path) -> void {
       o->bounding_radius = o->glob().bounding_radius * o->scale.x;
       o->mass = 1000;
     }
+  }
+}
+
+static inline auto load_map(std::filesystem::path path) -> void {
+  printf(" * loading map from '%s'\n", path.string().c_str());
+
+  std::ifstream file{path};
+  if (!file) {
+    throw exception{
+        std::format("cannot open file '{}'", path.string().c_str())};
+  }
+  uint32_t const glob_ix[] = {glob_ix_cube, glob_ix_asteroid_large,
+                              glob_ix_asteroid_medium, glob_ix_asteroid_small,
+                              glob_ix_landing_pad};
+  uint32_t map_width = 0;
+  uint32_t map_height = 0;
+  {
+    std::string line{};
+    std::getline(file, line);
+    std::istringstream line_stream{line};
+    line_stream >> map_width;
+    line_stream >> map_height;
+  }
+  printf("     %u x %u\n", map_width, map_height);
+
+  float const col_incr = grid_columns * grid_cell_size / float(map_width);
+  float const row_incr = grid_rows * grid_cell_size / float(map_height);
+
+  std::string line{};
+  float row_z = -float(grid_rows) * grid_cell_size / 2 + row_incr / 2;
+  for (uint32_t row = 0; row < map_height; ++row) {
+    std::getline(file, line);
+    std::istringstream line_stream{line};
+    float row_x = -float(grid_columns) * grid_cell_size / 2 + col_incr / 2;
+    for (uint32_t col = 0; col < map_width; ++col) {
+      char ch = '\0';
+      line_stream.get(ch);
+      if (ch != ' ' && ch != '\n' && ch != '\0') {
+        static_object *o = new (objects.alloc()) static_object{};
+        o->is_static = true;
+        o->position.x = row_x;
+        o->position.z = row_z;
+        o->scale = {1.0f, 1.0f, 1.0f};
+        uint32_t const ix = uint32_t(ch - '0');
+        assert(ix < sizeof(glob_ix) / sizeof(uint32_t));
+        if (ix > 0 && ix < 4) {
+          o->angle = vec3{rnd1(radians(360.0f))};
+        }
+        o->glob_ix(glob_ix[ix]);
+        o->bounding_radius = o->glob().bounding_radius * o->scale.x;
+        o->mass = 1000 * o->bounding_radius;
+      }
+      row_x += col_incr;
+    }
+    row_z += row_incr;
   }
 }
 

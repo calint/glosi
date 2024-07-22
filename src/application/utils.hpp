@@ -4,6 +4,7 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-15
 
+// @return random from -range to +range
 inline static auto rnd1(float const range) -> float {
   int const r = rand();
   if (debug_multiplayer) {
