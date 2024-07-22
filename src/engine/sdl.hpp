@@ -11,10 +11,10 @@ namespace glos {
 class sdl final {
 public:
   inline auto init() -> void {
-    SDL_version compiled;
-    SDL_version linked;
-
+    SDL_version compiled{};
     SDL_VERSION(&compiled);
+
+    SDL_version linked{};
     SDL_GetVersion(&linked);
 
     printf("SDL version compiled %d.%d.%d\n", compiled.major, compiled.minor,

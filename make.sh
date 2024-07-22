@@ -30,10 +30,14 @@ if [[ "$1" == "profile" ]]; then
     PROFILE="-pg"
 fi
 LDFLAGS=""
-if [[ "$1" == "sanitize" ]]; then
+if [[ "$1" == "sanitize1" ]]; then
     LDFLAGS="-fsanitize=address,undefined -fsanitize-address-use-after-scope"
 fi
-if [[ "$1" == "sanitize-thread" ]]; then
+if [[ "$1" == "sanitize2" ]]; then
+    # note: run > MSAN_OPTIONS=halt_on_error=0 ./glosi
+    LDFLAGS="-fsanitize=memory,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-scope"
+fi
+if [[ "$1" == "sanitize3" ]]; then
     LDFLAGS="-fsanitize=thread"
 fi
 
