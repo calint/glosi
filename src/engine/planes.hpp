@@ -31,9 +31,9 @@ public:
                                     glm::vec3 const &agl,
                                     glm::vec3 const &scl) -> void {
 
-    bool const angle_scale_changed = Mmw_agl != agl || Mmw_scl != scl;
+    bool const angle_or_scale_changed = Mmw_agl != agl || Mmw_scl != scl;
 
-    if (invalidated || pos != Mmw_pos || angle_scale_changed) {
+    if (invalidated || angle_or_scale_changed || pos != Mmw_pos) {
       // world points and normals are not in sync with object Mmw
       world_points.clear();
       world_points.reserve(points.size());
@@ -42,17 +42,19 @@ public:
         world_points.emplace_back(world_point);
       }
 
-      if (invalidated || angle_scale_changed) {
+      if (invalidated || angle_or_scale_changed) {
         // the generalized solution is based on Polar Decomposition theorem
         //  https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
-        //   glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
-        //    but since it is known how Mmw is composed a less expensive
-        //     operations is done
+        //   but since it is known how Mmw is composed a less expensive
+        //    operations is done
 
-        bool const is_uniform_scale = scl.x == scl.y && scl.y == scl.z;
+        // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
+
+        bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
+        bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
 
         glm::mat3 const N =
-            is_uniform_scale
+            is_uniformly_scaled
                 ? glm::eulerAngleXYZ(agl.x, agl.y, agl.z)
                 : glm::scale(glm::eulerAngleXYZ(agl.x, agl.y, agl.z),
                              1.0f / scl);
@@ -60,8 +62,10 @@ public:
         world_planes.clear();
         world_planes.reserve(normals.size());
         for (glm::vec3 const &normal : normals) {
-          glm::vec3 const world_normal = N * normal;
-          // note: world_normal length may not be 1 due to scaling
+          // normal needs to be normalized when the model is scaled
+          glm::vec3 const world_normal =
+              is_scaled ? glm::normalize(N * normal) : N * normal;
+
           world_planes.emplace_back(glm::vec4{world_normal, 0});
           // note: D component (distance to plane from origin along the normal)
           //       in plane equation is set to 0 and will be updated when
