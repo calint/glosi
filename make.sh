@@ -30,12 +30,11 @@ if [[ "$1" == "profile" ]]; then
     PROFILE="-pg"
 fi
 LDFLAGS=""
-if [[ "$1" == "sanitize-thread" ]]; then
-#    LDFLAGS="-fsanitize=address -fsanitize-address-use-after-scope"
-    LDFLAGS="-fsanitize=thread"
+if [[ "$1" == "sanitize" ]]; then
+    LDFLAGS="-fsanitize=address,undefined -fsanitize-address-use-after-scope"
 fi
-if [[ "$1" == "sanitize-address" ]]; then
-    LDFLAGS="-fsanitize=address -fsanitize-address-use-after-scope"
+if [[ "$1" == "sanitize-thread" ]]; then
+    LDFLAGS="-fsanitize=thread"
 fi
 
 CMD="$CC -o $BIN $SRC $DEBUG $PROFILE $OPTIMIZATION $CFLAGS $LDFLAGS $WARNINGS $LIBS"
