@@ -47,6 +47,9 @@ public:
         //  glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
         //   but since it is known how Mmw is composed a less expensive
         //    operations is done
+        // note:
+        // Polar Decomposition theorem
+        // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
 
         bool const is_uniform_scale = scl.x == scl.y && scl.y == scl.z;
 
