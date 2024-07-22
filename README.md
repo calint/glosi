@@ -33,14 +33,12 @@ experimental 3d multiplayer game framework using simple data layer 2 and opengl 
 * see `make.sh` for details
 
 ## howto run
-* using script (recommended): `./make.sh && ./glos`
-* using cmake: `mkdir build && cd build && cmake .. && make && cd .. && build/glos`
+* using script (recommended): `./make.sh && ./glosi`
+* using cmake: `mkdir build && cd build && cmake .. && make && cd .. && build/glosi`
 
 ## sample game
 * multiplayer enabled proof of concept
   - `threaded_grid` must be `false` for deterministic behavior
-* shoot asteroids and pick up power ups for the gun
-* developed to test the framework
 * source in `src/application/` and `assets/`
 * howto keys
   - w: thrust
