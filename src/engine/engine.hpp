@@ -559,6 +559,7 @@ private:
       }
 
       case SDL_QUIT:
+        printf(" * exit\n");
         is_running = false;
         break;
 
