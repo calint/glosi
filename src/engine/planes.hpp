@@ -68,7 +68,7 @@ public:
 
           glm::vec3 const world_normal = N * normal;
           // note: distorts normals when scaled but in this case only the
-          // information if it is behind or in front of a plane is needed
+          //       information if it is behind or in front of a plane is needed
 
           world_planes.emplace_back(glm::vec4{world_normal, 0});
           // note: D component (distance to plane from origin along the normal)
