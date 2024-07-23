@@ -6,6 +6,7 @@
     point vs plane (1 contact point)
     edge vs plane (2 contact points)
     plane vs plane (>2 contact points)
+    edge vs edge not handled
 [ ] constant step time for the simulation
 [x] static object: position, angle, scale do not change
     => rotation and angle is ok if bounding radius does not change
