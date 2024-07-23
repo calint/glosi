@@ -1,7 +1,7 @@
 [x] static_object map
 [ ] cartoon physics:
-    at collision detection, when a point is in volume, select the neasres plane as collision plane
-    if multiple points within same distance => multiple contact points
+    at collision detection, when a point is in volume, select the nearest plane as collision plane
+    if multiple points have same distance => multiple contact points
     point vs plane (1 contact point)
     point vs edge (2 contact points)
     plane vs plane (>2 contact points)
