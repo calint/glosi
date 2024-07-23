@@ -305,7 +305,7 @@ private:
         glm::normalize(o2->position - o1->position);
 
     float const relative_velocity_along_collision_normal =
-        glm::dot(o2->velocity - o1->velocity, collision_normal);
+        glm::dot(o2->linear_velocity - o1->linear_velocity, collision_normal);
 
     if (relative_velocity_along_collision_normal >= 0 ||
         std::isnan(relative_velocity_along_collision_normal)) {
@@ -326,8 +326,8 @@ private:
                           relative_velocity_along_collision_normal /
                           (o1->mass + o2->mass);
 
-    o1->velocity += impulse * o2->mass * collision_normal;
-    o2->velocity -= impulse * o1->mass * collision_normal;
+    o1->linear_velocity += impulse * o2->mass * collision_normal;
+    o2->linear_velocity -= impulse * o1->mass * collision_normal;
 
     if (threaded_grid && o2_overlaps_cells) {
       o2->release_lock();

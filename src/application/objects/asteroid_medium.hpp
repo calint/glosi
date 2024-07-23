@@ -62,8 +62,9 @@ public:
       float const br = bounding_radius / 2;
       vec3 const rel_pos = {rnd1(br), 0, rnd1(br)};
       ast->position = position + rel_pos;
-      ast->velocity =
-          velocity + rnd2(asteroid_medium_split_speed) * normalize(rel_pos);
+      ast->linear_velocity =
+          linear_velocity +
+          rnd2(asteroid_medium_split_speed) * normalize(rel_pos);
       ast->angular_velocity = vec3{rnd1(asteroid_medium_split_agl_vel_rnd)};
     }
 

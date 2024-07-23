@@ -40,7 +40,7 @@ public:
       return true;
     }
 
-    velocity = {};
+    linear_velocity = {};
     angular_velocity = {};
 
     uint64_t const keys = net_state->keys;
@@ -49,16 +49,16 @@ public:
     float const v = 1;
     float const a = radians(10.0f);
     if (keys & key_w) {
-      velocity.z = -v;
+      linear_velocity.z = -v;
     }
     if (keys & key_s) {
-      velocity.z = v;
+      linear_velocity.z = v;
     }
     if (keys & key_a) {
-      velocity.x = -v;
+      linear_velocity.x = -v;
     }
     if (keys & key_d) {
-      velocity.x = v;
+      linear_velocity.x = v;
     }
     if (keys & key_q) {
       angular_velocity.y = a;

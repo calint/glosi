@@ -58,14 +58,14 @@ public:
 
   inline auto update() -> bool override {
     previous_position = position;
-    previous_velocity = velocity;
+    previous_velocity = linear_velocity;
     if (!object::update()) {
       return false;
     }
 
     float const dt = frame_context.dt;
 
-    velocity.z += 3.0f * dt;
+    linear_velocity.z += 3.0f * dt;
 
     game_area_roll(position);
 
@@ -81,7 +81,8 @@ public:
     // handle ship controls
     if (keys & key_w && fuel > 0) {
       fuel -= fuel_consumption_per_sec * dt;
-      velocity += ship_speed * vec3{-sin(angle.y), 0, -cos(angle.y)} * dt;
+      linear_velocity +=
+          ship_speed * vec3{-sin(angle.y), 0, -cos(angle.y)} * dt;
       glob_ix(glob_ix_ship_engine_on);
     }
     if (keys & key_a) {
@@ -125,13 +126,14 @@ public:
 
     if (o->glob_ix() == glob_ix_landing_pad) {
       float const agl = normalize_angle_rad(angle.y);
-      // printf("speed: %f  angle.y: %f\n", length(velocity), degrees(agl));
+      // printf("speed: %f  angle.y: %f\n", length(linear_velocity),
+      // degrees(agl));
       position = previous_position;
-      velocity.x /= 2;
-      velocity.y /= 2;
-      velocity.z = -velocity.z / 2;
+      linear_velocity.x /= 2;
+      linear_velocity.y /= 2;
+      linear_velocity.z = -linear_velocity.z / 2;
       angle.y = -agl / 2;
-      if (length(velocity) < 4.0f && agl < radians(25.0f) &&
+      if (length(linear_velocity) < 4.0f && agl < radians(25.0f) &&
           agl > radians(-25.0f)) {
 
         if (fuel < fuel_capacity) {
@@ -175,9 +177,9 @@ private:
       ship_bullet *blt = new (objects.alloc()) ship_bullet{};
       blt->position = position + forward_vec;
       blt->angle = angle;
-      blt->velocity = ship_bullet_speed * forward_vec;
-      blt->velocity.x += rnd1(bl.bullet_spread);
-      blt->velocity.z += rnd1(bl.bullet_spread);
+      blt->linear_velocity = ship_bullet_speed * forward_vec;
+      blt->linear_velocity.x += rnd1(bl.bullet_spread);
+      blt->linear_velocity.z += rnd1(bl.bullet_spread);
     }
     ready_to_fire_at_ms = frame_context.ms + bl.fire_interval_ms;
   }

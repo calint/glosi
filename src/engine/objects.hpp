@@ -36,7 +36,7 @@ private:
   uint32_t updated_at_tick = 0; // used by cell to avoid updating twice
 public:
   glm::vec3 acceleration{};     // in meters/second^2
-  glm::vec3 velocity{};         // in meters/second
+  glm::vec3 linear_velocity{};  // in meters/second
   glm::vec3 angular_velocity{}; // in radians/second
   glm::vec3 angle{};            // in radians
 private:
@@ -93,8 +93,8 @@ public:
   // note: only one thread at a time is active in this section
   inline virtual auto update() -> bool {
     float const dt = frame_context.dt;
-    velocity += acceleration * dt;
-    position += velocity * dt;
+    linear_velocity += acceleration * dt;
+    position += linear_velocity * dt;
     angle += angular_velocity * dt;
 
     if (is_debug_object_planes_normals) {

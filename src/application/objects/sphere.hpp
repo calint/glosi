@@ -41,23 +41,23 @@ public:
       return true;
     }
 
-    velocity = {};
+    linear_velocity = {};
 
     uint64_t const keys = net_state->keys;
 
     // handle ship controls
     float const v = 1;
     if (keys & key_w) {
-      velocity.z = -v;
+      linear_velocity.z = -v;
     }
     if (keys & key_s) {
-      velocity.z = v;
+      linear_velocity.z = v;
     }
     if (keys & key_a) {
-      velocity.x = -v;
+      linear_velocity.x = -v;
     }
     if (keys & key_d) {
-      velocity.x = v;
+      linear_velocity.x = v;
     }
     if (keys & key_i) {
       camera.position = {0, 50, 0};

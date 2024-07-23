@@ -236,7 +236,7 @@ static inline auto application_on_render_done() -> void {
   int const s = score;
   if (performance_test_type == 0) {
     sprintf(buf.data(), "%03d %02u %06d", int32_t(hero->fuel),
-            uint32_t(length(hero->velocity)), s);
+            uint32_t(length(hero->linear_velocity)), s);
   } else {
     sprintf(buf.data(), "%06d", s);
   }
@@ -252,7 +252,7 @@ static inline auto create_asteroids(uint32_t const num) -> void {
   for (uint32_t i = 0; i < num; ++i) {
     asteroid_large *o = new (objects.alloc()) asteroid_large{};
     o->position = {rnd1(d), 0, rnd1(d)};
-    o->velocity = {rnd1(v), 0, rnd1(v)};
+    o->linear_velocity = {rnd1(v), 0, rnd1(v)};
   }
 }
 
@@ -261,7 +261,7 @@ static inline auto create_ufo() -> void {
   u->position = {-grid_size / 2, 0, -grid_size / 2};
   u->angle = {radians(-65.0f), 0, 0};
   u->angular_velocity = {0, radians(90.0f), 0};
-  u->velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
+  u->linear_velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
 }
 
 static inline auto create_cubes(uint32_t const num) -> void {
@@ -272,7 +272,7 @@ static inline auto create_cubes(uint32_t const num) -> void {
   for (uint32_t i = 0; i < num; ++i) {
     cube *o = new (objects.alloc()) cube{};
     o->position = {rnd1(gx), 0, rnd1(gz)};
-    o->velocity = {rnd1(v), 0, rnd1(v)};
+    o->linear_velocity = {rnd1(v), 0, rnd1(v)};
     o->angular_velocity = {rnd1(a), rnd1(a), rnd1(a)};
   }
 }

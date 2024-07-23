@@ -49,7 +49,7 @@ public:
         ufo_bullet *ub = new (objects.alloc()) ufo_bullet{};
         ub->position = position;
         vec3 const dir = normalize(hero->position - position);
-        ub->velocity = ufo_bullet_velocity * dir;
+        ub->linear_velocity = ufo_bullet_velocity * dir;
       }
     }
 
@@ -67,8 +67,8 @@ public:
     for (uint32_t i = 0; i < ufo_power_ups_at_death; ++i) {
       power_up *pu = new (objects.alloc()) power_up{};
       pu->position = position;
-      pu->velocity = {rnd1(ufo_power_up_velocity), 0,
-                      rnd1(ufo_power_up_velocity)};
+      pu->linear_velocity = {rnd1(ufo_power_up_velocity), 0,
+                             rnd1(ufo_power_up_velocity)};
       pu->angular_velocity.y = radians(90.0f);
     }
 
