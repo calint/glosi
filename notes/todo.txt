@@ -1,13 +1,14 @@
 [x] static_object map
 [ ] cartoon physics:
-    at collision detection, when a point is in volume, select the plane with
-    least distance to point as collision plane
+    at collision detection, when a point is in volume, select the neasres plane as collision plane
     if multiple points within same distance => multiple contact points
     point vs plane (1 contact point)
     point vs edge (2 contact points)
     plane vs plane (>2 contact points)
 [ ] constant step time for the simulation
 [x] static object: position, angle, scale do not change
+    => rotation and angle is ok if bounding radius does not change
+    => can be removed and re-inserted in the grid
 [x] grid: static vs moving
 [x]   cell.add_static(object*);
 [x]   cell.remove_static(object*);
