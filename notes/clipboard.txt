@@ -16,16 +16,6 @@ ll /var/lib/apport/coredump/
 gdb glos /var/lib/apport/coredump/core._home_c_w_glos_glos.1000.a5eca36c-81b5-42ad-bcb0-6f602625ec20.3305893.268365950
 # type 'bt' for stacktrace
 
-# cache hits statistics
- :: echo -1 | sudo tee /proc/sys/kernel/perf_event_paranoid
--1
- :: cat /proc/sys/kernel/perf_event_paranoid
--1
-
-perf stat -B -e cache-references,cache-misses,branches,branch-misses,cycles,instructions,faults,migrations ./glos 
-perf record -B -e cache-references,cache-misses,branches,branch-misses,cycles,instructions,faults,migrations ./glos 
-
-valgrind --tool=cachegrind --cache-sim=yes ./glos
 kcachegrind 
 
 cat stacktrace | awk '{print $2}'|cut -c 2-9 | while read addr; do
