@@ -31,10 +31,9 @@ class cell final {
     bool is_collision = false;
   };
 
-  std::vector<entry> entries{};        // moving objects
-  std::vector<entry> entries_static{}; // static objects
-  std::vector<collision> check_collisions_list{};
-  std::vector<collision> check_collisions_list_static{};
+  std::vector<entry> moving_entries_vector{};
+  std::vector<entry> static_entries_vector{};
+  std::vector<collision> check_collisions_vector{};
 
   inline auto
   update_objects_in_vector(std::vector<entry> const &vec) const -> void {
@@ -99,8 +98,8 @@ class cell final {
 public:
   // called from grid
   inline auto update() const -> void {
-    update_objects_in_vector(entries);
-    update_objects_in_vector(entries_static);
+    update_objects_in_vector(moving_entries_vector);
+    update_objects_in_vector(static_entries_vector);
   }
 
   inline auto resolve_collisions() -> void {
@@ -111,36 +110,37 @@ public:
 
   // called from grid (from only one thread)
   inline auto render() const -> void {
-    render_objects_in_vector(entries);
-    render_objects_in_vector(entries_static);
+    render_objects_in_vector(moving_entries_vector);
+    render_objects_in_vector(static_entries_vector);
   }
 
   // called from grid (from only one thread)
-  inline auto clear() -> void { entries.clear(); }
+  inline auto clear() -> void { moving_entries_vector.clear(); }
 
   // called from grid (from only one thread)
   inline auto add(object *o) -> void {
-    entries.emplace_back(o->position, o->bounding_radius, o->collision_bits,
-                         o->collision_mask, o);
+    moving_entries_vector.emplace_back(o->position, o->bounding_radius,
+                                       o->collision_bits, o->collision_mask, o);
   }
 
   // called from grid (from only one thread)
   inline auto add_static(object *o) -> void {
-    entries_static.emplace_back(o->position, o->bounding_radius,
-                                o->collision_bits, o->collision_mask, o);
+    static_entries_vector.emplace_back(o->position, o->bounding_radius,
+                                       o->collision_bits, o->collision_mask, o);
   }
 
   inline auto remove_static(object *o) -> void {
-    auto it = std::find_if(entries_static.begin(), entries_static.end(),
-                           [o](entry const &ce) { return ce.object == o; });
-    assert(it != entries_static.end());
-    std::swap(*it, entries_static.back());
-    entries_static.pop_back();
+    auto it =
+        std::find_if(static_entries_vector.begin(), static_entries_vector.end(),
+                     [o](entry const &ce) { return ce.object == o; });
+    assert(it != static_entries_vector.end());
+    std::swap(*it, static_entries_vector.back());
+    static_entries_vector.pop_back();
   }
 
   inline auto print() const -> void {
     uint32_t i = 0;
-    for (entry const &ce : entries) {
+    for (entry const &ce : moving_entries_vector) {
       if (i++) {
         printf(", ");
       }
@@ -148,7 +148,7 @@ public:
     }
     printf("\n");
     printf("static: ");
-    for (entry const &ce : entries_static) {
+    for (entry const &ce : static_entries_vector) {
       if (i++) {
         printf(", ");
       }
@@ -158,49 +158,48 @@ public:
   }
 
   inline auto objects_count() const -> uint32_t {
-    return uint32_t(entries.size());
+    return uint32_t(moving_entries_vector.size());
   }
 
   inline auto static_objects_count() const -> uint32_t {
-    return uint32_t(entries_static.size());
+    return uint32_t(static_entries_vector.size());
   }
 
 private:
   // called from one thread
   inline auto make_check_collisions_list() -> void {
-    check_collisions_list.clear();
-    check_collisions_list_static.clear();
+    check_collisions_vector.clear();
 
     // check static objects vs moving objects
-    uint32_t const len = uint32_t(entries.size());
-    uint32_t const len_statics = uint32_t(entries_static.size());
+    uint32_t const len_moving = uint32_t(moving_entries_vector.size());
+    uint32_t const len_statics = uint32_t(static_entries_vector.size());
     for (uint32_t i = 0; i < len_statics; ++i) {
-      entry const &e1 = entries_static[i];
-      for (uint32_t j = 0; j < len; ++j) {
-        entry const &e2 = entries[j];
+      entry const &e1 = static_entries_vector[i];
+      for (uint32_t j = 0; j < len_moving; ++j) {
+        entry const &e2 = moving_entries_vector[j];
         bool const notify1 = e1.collision_mask & e2.collision_bits;
         bool const notify2 = e2.collision_mask & e1.collision_bits;
         if ((notify1 || notify2) && bounding_spheres_are_in_collision(e1, e2)) {
-          check_collisions_list.emplace_back(e1.object, e2.object, notify1,
-                                             notify2);
+          check_collisions_vector.emplace_back(e1.object, e2.object, notify1,
+                                               notify2);
         }
       }
     }
 
-    if (len < 2) {
+    if (len_moving < 2) {
       return;
     }
 
     // check moving objects vs moving objects
-    for (uint32_t i = 0; i < len - 1; ++i) {
-      entry const &e1 = entries[i];
-      for (uint32_t j = i + 1; j < len; ++j) {
-        entry const &e2 = entries[j];
+    for (uint32_t i = 0; i < len_moving - 1; ++i) {
+      entry const &e1 = moving_entries_vector[i];
+      for (uint32_t j = i + 1; j < len_moving; ++j) {
+        entry const &e2 = moving_entries_vector[j];
         bool const notify1 = e1.collision_mask & e2.collision_bits;
         bool const notify2 = e2.collision_mask & e1.collision_bits;
         if ((notify1 || notify2) && bounding_spheres_are_in_collision(e1, e2)) {
-          check_collisions_list.emplace_back(e1.object, e2.object, notify1,
-                                             notify2);
+          check_collisions_vector.emplace_back(e1.object, e2.object, notify1,
+                                               notify2);
         }
       }
     }
@@ -208,7 +207,7 @@ private:
 
   // called from one thread
   inline auto process_check_collisions_list() -> void {
-    for (collision &cc : check_collisions_list) {
+    for (collision &cc : check_collisions_vector) {
       // bounding spheres are in collision
       object *o1 = cc.o1;
       object *o2 = cc.o2;
@@ -253,7 +252,7 @@ private:
 
   // called from one thread
   inline auto handle_check_collisions_list() const -> void {
-    for (collision const &cc : check_collisions_list) {
+    for (collision const &cc : check_collisions_vector) {
       if (!cc.is_collision) {
         continue;
       }
