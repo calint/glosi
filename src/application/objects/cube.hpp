@@ -82,7 +82,7 @@ public:
              frame_context.ms, name.c_str(), o->name.c_str());
     }
 
-    score += 1;
+    ++score;
 
     return true;
   }

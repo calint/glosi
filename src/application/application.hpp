@@ -12,6 +12,7 @@ using namespace glm;
 static auto application_init_shaders() -> void;
 static auto create_asteroids(uint32_t num) -> void;
 static auto create_ufo() -> void;
+static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
 // game state
@@ -135,6 +136,28 @@ static inline auto application_init() -> void {
   // skydome->bounding_radius = skydome_scale;
   // skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
 
+  background_color = {0, 0, 0};
+
+  // setup light and camera
+  ambient_light = normalize(vec3{2, 10, 1});
+
+  camera.type = camera::type::ORTHOGONAL;
+  camera.position = {0, 50, 0};
+  camera.look_at = {0, 0, -0.000001f};
+  // note: -0.000001f because of the math of 'look at' does not handle x and z
+  //       being equal camera_follow_object = hero;
+  camera.ortho_min_x = -game_area_half_x;
+  camera.ortho_min_y = -game_area_half_z;
+  camera.ortho_max_x = game_area_half_x;
+  camera.ortho_max_y = game_area_half_z;
+
+  hud.load_font("assets/fonts/digital-7 (mono).ttf", 20);
+
+  if (performance_test_type == 1) {
+    create_cubes(objects_count);
+    return;
+  }
+
   load_map("assets/maps/level_1.map");
 
   if (net.enabled) {
@@ -173,23 +196,6 @@ static inline auto application_init() -> void {
     o->angular_velocity = {0, radians(5.0f), 0};
     o->bounding_radius = o->glob().bounding_radius * o->scale.x;
   }
-
-  background_color = {0, 0, 0};
-
-  // setup light and camera
-  ambient_light = normalize(vec3{2, 10, 1});
-
-  camera.type = camera::type::ORTHOGONAL;
-  camera.position = {0, 50, 0};
-  camera.look_at = {0, 0, -0.000001f};
-  // note: -0.000001f because of the math of 'look at' does not handle x and z
-  //       being equal camera_follow_object = hero;
-  camera.ortho_min_x = -game_area_half_x;
-  camera.ortho_min_y = -game_area_half_z;
-  camera.ortho_max_x = game_area_half_x;
-  camera.ortho_max_y = game_area_half_z;
-
-  hud.load_font("assets/fonts/digital-7 (mono).ttf", 20);
 }
 
 // engine interface
@@ -227,9 +233,13 @@ static inline auto application_on_update_done() -> void {
 // engine interface
 static inline auto application_on_render_done() -> void {
   std::array<char, 128> buf;
-  int s = score;
-  sprintf(buf.data(), "%03d %02u %06d", int32_t(hero->fuel),
-          uint32_t(length(hero->velocity)), s);
+  int const s = score;
+  if (performance_test_type == 0) {
+    sprintf(buf.data(), "%03d %02u %06d", int32_t(hero->fuel),
+            uint32_t(length(hero->velocity)), s);
+  } else {
+    sprintf(buf.data(), "%06d", s);
+  }
   hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 60, 10);
 }
 
@@ -252,6 +262,19 @@ static inline auto create_ufo() -> void {
   u->angle = {radians(-65.0f), 0, 0};
   u->angular_velocity = {0, radians(90.0f), 0};
   u->velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
+}
+
+static inline auto create_cubes(uint32_t const num) -> void {
+  float constexpr a = cube_angular_velocity;
+  float constexpr v = cube_speed;
+  float constexpr gx = game_area_max_x - game_area_min_x;
+  float constexpr gz = game_area_max_z - game_area_min_z;
+  for (uint32_t i = 0; i < num; ++i) {
+    cube *o = new (objects.alloc()) cube{};
+    o->position = {rnd1(gx), 0, rnd1(gz)};
+    o->velocity = {rnd1(v), 0, rnd1(v)};
+    o->angular_velocity = {rnd1(a), rnd1(a), rnd1(a)};
+  }
 }
 
 static inline auto load_static_object_list(std::filesystem::path path) -> void {

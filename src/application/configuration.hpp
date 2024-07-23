@@ -42,6 +42,7 @@ static uint32_t constexpr performance_test_type = 0;
 
 static bool constexpr is_performance_test = performance_test_type != 0;
 static float constexpr cube_speed = 10;
+static float constexpr cube_angular_velocity = glm::radians(90.0f);
 static float constexpr sphere_speed = 10;
 
 // grid dimensions
