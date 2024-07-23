@@ -1,10 +1,10 @@
 [x] static_object map
 [ ] cartoon physics:
     at collision detection, when a point is in volume, select the nearest plane as
-    collision plane and it's normal
+    collision plane and it's normal as collision normal
     if multiple points have same distance => multiple contact points
     point vs plane (1 contact point)
-    point vs edge (2 contact points)
+    edge vs plane (2 contact points)
     plane vs plane (>2 contact points)
 [ ] constant step time for the simulation
 [x] static object: position, angle, scale do not change
