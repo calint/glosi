@@ -8,6 +8,7 @@
      plane vs plane (>2 contact points)
     edge vs edge not handled
 [ ] constant step time for the simulation
+[ ] oriented bounding box (OBB) using 3 vectors
 [x] static object: position, angle, scale do not change
     => rotation and angle is ok if bounding radius does not change
     => can be removed and re-inserted in the grid
