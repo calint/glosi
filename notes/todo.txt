@@ -6,10 +6,12 @@
     point vs plane (1 contact point)
     point vs edge (2 contact points)
     plane vs plane (>2 contact points)
+[ ] constant step time for the simulation
 [x] static object: position, angle, scale do not change
 [x] grid: static vs moving
 [x]   cell.add_static(object*);
 [x]   cell.remove_static(object*);
+[ ] memory_order_relaxed on: score, object_id, asteroids_alive, ufos_alive
 [ ] gravitos: amiga game "gravity" inspired game
 [ ] font with transparency to be used in the hud
 [ ] component slices in the monolithic object
