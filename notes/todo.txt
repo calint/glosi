@@ -9,6 +9,7 @@
     edge vs edge not handled
 [ ] constant step time for the simulation
 [ ] oriented bounding box (OBB) using 3 vectors
+[ ] object data member align Mmw to cache line
 [x] static object: position, angle, scale do not change
     => rotation and angle is ok if bounding radius does not change
     => can be removed and re-inserted in the grid
