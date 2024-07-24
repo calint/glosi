@@ -184,7 +184,7 @@ private:
     ready_to_fire_at_ms = frame_context.ms + bl.fire_interval_ms;
   }
 
-  static inline auto constexpr normalize_angle_rad(float const angle) -> float {
+  static inline auto normalize_angle_rad(float const angle) -> float {
     return glm::mod(angle + glm::pi<float>(), glm::two_pi<float>()) -
            glm::pi<float>();
   }

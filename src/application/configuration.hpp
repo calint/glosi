@@ -36,13 +36,18 @@ static int constexpr random_seed = 2;
 // application configuration
 // ----------------------------------------------------------------------
 
+// helper function
+static inline auto constexpr deg_to_rad(float const deg) -> float {
+  return float(M_PI * deg / 180.0);
+}
+
 // game or performance test
 // 0: none (game)  1: cubes  2: spheres
 static uint32_t constexpr performance_test_type = 0;
 
 static bool constexpr is_performance_test = performance_test_type != 0;
 static float constexpr cube_speed = 10;
-static float constexpr cube_angular_velocity = glm::radians(90.0f);
+static float constexpr cube_angular_velocity = deg_to_rad(90.0f);
 static float constexpr sphere_speed = 10;
 
 // grid dimensions
@@ -86,25 +91,25 @@ static uint32_t constexpr cb_static_object = 1u << 6u;
 // settings
 static uint32_t constexpr asteroids_per_level = 2;
 
-static float constexpr asteroid_large_agl_vel_rnd = glm::radians(75.0f);
+static float constexpr asteroid_large_agl_vel_rnd = deg_to_rad(75.0f);
 static float constexpr asteroid_large_speed = 10;
 static float constexpr asteroid_large_scale = 2;
 static uint32_t constexpr asteroid_large_split = 4;
 static float constexpr asteroid_large_split_speed = 6;
-static float constexpr asteroid_large_split_agl_vel_rnd = glm::radians(120.0f);
+static float constexpr asteroid_large_split_agl_vel_rnd = deg_to_rad(120.0f);
 
 static float constexpr asteroid_medium_scale = 1.2f;
 static uint32_t constexpr asteroid_medium_split = 4;
 static float constexpr asteroid_medium_split_speed = 6;
-static float constexpr asteroid_medium_split_agl_vel_rnd = glm::radians(200.0f);
+static float constexpr asteroid_medium_split_agl_vel_rnd = deg_to_rad(200.0f);
 
 static float constexpr asteroid_small_scale = 0.75f;
 
-static float constexpr ship_turn_rate = glm::radians(120.0f);
+static float constexpr ship_turn_rate = deg_to_rad(120.0f);
 static float constexpr ship_speed = 10;
 static float constexpr ship_bullet_speed = 17;
 
-static float constexpr bullet_fragment_agl_vel_rnd = glm::radians(360.0f);
+static float constexpr bullet_fragment_agl_vel_rnd = deg_to_rad(360.0f);
 
 static int32_t constexpr power_up_chance_rem = 5;
 static uint32_t constexpr power_up_lifetime_ms = 30'000;

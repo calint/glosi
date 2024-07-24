@@ -173,7 +173,7 @@ public:
   inline auto all_list() const -> type * { return all_; }
 
   // @return the length of 'all' list
-  inline constexpr auto all_list_len() const -> size_t {
+  inline auto constexpr all_list_len() const -> size_t {
     return instance_count;
   }
 
@@ -188,7 +188,7 @@ public:
   }
 
   // @return the size of allocated heap memory in bytes
-  inline constexpr auto allocated_data_size_B() const -> size_t {
+  inline auto constexpr allocated_data_size_B() const -> size_t {
     return instance_size_B ? (instance_count * instance_size_B +
                               3 * instance_count * sizeof(type *))
                            : (instance_count * sizeof(type) +

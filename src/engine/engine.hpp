@@ -20,6 +20,8 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
+#define GLM_FORCE_AVX
+#define GLM_FORCE_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -126,10 +128,8 @@ static glm::vec3 ambient_light = glm::normalize(glm::vec3{0, 1, 1});
 // object the camera should follow
 static object *camera_follow_object = nullptr;
 
-static float constexpr rad_over_degree = 2.0f * glm::pi<float>() / 360.0f;
-
 // mouse settings
-static float mouse_rad_over_pixels = rad_over_degree * .02f;
+static float constexpr mouse_rad_over_pixels = float(M_PI * 0.02 / 180.0);
 static float mouse_sensitivity = 1.5f;
 
 // signal bit corresponding to keyboard key
