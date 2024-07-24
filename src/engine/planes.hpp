@@ -31,9 +31,9 @@ public:
                                     glm::vec3 const &agl,
                                     glm::vec3 const &scl) -> void {
 
-    bool const angle_or_scale_changed = Mmw_agl != agl || Mmw_scl != scl;
+    bool const inv_agl_scl = invalidated || Mmw_agl != agl || Mmw_scl != scl;
 
-    if (invalidated || angle_or_scale_changed || pos != Mmw_pos) {
+    if (inv_agl_scl || pos != Mmw_pos) {
       // world points and normals are not in sync with object Mmw
       world_points.clear();
       world_points.reserve(points.size());
@@ -42,7 +42,7 @@ public:
         world_points.emplace_back(world_point);
       }
 
-      if (invalidated || angle_or_scale_changed) {
+      if (inv_agl_scl) {
         // the generalized solution is based on Polar Decomposition theorem
         //  https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
         //   but since it is known how Mmw is composed a less expensive
