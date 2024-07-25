@@ -15,7 +15,7 @@ BIN="glosi"
 #CC="g++ -std=c++23 -Wno-changes-meaning"
 CC="clang++ -std=c++23" # -Xclang -fdump-record-layouts"
 SRC="src/main.cpp"
-CFLAGS="-mavx -Wfatal-errors $(sdl2-config --cflags)"
+CFLAGS="-mavx2 -Wfatal-errors $(sdl2-config --cflags)"
 LIBS="-ltbb -lGL -lSDL2_image -lSDL2_ttf $(sdl2-config --libs)"
 WARNINGS="-Wall -Wextra -Wpedantic \
     -Wshadow -Wconversion -Wsign-conversion \

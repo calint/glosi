@@ -20,8 +20,7 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
-#define GLM_FORCE_AVX
-#define GLM_FORCE_ALIGNED_GENTYPES
+#define GLM_FORCE_INTRINSICS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
