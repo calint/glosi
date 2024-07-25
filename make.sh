@@ -16,7 +16,7 @@ CC="g++ -std=c++23 -Wno-changes-meaning"
 #CC="clang++ -std=c++23" # -Xclang -fdump-record-layouts"
 SRC="src/main.cpp"
 CFLAGS="-flifetime-dse=1 -march=native -ffast-math -Wfatal-errors $(sdl2-config --cflags)"
-# -flifetime-dse=1 : workaround for bug (see notes/when-compiler-optimizes-stores-before-new-in-place.txt
+# -flifetime-dse=1 : workaround for issue: when compiler optimizes stores before new in place
 LIBS="-ltbb -lGL -lSDL2_image -lSDL2_ttf $(sdl2-config --libs)"
 WARNINGS="-Wall -Wextra -Wpedantic \
     -Wshadow -Wconversion -Wsign-conversion \
