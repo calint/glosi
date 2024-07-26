@@ -33,66 +33,70 @@ public:
 
     bool const inv_agl_scl = invalidated || Mmw_agl != agl || Mmw_scl != scl;
 
-    if (inv_agl_scl || pos != Mmw_pos) {
-      // world points and normals are not in sync with object Mmw
-      world_points.clear();
-      world_points.reserve(points.size());
-      for (glm::vec4 const &point : points) {
-        glm::vec4 const world_point = Mmw * point;
-        world_points.emplace_back(world_point);
-      }
+    if (!inv_agl_scl && pos == Mmw_pos) {
+      // cached points and normals are valid
+      return;
+    }
 
-      if (inv_agl_scl) {
-        // the generalized solution is based on Polar Decomposition theorem
-        //  https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
-        //   but since it is known how Mmw is composed a less expensive
-        //    operations is done
+    // world points and/or normals are not in sync with Mmw
+    world_points.clear();
+    world_points.reserve(points.size());
+    for (glm::vec4 const &point : points) {
+      glm::vec4 const world_point = Mmw * point;
+      world_points.emplace_back(world_point);
+    }
 
-        // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
+    if (inv_agl_scl) {
+      // normals are not in sync with Mmw
 
-        // bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
-        bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
+      // the generalized solution is based on Polar Decomposition theorem
+      //  https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
+      //   but since it is known how Mmw is composed a less expensive
+      //    operations is done
 
-        glm::mat3 const N =
-            is_uniformly_scaled
-                ? glm::eulerAngleXYZ(agl.x, agl.y, agl.z)
-                : glm::scale(glm::eulerAngleXYZ(agl.x, agl.y, agl.z),
-                             1.0f / scl);
+      // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
 
-        world_planes.clear();
-        world_planes.reserve(normals.size());
-        for (glm::vec3 const &normal : normals) {
-          // glm::vec3 const world_normal =
-          //     is_scaled ? glm::normalize(N * normal) : N * normal;
-          // note: normal needs to be normalized when the model is scaled
+      // bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
+      bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
 
-          glm::vec3 const world_normal = N * normal;
-          // note: distorts normals when scaled but in this case only the
-          //       information if it is behind or in front of a plane is needed
+      glm::mat3 const N =
+          is_uniformly_scaled
+              ? glm::eulerAngleXYZ(agl.x, agl.y, agl.z)
+              : glm::scale(glm::eulerAngleXYZ(agl.x, agl.y, agl.z), 1.0f / scl);
 
-          world_planes.emplace_back(glm::vec4{world_normal, 0});
-          // note: D component (distance to plane from origin along the normal)
-          //       in plane equation is set to 0 and will be updated when
-          //       'world_points' change
-        }
-        // save the state of the cache
-        Mmw_agl = agl;
-        Mmw_scl = scl;
-      }
+      world_planes.clear();
+      world_planes.reserve(normals.size());
+      for (glm::vec3 const &normal : normals) {
+        // glm::vec3 const world_normal =
+        //     is_scaled ? glm::normalize(N * normal) : N * normal;
+        // note: normal needs to be normalized when the model is scaled
 
-      // update planes D component
-      size_t const n = world_planes.size();
-      for (size_t i = 0; i < n; ++i) {
-        // point on plane
-        glm::vec3 const &point = world_points[i];
-        glm::vec4 &plane = world_planes[i];
-        // D in A*x+B*y+C*z+D=0 stored in w
-        plane.w = -glm::dot(glm::vec3{plane}, point);
+        glm::vec3 const world_normal = N * normal;
+        // note: distorts normals when scaled but in this case only the
+        //       information if it is behind or in front of a plane is needed
+
+        world_planes.emplace_back(glm::vec4{world_normal, 0});
+        // note: D component (distance to plane from origin along the normal)
+        //       in plane equation is set to 0 and will be updated when
+        //       'world_points' change
       }
       // save the state of the cache
-      Mmw_pos = pos;
-      invalidated = false;
+      Mmw_agl = agl;
+      Mmw_scl = scl;
     }
+
+    // update planes D component
+    size_t const n = world_planes.size();
+    for (size_t i = 0; i < n; ++i) {
+      // point on plane
+      glm::vec3 const &point = world_points[i];
+      glm::vec4 &plane = world_planes[i];
+      // D in A*x+B*y+C*z+D=0 stored in w
+      plane.w = -glm::dot(glm::vec3{plane}, point);
+    }
+    // save the state of the cache
+    Mmw_pos = pos;
+    invalidated = false;
   }
 
   inline auto debug_render_normals() -> void {
