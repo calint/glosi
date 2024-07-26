@@ -38,7 +38,7 @@ public:
       return;
     }
 
-    // world points and/or normals are not in sync with Mmw
+    // world points and possibly normals are not in sync with Mmw
     world_points.clear();
     world_points.reserve(points.size());
     for (glm::vec4 const &point : points) {
