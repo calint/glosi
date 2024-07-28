@@ -415,9 +415,9 @@ private:
   //  'update_pass_2()'
   inline auto update_pass_1() -> void {
     // remove all objects from grid
-    grid.clear();
+    grid.clear_non_static_entries();
 
-    // add all allocated objects to the grid
+    // add all allocated non static objects to the grid
     objects.for_each([](object *o) {
       if (!o->is_static) {
         grid.add(o);
@@ -472,6 +472,7 @@ private:
         grid.remove_static(o);
       }
     });
+
     objects.apply_allocated_instances([](object *o) {
       if (o->is_static) {
         grid.add_static(o);

@@ -67,10 +67,10 @@ public:
   }
 
   // called from engine
-  inline auto clear() -> void {
+  inline auto clear_non_static_entries() -> void {
     for (auto &row : cells) {
       for (cell &c : row) {
-        c.clear();
+        c.clear_non_static_entries();
       }
     }
   }

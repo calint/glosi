@@ -115,7 +115,9 @@ public:
   }
 
   // called from grid (from only one thread)
-  inline auto clear() -> void { moving_entries_vector.clear(); }
+  inline auto clear_non_static_entries() -> void {
+    moving_entries_vector.clear();
+  }
 
   // called from grid (from only one thread)
   inline auto add(object *o) -> void {
