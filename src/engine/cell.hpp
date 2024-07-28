@@ -103,9 +103,9 @@ public:
   }
 
   inline auto resolve_collisions() -> void {
-    make_check_collisions_list();
-    process_check_collisions_list();
-    handle_check_collisions_list();
+    make_check_collisions_vector();
+    process_check_collisions_vector();
+    handle_check_collisions_vector();
   }
 
   // called from grid (from only one thread)
@@ -167,7 +167,7 @@ public:
 
 private:
   // called from one thread
-  inline auto make_check_collisions_list() -> void {
+  inline auto make_check_collisions_vector() -> void {
     check_collisions_vector.clear();
 
     // check static objects vs moving objects
@@ -206,7 +206,7 @@ private:
   }
 
   // called from one thread
-  inline auto process_check_collisions_list() -> void {
+  inline auto process_check_collisions_vector() -> void {
     for (collision &cc : check_collisions_vector) {
       // bounding spheres are in collision
       object *o1 = cc.o1;
@@ -251,7 +251,7 @@ private:
   }
 
   // called from one thread
-  inline auto handle_check_collisions_list() const -> void {
+  inline auto handle_check_collisions_vector() const -> void {
     for (collision const &cc : check_collisions_vector) {
       if (!cc.is_collision) {
         continue;
