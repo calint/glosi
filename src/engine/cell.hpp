@@ -352,6 +352,8 @@ private:
       receiver->acquire_lock();
     }
 
+    // only one thread at a time can be here for 'receiver'
+
     // if both objects overlap cells then the same collision is detected and
     //  dispatched in multiple cells
     if (receiver_overlaps_cells && obj->overlaps_cells &&
@@ -362,8 +364,6 @@ private:
       }
       return true;
     }
-
-    // only one thread at a time can be here for 'receiver'
 
     if (!receiver->is_dead && !receiver->on_collision(obj)) {
       receiver->is_dead = true;
