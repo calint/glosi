@@ -126,7 +126,7 @@ public:
       }
     }
 
-    if (is_Mmw_valid()) {
+    if (position == Mmw_pos && angle == Mmw_agl && scale == Mmw_scl) {
       if (synchronize) {
         lock_Mmw.clear(std::memory_order_release);
       }
@@ -162,11 +162,6 @@ public:
   inline auto glob() const -> glob const & { return globs.at(glob_ix_); }
 
 private:
-  // called from 'object' in thread safe way
-  inline auto is_Mmw_valid() const -> bool {
-    return position == Mmw_pos && angle == Mmw_agl && scale == Mmw_scl;
-  }
-
   // called from 'cell' in thread safe way
   inline auto clear_handled_collisions() -> void { handled_collisions.clear(); }
 
