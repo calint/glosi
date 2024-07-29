@@ -414,6 +414,7 @@ private:
   // in 'threaded_update' runs before render and update is done parallel in
   //  'update_pass_2()'
   inline auto update_pass_1() -> void {
+
     grid.clear_non_static_entries();
 
     // add all allocated non static objects to the grid
