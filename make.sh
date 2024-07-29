@@ -21,7 +21,7 @@ LIBS="-ltbb -lGL -lSDL2_image -lSDL2_ttf $(sdl2-config --libs)"
 WARNINGS="-Wall -Wextra -Wpedantic \
     -Wshadow -Wconversion -Wsign-conversion \
     -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
-OPTIMIZATION="-O3 -march=native -ffast-math"
+OPTIMIZATION="-O3 -march=native"
 DEBUG="-g"
 if [[ "$1" == "release" ]]; then
     DEBUG=""

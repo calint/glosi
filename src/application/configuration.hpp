@@ -13,7 +13,7 @@
 // note: in some cases multithreaded mode is a degradation of performance
 // note: multiplayer mode cannot use 'threaded_grid' because of the
 //       non-deterministic behavior
-static bool constexpr threaded_grid = false;
+static bool constexpr threaded_grid = true;
 static bool constexpr threaded_update = false;
 
 // o1store debugging (assertions should be on in development)
@@ -43,7 +43,7 @@ static inline auto constexpr deg_to_rad(float const deg) -> float {
 
 // game or performance test
 // 0: none (game)  1: cubes  2: spheres
-static uint32_t constexpr performance_test_type = 0;
+static uint32_t constexpr performance_test_type = 1;
 
 static bool constexpr is_performance_test = performance_test_type != 0;
 static float constexpr cube_speed = 10;
