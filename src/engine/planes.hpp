@@ -4,6 +4,7 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-01-16
 // reviewed: 2024-07-08
+// reviewed: 2024-07-31
 
 namespace glos {
 
@@ -13,7 +14,7 @@ class planes final {
   //       without planes for use in collision detection
   std::vector<glm::vec4> world_points{}; // x, y, z, 1
   std::vector<glm::vec4> world_planes{}; // A*X + B*Y + C*Z + D = 0
-  // the components used in the cached points and planes
+  // the components used in the cached world points and planes
   glm::vec3 Mmw_pos{};
   glm::vec3 Mmw_agl{};
   glm::vec3 Mmw_scl{};
@@ -34,11 +35,13 @@ public:
     bool const inv_agl_scl = invalidated || Mmw_agl != agl || Mmw_scl != scl;
 
     if (!inv_agl_scl && pos == Mmw_pos) {
-      // cached points and normals are valid
+      // cached world points and normals are valid
       return;
     }
 
     // world points and possibly normals are not in sync with Mmw
+
+    // transform world points according to the new Mmw
     world_points.clear();
     world_points.reserve(points.size());
     for (glm::vec4 const &point : points) {
@@ -125,7 +128,7 @@ public:
     });
   }
 
-  // assumes update planes to world coordinate system
+  // assumes updated planes to world coordinate system
   inline auto is_point_in_volume(glm::vec4 const &point) const -> bool {
     return std::ranges::all_of(world_planes, [&point](glm::vec4 const &plane) {
       return glm::dot(plane, point) <= 0;
@@ -143,7 +146,7 @@ public:
     // return are_in_collision_with_sphere_sat(position, radius);
 
     glm::vec4 const point{position, 1.0f};
-    return std::ranges::all_of(world_planes, [point,
+    return std::ranges::all_of(world_planes, [&point,
                                               radius](glm::vec4 const &plane) {
       return glm::dot(point, plane) <= radius * glm::length(glm::vec3{plane});
       // note: division by length of plane normal is necessary because normal
