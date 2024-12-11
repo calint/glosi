@@ -23,6 +23,7 @@
 #define GLM_FORCE_INTRINSICS
 #define GLM_FORCE_INLINE
 #define GLM_FORCE_ALIGNED_GENTYPES
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
