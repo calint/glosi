@@ -2,16 +2,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "glosi build",
+            "label": "glosi: build",
             "type": "shell",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
+            "command": "${workspaceFolder}/make.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "${workspaceFolder}/make.sh",
             "problemMatcher": [
                 "$gcc"
             ]

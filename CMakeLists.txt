@@ -8,7 +8,7 @@
 # * libsdl2-ttf-dev/noble,now 2.22.0+dfsg-1
 # * opengl related packages
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.10)
 project(glosi)
 set(CMAKE_CXX_STANDARD 23)
 set(OpenGL_GL_PREFERENCE GLVND)
