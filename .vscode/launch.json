@@ -5,7 +5,7 @@
       "name": "glosi: debug",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/glosi",
+      "program": "${workspaceFolder}/build/glosi", // Adjust the path if necessary
       "args": [],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "glosi: build",

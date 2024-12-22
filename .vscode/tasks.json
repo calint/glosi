@@ -2,16 +2,31 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "glosi: create build directory",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "build"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "glosi: build",
             "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Debug"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "command": "${workspaceFolder}/make.sh",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
+            "dependsOn": "glosi: create build directory",
             "problemMatcher": [
                 "$gcc"
             ]

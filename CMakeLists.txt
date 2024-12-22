@@ -10,6 +10,8 @@
 
 cmake_minimum_required(VERSION 3.10)
 project(glosi)
+set(BUILD_DIR "${CMAKE_SOURCE_DIR}/build")
+file(MAKE_DIRECTORY ${BUILD_DIR})
 set(CMAKE_CXX_STANDARD 23)
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(SDL2 REQUIRED)
