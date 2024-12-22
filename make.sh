@@ -20,8 +20,8 @@ SRC="src/main.cpp"
 CFLAGS="-Wfatal-errors"
 LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 WARNINGS="-Wall -Wextra -Wpedantic \
-    -Wshadow -Wconversion -Wsign-conversion \
-    -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
+          -Wshadow -Wconversion -Wsign-conversion \
+          -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
 OPTIMIZATION="-O3 -march=native"
 DEBUG="-g"
 if [[ "$1" == "release" ]]; then
