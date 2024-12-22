@@ -16,8 +16,8 @@ BIN="glosi"
 # note: -flifetime-dse=1 : workaround for issue when compiler optimizes away stores before new in place
 CC="clang++ -std=c++23" # -Xclang -fdump-record-layouts"
 SRC="src/main.cpp"
-CFLAGS="-Wfatal-errors $(sdl2-config --cflags)"
-LIBS="-ltbb -lGL -lSDL2_image -lSDL2_ttf $(sdl2-config --libs)"
+CFLAGS="-Wfatal-errors"
+LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 WARNINGS="-Wall -Wextra -Wpedantic \
     -Wshadow -Wconversion -Wsign-conversion \
     -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
