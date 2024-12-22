@@ -2,17 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "glosi: create build directory",
-            "type": "shell",
-            "command": "mkdir",
-            "args": [
-                "-p",
-                "build"
-            ],
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
             "label": "glosi: build",
             "type": "shell",
             "command": "cmake",
@@ -26,7 +15,6 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": "glosi: create build directory",
             "problemMatcher": [
                 "$gcc"
             ]
