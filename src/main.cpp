@@ -33,6 +33,4 @@ auto main(int argc, char const *argv[]) -> int {
   glos::engine.init();
   glos::engine.run();
   glos::engine.free();
-
-  return EXIT_SUCCESS;
 }
