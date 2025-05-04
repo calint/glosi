@@ -6,3 +6,4 @@
 /cachegrind.out.*
 /sanitize.log*
 /qa/linaro-map/
+/.cache/
