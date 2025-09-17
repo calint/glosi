@@ -1,0 +1,28 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-c",
+      "-std=c++23",
+      "-g",
+      "-O3",
+      "-march=native",
+      "-Wfatal-errors",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wshadow",
+      "-Wconversion",
+      "-Wsign-conversion",
+      "-Wno-unused-variable",
+      "-Wno-unused-function",
+      "-Wno-unused-parameter",
+      "-o",
+      "glosi",
+      "src/main.cpp"
+    ],
+    "directory": "/home/c/w/glosi",
+    "file": "/home/c/w/glosi/src/main.cpp",
+    "output": "/home/c/w/glosi/glosi"
+  }
+]

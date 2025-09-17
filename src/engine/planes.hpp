@@ -6,6 +6,12 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-31
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <atomic>
+#include <glm/glm.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <vector>
+
 namespace glos {
 
 class planes final {
@@ -29,8 +35,8 @@ public:
   inline auto update_model_to_world(std::vector<glm::vec4> const &points,
                                     std::vector<glm::vec3> const &normals,
                                     glm::mat4 const &Mmw, glm::vec3 const &pos,
-                                    glm::vec3 const &agl,
-                                    glm::vec3 const &scl) -> void {
+                                    glm::vec3 const &agl, glm::vec3 const &scl)
+      -> void {
 
     bool const inv_agl_scl = invalidated || Mmw_agl != agl || Mmw_scl != scl;
 
@@ -246,8 +252,8 @@ public:
 
   // tests whether any point in 'pns1' is within the volume defined by 'pns2'
   //  and vice versa
-  inline static auto are_in_collision(planes const &pns1,
-                                      planes const &pns2) -> bool {
+  inline static auto are_in_collision(planes const &pns1, planes const &pns2)
+      -> bool {
     return pns1.is_any_point_in_volume(pns2) ||
            pns2.is_any_point_in_volume(pns1);
   }
