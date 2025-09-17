@@ -630,6 +630,9 @@ void main() {
                     SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE
                                                            : SDL_FALSE);
                     break;
+                case SDLK_F10:
+                    shaders.print_current_shader_info();
+                    break;
                 }
                 break;
             }

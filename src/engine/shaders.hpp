@@ -34,10 +34,10 @@ class shaders final {
 #version 330 core
 uniform mat4 umtx_mw;  // model-to-world-matrix
 uniform mat4 umtx_wvp; // world-to-view-to-projection
-layout(location = 0) in vec4 apos;
-layout(location = 1) in vec4 argba;
-layout(location = 2) in vec3 anorm;
-layout(location = 3) in vec2 atex;
+in vec4 apos;
+in vec4 argba;
+in vec3 anorm;
+in vec2 atex;
 out vec4 vrgba;
 out vec3 vnorm;
 out vec2 vtex;
@@ -111,7 +111,9 @@ void main() {
             vertex_shader_source, fragment_shader_source);
 
         use_program(default_program_ix);
+    }
 
+    inline auto print_current_shader_info() -> void {
         printf("shader uniforms locations:\n");
         printf(":-%10s-:-%7s-:\n", "----------", "-------");
         printf(": %10s : %-7d :\n", "umtx_mw", umtx_mw);
