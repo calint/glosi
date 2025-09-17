@@ -21,7 +21,6 @@ CFLAGS="-Wfatal-errors"
 LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 WARNINGS="-Wall -Wextra -Wpedantic \
           -Wshadow -Wconversion -Wsign-conversion \
-          -Wno-undefined-internal \
           -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
 OPTIMIZATION="-O3 -march=native"
 DEBUG="-g"
