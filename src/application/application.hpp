@@ -22,8 +22,8 @@ static auto create_ufo() -> void;
 static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
-// hello
-static auto application_print_hello() { printf("\nprogram glosi\n\n"); }
+// called from `main.cpp` at start
+static inline auto application_print_hello() { printf("\nprogram glosi\n\n"); }
 
 // engine interface
 static inline auto application_init() -> void {
