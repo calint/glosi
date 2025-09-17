@@ -18,7 +18,7 @@ auto main(int argc, char const *argv[]) -> int {
   }
 
   // instance is client
-  printf("\nprogram glosi\n\n");
+  application_print_hello();
 
   if (argc > 1 and *argv[1] == 'c') {
     // multiplayer client, enable 'net'
