@@ -168,15 +168,14 @@ void main() {
     inline auto use_program(uint32_t const ix) -> void {
         program const& prog = programs.at(ix);
         prog.use();
-        GLuint const prog_id = prog.id;
-        umtx_mw = glGetUniformLocation(prog_id, "umtx_mw");
-        umtx_wvp = glGetUniformLocation(prog_id, "umtx_wvp");
-        utex = glGetUniformLocation(prog_id, "utex");
-        ulht = glGetUniformLocation(prog_id, "ulht");
-        apos = glGetAttribLocation(prog_id, "apos");
-        argba = glGetAttribLocation(prog_id, "argba");
-        anorm = glGetAttribLocation(prog_id, "anorm");
-        atex = glGetAttribLocation(prog_id, "atex");
+        umtx_mw = glGetUniformLocation(prog.id, "umtx_mw");
+        umtx_wvp = glGetUniformLocation(prog.id, "umtx_wvp");
+        utex = glGetUniformLocation(prog.id, "utex");
+        ulht = glGetUniformLocation(prog.id, "ulht");
+        apos = glGetAttribLocation(prog.id, "apos");
+        argba = glGetAttribLocation(prog.id, "argba");
+        anorm = glGetAttribLocation(prog.id, "anorm");
+        atex = glGetAttribLocation(prog.id, "atex");
     }
 
   private:
