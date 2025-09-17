@@ -17,8 +17,7 @@
   - gives compiler opportunity to optimize
 * use of global variables
   - the application is a singleton with the namespace `glos` being the container of the components
-* include order relevant
-  - subsystems are included in dependency order making the program readable top-down
+* include order irrelevant
   - most `hpp` files also define a global instance or instances of the defined type 
 * rather than component-based and streaming data, a monolithic approach with shallow hierarchy is used, where object data is ordered in slices, as used by sub-systems with cache coherence in mind
 * `inline` functions
