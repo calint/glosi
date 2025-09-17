@@ -5,6 +5,10 @@
 // reviewed: 2024-01-08
 // reviewed: 2024-07-08
 
+#include <cstddef>
+#include <cstdint>
+#include <numbers>
+
 // ----------------------------------------------------------------------
 // engine configuration
 // ----------------------------------------------------------------------
@@ -38,7 +42,7 @@ static int constexpr random_seed = 2;
 
 // helper function
 static inline auto constexpr deg_to_rad(float const deg) -> float {
-  return float(M_PI * deg / 180.0);
+  return float(std::numbers::pi * deg / 180.0);
 }
 
 // game or performance test

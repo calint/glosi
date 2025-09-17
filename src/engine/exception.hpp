@@ -1,6 +1,11 @@
 #pragma once
 // reviewed: 2024-07-08
 
+#include <exception>
+#include <format>
+#include <source_location>
+#include <string>
+
 namespace glos {
 
 class exception final : public std::exception {

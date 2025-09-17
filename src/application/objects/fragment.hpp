@@ -4,7 +4,10 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-15
 
-class fragment final : public object {
+#include "../../engine/objects.hpp"
+#include "../state.hpp"
+
+class fragment final : public glos::object {
 public:
   uint64_t death_time_ms = 0;
 
@@ -13,8 +16,8 @@ public:
       uint32_t const oid = ++object_id;
       // note: 'object_id' increment and assignment to 'oid' is atomic
       name.append("fragment_").append(std::to_string(oid));
-      printf("%lu: %lu: create %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
     glob_ix(glob_ix_fragment);
     scale = {0.5f, 0.5f, 0.5f};
@@ -26,8 +29,8 @@ public:
 
   inline ~fragment() override {
     if (debug_multiplayer) {
-      printf("%lu: %lu: free %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
   }
 
@@ -36,7 +39,7 @@ public:
       return false;
     }
 
-    if (death_time_ms < frame_context.ms) {
+    if (death_time_ms < glos::frame_context.ms) {
       return false;
     }
 

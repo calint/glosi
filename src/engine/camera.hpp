@@ -5,6 +5,10 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
 namespace glos {
 
 class camera final {

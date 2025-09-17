@@ -6,6 +6,17 @@
 // reviewed: 2024-01-16
 // reviewed: 2024-07-08
 
+#include "materials.hpp"
+#include "shaders.hpp"
+#include <GLES3/gl3.h>
+#include <cstdint>
+#include <filesystem>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <string>
+#include <vector>
+
 namespace glos {
 
 class glob final {
@@ -312,8 +323,8 @@ public:
     }
   }
 
-  inline auto load(char const *obj_path,
-                   char const *bounding_planes_path) -> uint32_t {
+  inline auto load(char const *obj_path, char const *bounding_planes_path)
+      -> uint32_t {
 
     store.emplace_back(obj_path, bounding_planes_path);
     return uint32_t(store.size() - 1);

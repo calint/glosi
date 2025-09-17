@@ -5,6 +5,11 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#include <SDL2/SDL_timer.h>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+
 namespace glos {
 
 class metrics final {

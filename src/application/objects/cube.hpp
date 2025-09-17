@@ -4,15 +4,21 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-15
 
-class cube final : public object {
+#include "../../engine/camera.hpp"
+#include "../../engine/decouple.hpp"
+#include "../../engine/objects.hpp"
+#include "../state.hpp"
+#include "../utils.hpp"
+
+class cube final : public glos::object {
 public:
   inline cube() {
     if (debug_multiplayer) {
       uint32_t const oid = ++object_id;
       // note: 'object_id' increment and assignment to 'oid' is atomic
       name.append("cube_").append(std::to_string(oid));
-      printf("%lu: %lu: create %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
     glob_ix(glob_ix_cube);
     scale = {1.0f, 1.0f, 1.0f};
@@ -24,8 +30,8 @@ public:
 
   inline ~cube() override {
     if (debug_multiplayer) {
-      printf("%lu: %lu: free %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
   }
 
@@ -47,30 +53,30 @@ public:
 
     // handle controls
     float const v = 1;
-    float const a = radians(10.0f);
-    if (keys & key_w) {
+    float const a = glm::radians(10.0f);
+    if (keys & glos::key_w) {
       linear_velocity.z = -v;
     }
-    if (keys & key_s) {
+    if (keys & glos::key_s) {
       linear_velocity.z = v;
     }
-    if (keys & key_a) {
+    if (keys & glos::key_a) {
       linear_velocity.x = -v;
     }
-    if (keys & key_d) {
+    if (keys & glos::key_d) {
       linear_velocity.x = v;
     }
-    if (keys & key_q) {
+    if (keys & glos::key_q) {
       angular_velocity.y = a;
     }
-    if (keys & key_e) {
+    if (keys & glos::key_e) {
       angular_velocity.y = -a;
     }
-    if (keys & key_i) {
-      camera.position = {0, 50, 0};
+    if (keys & glos::key_i) {
+      glos::camera.position = {0, 50, 0};
     }
-    if (keys & key_k) {
-      camera.position = {0, 0, 50};
+    if (keys & glos::key_k) {
+      glos::camera.position = {0, 0, 50};
     }
 
     return true;
@@ -78,8 +84,8 @@ public:
 
   inline auto on_collision(object *o) -> bool override {
     if (debug_multiplayer) {
-      printf("%lu: %lu: %s collision with %s\n", frame_context.frame_num,
-             frame_context.ms, name.c_str(), o->name.c_str());
+      printf("%lu: %lu: %s collision with %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str(), o->name.c_str());
     }
 
     ++score;

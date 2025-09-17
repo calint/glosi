@@ -7,6 +7,9 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-19
 
+#include "decouple.hpp"
+#include "globs.hpp"
+#include "net.hpp"
 #include "o1store.hpp"
 #include "planes.hpp"
 

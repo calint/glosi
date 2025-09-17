@@ -6,6 +6,10 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#include "exception.hpp"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_version.h>
+
 namespace glos {
 
 class sdl final {

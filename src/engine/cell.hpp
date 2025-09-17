@@ -7,6 +7,10 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-19
 
+#include "decouple.hpp"
+#include "objects.hpp"
+#include <glm/glm.hpp>
+
 namespace glos {
 
 class cell final {
@@ -35,8 +39,8 @@ class cell final {
   std::vector<entry> static_entries_vector{};
   std::vector<collision> check_collisions_vector{};
 
-  inline auto
-  update_objects_in_vector(std::vector<entry> const &vec) const -> void {
+  inline auto update_objects_in_vector(std::vector<entry> const &vec) const
+      -> void {
     uint32_t const frame_num = uint32_t(frame_context.frame_num);
     // note: ok to truncate because only equality is checked
     for (entry const &ce : vec) {
@@ -78,8 +82,8 @@ class cell final {
     }
   }
 
-  inline auto
-  render_objects_in_vector(std::vector<entry> const &vec) const -> void {
+  inline auto render_objects_in_vector(std::vector<entry> const &vec) const
+      -> void {
     uint32_t const frame_num = uint32_t(frame_context.frame_num);
     // note: ok to truncate because only equality is checked
     for (entry const &ce : vec) {
@@ -377,9 +381,9 @@ private:
     return false;
   }
 
-  static inline auto
-  bounding_spheres_are_in_collision(entry const &ce1,
-                                    entry const &ce2) -> bool {
+  static inline auto bounding_spheres_are_in_collision(entry const &ce1,
+                                                       entry const &ce2)
+      -> bool {
 
     glm::vec3 const v = ce2.position - ce1.position;
     float const d = ce1.radius + ce2.radius;
@@ -389,8 +393,8 @@ private:
     return diff < 0;
   }
 
-  static inline auto bounding_planes_are_in_collision(object *o1,
-                                                      object *o2) -> bool {
+  static inline auto bounding_planes_are_in_collision(object *o1, object *o2)
+      -> bool {
 
     o1->update_planes_world_coordinates();
     o2->update_planes_world_coordinates();

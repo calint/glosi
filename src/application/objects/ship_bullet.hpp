@@ -4,17 +4,18 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-15
 
+#include "../utils.hpp"
 #include "fragment.hpp"
 
-class ship_bullet final : public object {
+class ship_bullet final : public glos::object {
 public:
   inline ship_bullet() {
     if (debug_multiplayer) {
       uint32_t const oid = ++object_id;
       // note: 'object_id' increment and assignment to 'oid' is atomic
       name.append("ship_bullet_").append(std::to_string(oid));
-      printf("%lu: %lu: create %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
     glob_ix(glob_ix_bullet);
     scale = {1.0f, 1.0f, 1.0f};
@@ -26,8 +27,8 @@ public:
 
   inline ~ship_bullet() override {
     if (debug_multiplayer) {
-      printf("%lu: %lu: free %s\n", frame_context.frame_num, frame_context.ms,
-             name.c_str());
+      printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str());
     }
   }
 
@@ -45,14 +46,14 @@ public:
 
   inline auto on_collision(object *o) -> bool override {
     if (debug_multiplayer) {
-      printf("%lu: %lu: %s collision with %s\n", frame_context.frame_num,
-             frame_context.ms, name.c_str(), o->name.c_str());
+      printf("%lu: %lu: %s collision with %s\n", glos::frame_context.frame_num,
+             glos::frame_context.ms, name.c_str(), o->name.c_str());
     }
 
-    fragment *frg = new (objects.alloc()) fragment{};
+    fragment *frg = new (glos::objects.alloc()) fragment{};
     frg->position = position;
-    frg->angular_velocity = vec3{rnd1(bullet_fragment_agl_vel_rnd)};
-    frg->death_time_ms = frame_context.ms + 500;
+    frg->angular_velocity = glm::vec3{rnd1(bullet_fragment_agl_vel_rnd)};
+    frg->death_time_ms = glos::frame_context.ms + 500;
 
     return false;
   }

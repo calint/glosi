@@ -5,6 +5,18 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#include "../application/configuration.hpp"
+#include "exception.hpp"
+#include "metrics.hpp"
+#include <SDL2/SDL_timer.h>
+#include <arpa/inet.h>
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 namespace glos {
 
 // client state
@@ -54,7 +66,7 @@ public:
       throw exception{"cannot set TCP_NODELAY"};
     }
 
-    struct sockaddr_in server {};
+    struct sockaddr_in server{};
     server.sin_addr.s_addr = inet_addr(host);
     server.sin_family = AF_INET;
     server.sin_port = htons(port);

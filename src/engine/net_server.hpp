@@ -6,6 +6,7 @@
 // reviewed: 2024-07-08
 
 #include "net.hpp"
+#include <SDL2/SDL.h>
 
 namespace glos {
 
@@ -32,7 +33,7 @@ public:
       }
     }
 
-    struct sockaddr_in server {};
+    struct sockaddr_in server{};
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port);

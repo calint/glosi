@@ -6,6 +6,13 @@
 //! colors do not get converted correctly. color 'red' works though.
 //
 
+#include "exception.hpp"
+#include "shaders.hpp"
+#include <GLES3/gl3.h>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_ttf.h>
+#include <cstdint>
+
 namespace glos {
 
 class hud final {

@@ -21,26 +21,27 @@ CFLAGS="-Wfatal-errors"
 LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 WARNINGS="-Wall -Wextra -Wpedantic \
           -Wshadow -Wconversion -Wsign-conversion \
+          -Wno-undefined-internal \
           -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
 OPTIMIZATION="-O3 -march=native"
 DEBUG="-g"
 if [[ "$1" == "release" ]]; then
-    DEBUG=""
+  DEBUG=""
 fi
 PROFILE=""
 if [[ "$1" == "profile" ]]; then
-    PROFILE="-pg"
+  PROFILE="-pg"
 fi
 LDFLAGS=""
 if [[ "$1" == "sanitize1" ]]; then
-    LDFLAGS="-fsanitize=address,undefined -fsanitize-address-use-after-scope"
+  LDFLAGS="-fsanitize=address,undefined -fsanitize-address-use-after-scope"
 fi
 if [[ "$1" == "sanitize2" ]]; then
-    # note: run > MSAN_OPTIONS=halt_on_error=0 ./glosi
-    LDFLAGS="-fsanitize=memory,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-scope"
+  # note: run > MSAN_OPTIONS=halt_on_error=0 ./glosi
+  LDFLAGS="-fsanitize=memory,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-scope"
 fi
 if [[ "$1" == "sanitize3" ]]; then
-    LDFLAGS="-fsanitize=thread"
+  LDFLAGS="-fsanitize=thread"
 fi
 
 CMD="$CC -o $BIN $SRC $DEBUG $PROFILE $OPTIMIZATION $CFLAGS $LDFLAGS $WARNINGS $LIBS"

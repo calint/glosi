@@ -8,6 +8,7 @@
 // reviewed: 2024-07-08
 
 #include "cell.hpp"
+#include <execution>
 
 namespace glos {
 

@@ -5,6 +5,12 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#include "exception.hpp"
+#include <GLES3/gl3.h>
+#include <cstdio>
+#include <glm/glm.hpp>
+#include <vector>
+
 namespace glos {
 
 struct vertex final {
@@ -168,8 +174,8 @@ public:
   }
 
 private:
-  static inline auto compile(GLenum const shader_type,
-                             char const *src) -> GLuint {
+  static inline auto compile(GLenum const shader_type, char const *src)
+      -> GLuint {
     GLuint const shader_id = glCreateShader(shader_type);
     glShaderSource(shader_id, 1, &src, nullptr);
     glCompileShader(shader_id);
@@ -188,14 +194,14 @@ public:
   //
   // static functions
   //
-  static inline auto gl_print_string(char const *name,
-                                     GLenum const gl_str) -> void {
+  static inline auto gl_print_string(char const *name, GLenum const gl_str)
+      -> void {
     char const *str = (char const *)glGetString(gl_str);
     printf("%s = %s\n", name, str);
   }
 
-  static inline auto
-  shader_name_for_type(GLenum const shader_type) -> char const * {
+  static inline auto shader_name_for_type(GLenum const shader_type)
+      -> char const * {
     switch (shader_type) {
     case GL_VERTEX_SHADER:
       return "vertex";

@@ -15,6 +15,15 @@
 //
 // reviewed: 2024-07-08
 
+#include "../application/configuration.hpp"
+#include "exception.hpp"
+#include <atomic>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+
 namespace glos {
 
 template <typename type, size_t instance_count, uint32_t store_id = 0,

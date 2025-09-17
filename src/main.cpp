@@ -3,9 +3,8 @@
 // reviewed: 2024-01-16
 // reviewed: 2024-07-15
 
-#include "engine/engine.hpp"
-// note: include order matters
 #include "application/application.hpp"
+#include "engine/net_server.hpp"
 
 auto main(int argc, char const *argv[]) -> int {
 

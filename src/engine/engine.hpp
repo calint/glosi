@@ -11,15 +11,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <algorithm>
 #include <arpa/inet.h>
-#include <atomic>
 #include <condition_variable>
-#include <exception>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <fstream>
 #define GLM_FORCE_INTRINSICS
 #define GLM_FORCE_INLINE
 #define GLM_FORCE_ALIGNED_GENTYPES
@@ -29,79 +22,22 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <iostream>
 #include <mutex>
 #include <netinet/tcp.h>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <sys/socket.h>
-#include <unordered_map>
-#include <vector>
 
-// include order of subsystems relevant
-#include "exception.hpp"
-//
-#include "../application/configuration.hpp"
-//
-#include "metrics.hpp"
-//
-#include "net.hpp"
-//
-#include "net_server.hpp"
-//
-#include "sdl.hpp"
-//
-#include "window.hpp"
-//
-#include "shaders.hpp"
-//
 #include "camera.hpp"
-//
-#include "hud.hpp"
-//
-#include "textures.hpp"
-//
-#include "materials.hpp"
-//
+#include "decouple.hpp"
 #include "globs.hpp"
-
-namespace glos {
-
-// forward declaration of debugging functions
-static inline auto debug_render_wcs_line(glm::vec3 const &from_wcs,
-                                         glm::vec3 const &to_wcs,
-                                         glm::vec4 const &color,
-                                         bool const depth_test) -> void;
-
-static inline auto debug_render_wcs_points(std::vector<glm::vec3> const &points,
-                                           glm::vec4 const &color) -> void;
-
-static inline auto debug_render_bounding_sphere(glm::mat4 const &Mmw) -> void;
-
-// information about the current frame
-class frame_context final {
-public:
-  uint64_t frame_num = 0; // frame number (will rollover)
-  uint64_t ms = 0; // current time since start in milliseconds (will rollover)
-  float dt = 0;    // frame delta time in seconds (time step)
-};
-
-// globally accessible current frame info
-static frame_context frame_context{};
-
-// a sphere used when debugging object bounding sphere (set at 'init()')
-static uint32_t glob_ix_bounding_sphere = 0;
-
-static bool is_debug_object_planes_normals = false;
-static bool is_debug_object_bounding_sphere = false;
-} // namespace glos
-
-//
-#include "objects.hpp"
-//
 #include "grid.hpp"
-//
+#include "hud.hpp"
+#include "materials.hpp"
+#include "metrics.hpp"
+#include "net.hpp"
+#include "objects.hpp"
+#include "sdl.hpp"
+#include "shaders.hpp"
+#include "textures.hpp"
+#include "window.hpp"
 
 //
 // application interface
@@ -134,19 +70,8 @@ static object *camera_follow_object = nullptr;
 static float constexpr mouse_rad_over_pixels = float(M_PI * 0.02 / 180.0);
 static float mouse_sensitivity = 1.5f;
 
-// signal bit corresponding to keyboard key
-static uint32_t constexpr key_w = 1u << 0u;
-static uint32_t constexpr key_a = 1u << 1u;
-static uint32_t constexpr key_s = 1u << 2u;
-static uint32_t constexpr key_d = 1u << 3u;
-static uint32_t constexpr key_q = 1u << 4u;
-static uint32_t constexpr key_e = 1u << 5u;
-static uint32_t constexpr key_i = 1u << 6u;
-static uint32_t constexpr key_j = 1u << 7u;
-static uint32_t constexpr key_k = 1u << 8u;
-static uint32_t constexpr key_l = 1u << 9u;
-static uint32_t constexpr key_u = 1u << 10u;
-static uint32_t constexpr key_o = 1u << 11u;
+// a sphere used when debugging object bounding sphere (set at 'init()')
+static uint32_t glob_ix_bounding_sphere = 0;
 
 class engine final {
 public:

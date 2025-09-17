@@ -5,6 +5,15 @@
 // reviewed: 2024-01-16
 // reviewed: 2024-07-08
 
+#include "exception.hpp"
+#include "metrics.hpp"
+#include <GLES3/gl3.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_surface.h>
+#include <cstddef>
+#include <string>
+#include <unordered_map>
+
 namespace glos {
 
 class texture final {

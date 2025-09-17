@@ -6,6 +6,12 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
+#include "../application/configuration.hpp"
+#include "exception.hpp"
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
+#include <utility>
+
 namespace glos {
 
 class window final {

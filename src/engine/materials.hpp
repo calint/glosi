@@ -6,6 +6,15 @@
 // reviewed: 2024-01-16
 // reviewed: 2024-07-08
 
+#include "exception.hpp"
+#include "textures.hpp"
+#include <GLES3/gl3.h>
+#include <fstream>
+#include <glm/glm.hpp>
+#include <sstream>
+#include <string>
+#include <vector>
+
 namespace glos {
 
 class material final {
@@ -108,9 +117,9 @@ public:
     }
   }
 
-  inline auto
-  find_material_ix_or_throw(std::string const &path,
-                            std::string const &name) const -> uint32_t {
+  inline auto find_material_ix_or_throw(std::string const &path,
+                                        std::string const &name) const
+      -> uint32_t {
 
     auto it = std::ranges::find_if(store, [&path, &name](material const &mtl) {
       return mtl.path == path && mtl.name == name;
