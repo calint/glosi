@@ -72,3 +72,7 @@ in order of dependency:
 * globs
 * objects
 * grid
+
+## notes
+* `decouple.hpp` solves circular references between application objects and engine
+
