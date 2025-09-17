@@ -16,9 +16,11 @@
 * use of `static` storage and function declarations
   - gives compiler opportunity to optimize
 * use of global variables
-  - the application is a singleton with the namespace `glos` being the container of the components
-* include order irrelevant
-  - most `hpp` files also define a global instance or instances of the defined type 
+  - the application and engine is a singleton
+  - engine code is in namespace `glos`
+* unity build with include order irrelevant
+  - the program is essentially one `cpp` file that is composed by including the application that includes the engine
+  - most engine `hpp` files also define a global instance or instances of the defined type 
 * rather than component-based and streaming data, a monolithic approach with shallow hierarchy is used, where object data is ordered in slices, as used by sub-systems with cache coherence in mind
 * `inline` functions
   - functions are requested to be inlined assuming compilers won't adhere to the hint when it does not make sense, such as big functions called from multiple locations
