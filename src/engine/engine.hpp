@@ -167,7 +167,7 @@ void main() {
 
         application_init();
 
-        // apply new objects create at 'application_init()'
+        // add static objects created at 'application_init()' to grid
         objects.apply_allocated_instances([](object* o) {
             if (o->is_static) {
                 grid.add_static(o);
@@ -373,14 +373,16 @@ void main() {
             grid.resolve_collisions();
         }
 
-        // apply deleted and new objects from 'update()' and
-        // 'resolve_collisions()'
+        // remove freed static objects from grid
+        // note: at 'update()' and 'resolve_collisions()' objects might be freed
+        // and created
         objects.apply_freed_instances([](object* o) {
             if (o->is_static) {
                 grid.remove_static(o);
             }
         });
 
+        // add newly allocated static objects to grid
         objects.apply_allocated_instances([](object* o) {
             if (o->is_static) {
                 grid.add_static(o);
@@ -391,12 +393,15 @@ void main() {
         application_on_update_done();
 
         // apply changes done by application
+
+        // removed freed static objects from grid
         objects.apply_freed_instances([](object* o) {
             if (o->is_static) {
                 grid.remove_static(o);
             }
         });
 
+        // add newly allocated static objects to grid
         objects.apply_allocated_instances([](object* o) {
             if (o->is_static) {
                 grid.add_static(o);

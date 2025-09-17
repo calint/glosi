@@ -65,6 +65,8 @@ static inline auto application_init() -> void {
     static_assert(sizeof(ufo_bullet) <= objects_instance_size_B);
 
     // load the objects and assign the glob indexes
+    // note: use default program that defines the default attributes and
+    // uniforms
 
     // stock objects
     glob_ix_cube =
