@@ -77,11 +77,21 @@ void main() {
     std::vector<program> programs{};
 
   public:
-    // vertex attributes layout in shaders
+    // vertex attributes layout in shader
+
+    // vertex coordinate
     GLint apos = 0;
+
+    // color
     GLint argba = 1;
+
+    // normal
     GLint anorm = 2;
+
+    // texture coordinate
     GLint atex = 3;
+
+    // uniform attributes layout in shader
 
     // model -> world matrix
     GLint umtx_mw = 0;
