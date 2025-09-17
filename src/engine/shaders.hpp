@@ -83,18 +83,16 @@ void main() {
     GLint anorm = 2;
     GLint atex = 3;
 
-    // uniform matrixes
-
     // model -> world matrix
     GLint umtx_mw = 0;
 
-    // world -> view -> projection matrix uniform textures
+    // world -> view -> projection matrix
     GLint umtx_wvp = 1;
 
-    // texture mapper uniform ambient light
+    // texture mapper uniform
     GLint utex = 2;
 
-    // light vector
+    // ambient light vector
     GLint ulht = 3;
 
     inline auto init() -> void {
