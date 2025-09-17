@@ -6,6 +6,7 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-10
 
+#include <SDL2/SDL_keycode.h>
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "camera.hpp"
@@ -539,6 +540,9 @@ private:
         case SDLK_o:
           net.next_state.keys |= key_o;
           break;
+        case SDLK_SPACE:
+          net.next_state.keys |= key_space;
+          break;
         }
         break;
 
@@ -581,8 +585,7 @@ private:
           net.next_state.keys &= ~key_o;
           break;
         case SDLK_SPACE:
-          is_mouse_mode = is_mouse_mode ? SDL_FALSE : SDL_TRUE;
-          SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE : SDL_FALSE);
+          net.next_state.keys &= ~key_space;
           break;
         case SDLK_F1:
           is_print_grid = !is_print_grid;
@@ -610,6 +613,10 @@ private:
           break;
         case SDLK_F8:
           is_render_grid = !is_render_grid;
+          break;
+        case SDLK_F9:
+          is_mouse_mode = is_mouse_mode ? SDL_FALSE : SDL_TRUE;
+          SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE : SDL_FALSE);
           break;
         }
         break;
