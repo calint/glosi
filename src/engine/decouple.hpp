@@ -1,4 +1,6 @@
 #pragma once
+// declarations here are used both by engine and client code that leads to
+// circular references if declared in `engine.hpp`
 
 #include <glm/glm.hpp>
 #include <vector>

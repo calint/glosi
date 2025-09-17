@@ -8,21 +8,6 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-// all includes used by the subsystems
-#include <GLES3/gl3.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <arpa/inet.h>
-#include <condition_variable>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/euler_angles.hpp>
-#include <glm/gtx/string_cast.hpp>
-#include <mutex>
-#include <netinet/tcp.h>
-
 #include "camera.hpp"
 #include "decouple.hpp"
 #include "globs.hpp"
@@ -36,6 +21,19 @@
 #include "shaders.hpp"
 #include "textures.hpp"
 #include "window.hpp"
+#include <GLES3/gl3.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <arpa/inet.h>
+#include <condition_variable>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <mutex>
+#include <netinet/tcp.h>
 
 //
 // application interface
