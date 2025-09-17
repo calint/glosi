@@ -10,7 +10,7 @@
 
 ## disclaimers
 * source in `hpp` files
-  - unified build viewing the program as one file
+  - unity build viewing the program as one file
   - gives compiler opportunity to optimize in a broader context
   - increases compile time and is not scalable; however, this framework is intended for smallish applications
 * use of `static` storage and function declarations
@@ -18,8 +18,6 @@
 * use of global variables
   - the application and engine is a singleton
   - engine code is in namespace `glos`
-* unity build with include order irrelevant
-  - the program is essentially one `cpp` file that is composed by including the application that includes the engine
   - most engine `hpp` files also define a global instance or instances of the defined type 
 * rather than component-based and streaming data, a monolithic approach with shallow hierarchy is used, where object data is ordered in slices, as used by sub-systems with cache coherence in mind
 * `inline` functions
