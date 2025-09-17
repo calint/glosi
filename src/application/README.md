@@ -1,10 +1,13 @@
 # table of contents
 * `configuration.hpp` contains constants used by engine and game
 * `application.hpp` contains game logic and implements the interface to engine
-  - `application_init()` called at init
+  - application_print_hello() called at initialization
+  - `application_init()` called at initialization
   - `application_on_update_done()` called after objects have been updated and collisions resolved. may create and change state of objects
-  - `application_on_render_done()` called when render frame is done. may not create or change state of objects
+  - `application_on_render_done()` called when render frame is done; may not create or change state of objects
   - `application_free()` called when application exits (can be empty assuming resources are reclaimed by operating system)
+* `state.hpp`
+  - contains the state of the application and solves circular references
 * `objects/` contains the game objects
   - `asteroid_large`
   - `asteroid_medium`

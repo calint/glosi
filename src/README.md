@@ -16,7 +16,7 @@
 * use of `static` storage and function declarations
   - gives compiler opportunity to optimize
 * use of global variables
-  - the application and engine is a singleton
+  - the engine is a singleton `glos::engine`
   - engine code is in namespace `glos`
   - most engine `hpp` files also define a global instance or instances of the defined type 
 * rather than component-based and streaming data, a monolithic approach with shallow hierarchy is used, where object data is ordered in slices, as used by sub-systems with cache coherence in mind
