@@ -225,34 +225,25 @@ class glob final {
                      vertices.data(), GL_STATIC_DRAW);
 
         // describe the data format
-        if (shaders.apos != -1) {
-            glEnableVertexAttribArray(GLuint(shaders.apos));
-            glVertexAttribPointer(GLuint(shaders.apos), 3, GL_FLOAT, GL_FALSE,
-                                  sizeof(vertex),
-                                  (GLvoid*)offsetof(vertex, position));
-            // note: 'vertex' defined in 'shaders.hpp'
-        }
+        glEnableVertexAttribArray(GLuint(shaders.apos));
+        glVertexAttribPointer(GLuint(shaders.apos), 3, GL_FLOAT, GL_FALSE,
+                              sizeof(vertex),
+                              (GLvoid*)offsetof(vertex, position));
+        // note: 'vertex' defined in 'shaders.hpp'
 
-        if (shaders.argba != -1) {
-            glEnableVertexAttribArray(GLuint(shaders.argba));
-            glVertexAttribPointer(GLuint(shaders.argba), 4, GL_FLOAT, GL_FALSE,
-                                  sizeof(vertex),
-                                  (GLvoid*)offsetof(vertex, color));
-        }
+        glEnableVertexAttribArray(GLuint(shaders.argba));
+        glVertexAttribPointer(GLuint(shaders.argba), 4, GL_FLOAT, GL_FALSE,
+                              sizeof(vertex), (GLvoid*)offsetof(vertex, color));
 
-        if (shaders.anorm != -1) {
-            glEnableVertexAttribArray(GLuint(shaders.anorm));
-            glVertexAttribPointer(GLuint(shaders.anorm), 3, GL_FLOAT, GL_FALSE,
-                                  sizeof(vertex),
-                                  (GLvoid*)offsetof(vertex, normal));
-        }
+        glEnableVertexAttribArray(GLuint(shaders.anorm));
+        glVertexAttribPointer(GLuint(shaders.anorm), 3, GL_FLOAT, GL_FALSE,
+                              sizeof(vertex),
+                              (GLvoid*)offsetof(vertex, normal));
 
-        if (shaders.atex != -1) {
-            glEnableVertexAttribArray(GLuint(shaders.atex));
-            glVertexAttribPointer(GLuint(shaders.atex), 2, GL_FLOAT, GL_FALSE,
-                                  sizeof(vertex),
-                                  (GLvoid*)offsetof(vertex, texture));
-        }
+        glEnableVertexAttribArray(GLuint(shaders.atex));
+        glVertexAttribPointer(GLuint(shaders.atex), 2, GL_FLOAT, GL_FALSE,
+                              sizeof(vertex),
+                              (GLvoid*)offsetof(vertex, texture));
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
