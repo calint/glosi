@@ -6,6 +6,8 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-10
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 // all includes used by the subsystems
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
@@ -13,10 +15,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <arpa/inet.h>
 #include <condition_variable>
-#define GLM_FORCE_INTRINSICS
-#define GLM_FORCE_INLINE
-#define GLM_FORCE_ALIGNED_GENTYPES
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
