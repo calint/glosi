@@ -42,12 +42,12 @@ static int constexpr random_seed = 2;
 
 // helper function
 static inline auto constexpr deg_to_rad(float const deg) -> float {
-  return float(std::numbers::pi * deg / 180.0);
+    return float(std::numbers::pi * deg / 180.0);
 }
 
 // game or performance test
 // 0: none (game)  1: cubes  2: spheres
-static uint32_t constexpr performance_test_type = 1;
+static uint32_t constexpr performance_test_type = 0;
 
 static bool constexpr is_performance_test = performance_test_type != 0;
 static float constexpr cube_speed = 10;

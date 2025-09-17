@@ -8,22 +8,22 @@
 namespace glos {
 
 // forward declaration of debugging functions
-static inline auto debug_render_wcs_line(glm::vec3 const &from_wcs,
-                                         glm::vec3 const &to_wcs,
-                                         glm::vec4 const &color,
+static inline auto debug_render_wcs_line(glm::vec3 const& from_wcs,
+                                         glm::vec3 const& to_wcs,
+                                         glm::vec4 const& color,
                                          bool const depth_test) -> void;
 
-static inline auto debug_render_wcs_points(std::vector<glm::vec3> const &points,
-                                           glm::vec4 const &color) -> void;
+static inline auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
+                                           glm::vec4 const& color) -> void;
 
-static inline auto debug_render_bounding_sphere(glm::mat4 const &Mmw) -> void;
+static inline auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void;
 
 // information about the current frame
 class frame_context final {
-public:
-  uint64_t frame_num = 0; // frame number (will rollover)
-  uint64_t ms = 0; // current time since start in milliseconds (will rollover)
-  float dt = 0;    // frame delta time in seconds (time step)
+  public:
+    uint64_t frame_num = 0; // frame number (will rollover)
+    uint64_t ms = 0; // current time since start in milliseconds (will rollover)
+    float dt = 0;    // frame delta time in seconds (time step)
 };
 
 // globally accessible current frame info

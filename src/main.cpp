@@ -6,30 +6,30 @@
 #include "application/application.hpp"
 #include "engine/net_server.hpp"
 
-auto main(int argc, char const *argv[]) -> int {
+auto main(int argc, char const* argv[]) -> int {
 
-  if (argc > 1 && *argv[1] == 's') {
-    // instance is server
-    glos::net_server.init();
-    glos::net_server.run();
-    glos::net_server.free();
+    if (argc > 1 && *argv[1] == 's') {
+        // instance is server
+        glos::net_server.init();
+        glos::net_server.run();
+        glos::net_server.free();
 
-    return EXIT_SUCCESS;
-  }
-
-  // instance is client
-  application_print_hello();
-
-  if (argc > 1 and *argv[1] == 'c') {
-    // multiplayer client, enable 'net'
-    glos::net.enabled = true;
-    if (argc > 2) {
-      // server ip
-      glos::net.host = argv[2];
+        return EXIT_SUCCESS;
     }
-  }
 
-  glos::engine.init();
-  glos::engine.run();
-  glos::engine.free();
+    // instance is client
+    application_print_hello();
+
+    if (argc > 1 and *argv[1] == 'c') {
+        // multiplayer client, enable 'net'
+        glos::net.enabled = true;
+        if (argc > 2) {
+            // server ip
+            glos::net.host = argv[2];
+        }
+    }
+
+    glos::engine.init();
+    glos::engine.run();
+    glos::engine.free();
 }

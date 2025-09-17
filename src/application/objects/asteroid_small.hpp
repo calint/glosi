@@ -9,62 +9,63 @@
 #include "power_up.hpp"
 
 class asteroid_small final : public glos::object {
-  static inline uint64_t power_up_soonest_next_spawn_ms = 0;
+    static inline uint64_t power_up_soonest_next_spawn_ms = 0;
 
-public:
-  inline asteroid_small() {
-    if (debug_multiplayer) {
-      uint32_t const oid = ++object_id;
-      // note: 'object_id' increment and assignment to 'oid' is atomic
-      name.append("asteroid_small_").append(std::to_string(oid));
-      printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str());
-    }
-    glob_ix(glob_ix_asteroid_small);
-    scale = glm::vec3{asteroid_small_scale};
-    bounding_radius = glob().bounding_radius * scale.x;
-    mass = 500;
-    collision_bits = cb_asteroid;
-    collision_mask = cb_hero_bullet | cb_hero;
-    ++asteroids_alive;
-  }
-
-  inline ~asteroid_small() override {
-    if (debug_multiplayer) {
-      printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str());
+  public:
+    inline asteroid_small() {
+        if (debug_multiplayer) {
+            uint32_t const oid = ++object_id;
+            // note: 'object_id' increment and assignment to 'oid' is atomic
+            name.append("asteroid_small_").append(std::to_string(oid));
+            printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
+                   glos::frame_context.ms, name.c_str());
+        }
+        glob_ix(glob_ix_asteroid_small);
+        scale = glm::vec3{asteroid_small_scale};
+        bounding_radius = glob().bounding_radius * scale.x;
+        mass = 500;
+        collision_bits = cb_asteroid;
+        collision_mask = cb_hero_bullet | cb_hero;
+        ++asteroids_alive;
     }
 
-    --asteroids_alive;
-  }
+    inline ~asteroid_small() override {
+        if (debug_multiplayer) {
+            printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
+                   glos::frame_context.ms, name.c_str());
+        }
 
-  inline auto update() -> bool override {
-    if (!object::update()) {
-      return false;
+        --asteroids_alive;
     }
 
-    game_area_roll(position);
+    inline auto update() -> bool override {
+        if (!object::update()) {
+            return false;
+        }
 
-    return true;
-  }
+        game_area_roll(position);
 
-  inline auto on_collision(object *o) -> bool override {
-    if (debug_multiplayer) {
-      printf("%lu: %lu: %s collision with %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str(), o->name.c_str());
+        return true;
     }
 
-    score += 40;
+    inline auto on_collision(object* o) -> bool override {
+        if (debug_multiplayer) {
+            printf("%lu: %lu: %s collision with %s\n",
+                   glos::frame_context.frame_num, glos::frame_context.ms,
+                   name.c_str(), o->name.c_str());
+        }
 
-    if (glos::frame_context.ms > power_up_soonest_next_spawn_ms &&
-        rnd3(power_up_chance_rem)) {
-      power_up_soonest_next_spawn_ms =
-          glos::frame_context.ms + power_up_min_span_interval_ms;
-      power_up *pu = new (glos::objects.alloc()) power_up{};
-      pu->position = position;
-      pu->angular_velocity.y = glm::radians(90.0f);
+        score += 40;
+
+        if (glos::frame_context.ms > power_up_soonest_next_spawn_ms &&
+            rnd3(power_up_chance_rem)) {
+            power_up_soonest_next_spawn_ms =
+                glos::frame_context.ms + power_up_min_span_interval_ms;
+            power_up* pu = new (glos::objects.alloc()) power_up{};
+            pu->position = position;
+            pu->angular_velocity.y = glm::radians(90.0f);
+        }
+
+        return false;
     }
-
-    return false;
-  }
 };

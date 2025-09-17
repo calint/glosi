@@ -13,7 +13,7 @@ static std::atomic_uint32_t object_id{0};
 // note: used when 'debug_multiplayer' is true to give objects unique numbers
 
 class ship;
-static ship *hero = nullptr;
+static ship* hero = nullptr;
 
 // glob indexes
 // note: set by 'application_init()' when loading models and used by objects

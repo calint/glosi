@@ -10,63 +10,66 @@
 #include "asteroid_medium.hpp"
 
 class asteroid_large final : public glos::object {
-public:
-  inline asteroid_large() {
-    if (debug_multiplayer) {
-      uint32_t const oid = ++object_id;
-      // note: 'object_id' increment and assignment to 'oid' is atomic
-      name.append("asteroid_large_").append(std::to_string(oid));
-      printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str());
-    }
-    glob_ix(glob_ix_asteroid_large);
-    scale = glm::vec3{asteroid_large_scale};
-    bounding_radius = glob().bounding_radius * scale.x;
-    mass = 1500;
-    collision_bits = cb_asteroid;
-    collision_mask = cb_hero_bullet | cb_hero;
-    angular_velocity.y = rnd1(asteroid_large_agl_vel_rnd);
-    ++asteroids_alive;
-  }
-
-  inline ~asteroid_large() override {
-    if (debug_multiplayer) {
-      printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str());
+  public:
+    inline asteroid_large() {
+        if (debug_multiplayer) {
+            uint32_t const oid = ++object_id;
+            // note: 'object_id' increment and assignment to 'oid' is atomic
+            name.append("asteroid_large_").append(std::to_string(oid));
+            printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
+                   glos::frame_context.ms, name.c_str());
+        }
+        glob_ix(glob_ix_asteroid_large);
+        scale = glm::vec3{asteroid_large_scale};
+        bounding_radius = glob().bounding_radius * scale.x;
+        mass = 1500;
+        collision_bits = cb_asteroid;
+        collision_mask = cb_hero_bullet | cb_hero;
+        angular_velocity.y = rnd1(asteroid_large_agl_vel_rnd);
+        ++asteroids_alive;
     }
 
-    --asteroids_alive;
-  }
+    inline ~asteroid_large() override {
+        if (debug_multiplayer) {
+            printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
+                   glos::frame_context.ms, name.c_str());
+        }
 
-  inline auto update() -> bool override {
-    if (!object::update()) {
-      return false;
+        --asteroids_alive;
     }
 
-    game_area_roll(position);
+    inline auto update() -> bool override {
+        if (!object::update()) {
+            return false;
+        }
 
-    return true;
-  }
+        game_area_roll(position);
 
-  inline auto on_collision(object *o) -> bool override {
-    if (debug_multiplayer) {
-      printf("%lu: %lu: %s collision with %s\n", glos::frame_context.frame_num,
-             glos::frame_context.ms, name.c_str(), o->name.c_str());
+        return true;
     }
 
-    score += 10;
+    inline auto on_collision(object* o) -> bool override {
+        if (debug_multiplayer) {
+            printf("%lu: %lu: %s collision with %s\n",
+                   glos::frame_context.frame_num, glos::frame_context.ms,
+                   name.c_str(), o->name.c_str());
+        }
 
-    for (uint32_t i = 0; i < asteroid_large_split; ++i) {
-      asteroid_medium *ast = new (glos::objects.alloc()) asteroid_medium{};
-      float const br = bounding_radius / 2;
-      glm::vec3 const rel_pos{rnd1(br), 0, rnd1(br)};
-      ast->position = position + rel_pos;
-      ast->linear_velocity =
-          linear_velocity +
-          rnd2(asteroid_large_split_speed) * normalize(rel_pos);
-      ast->angular_velocity = glm::vec3{rnd1(asteroid_large_split_agl_vel_rnd)};
+        score += 10;
+
+        for (uint32_t i = 0; i < asteroid_large_split; ++i) {
+            asteroid_medium* ast =
+                new (glos::objects.alloc()) asteroid_medium{};
+            float const br = bounding_radius / 2;
+            glm::vec3 const rel_pos{rnd1(br), 0, rnd1(br)};
+            ast->position = position + rel_pos;
+            ast->linear_velocity =
+                linear_velocity +
+                rnd2(asteroid_large_split_speed) * normalize(rel_pos);
+            ast->angular_velocity =
+                glm::vec3{rnd1(asteroid_large_split_agl_vel_rnd)};
+        }
+
+        return false;
     }
-
-    return false;
-  }
 };
