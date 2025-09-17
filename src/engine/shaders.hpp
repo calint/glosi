@@ -80,30 +80,30 @@ void main() {
     // vertex attributes layout in shader
 
     // vertex coordinate
-    GLint apos = 0;
+    GLint apos = -1;
 
     // color
-    GLint argba = 1;
+    GLint argba = -1;
 
     // normal
-    GLint anorm = 2;
+    GLint anorm = -1;
 
     // texture coordinate
-    GLint atex = 3;
+    GLint atex = -1;
 
     // uniform attributes layout in shader
 
     // model -> world matrix
-    GLint umtx_mw = 0;
+    GLint umtx_mw = -1;
 
     // world -> view -> projection matrix
-    GLint umtx_wvp = 1;
+    GLint umtx_wvp = -1;
 
     // texture mapper uniform
-    GLint utex = 2;
+    GLint utex = -1;
 
     // ambient light vector
-    GLint ulht = 3;
+    GLint ulht = -1;
 
     inline auto init() -> void {
         puts("");
