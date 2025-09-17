@@ -1,4 +1,4 @@
-[x] adjust source to be workable with in neovim
+[x] adjust source to be workable with neovim
 [x] static_object map
 [ ] cartoon physics:
     at collision detection, when a point is in volume, select the nearest plane as
