@@ -112,7 +112,7 @@ static inline auto application_init() -> void {
     glos::background_color = {0, 0, 0};
 
     // setup light and camera
-    glos::ambient_light = normalize(glm::vec3{1, 0, 0});
+    glos::ambient_light = normalize(glm::vec3{1, 1, 1});
 
     glos::camera.type = glos::camera::type::ORTHOGONAL;
     glos::camera.position = {0, 50, 0};

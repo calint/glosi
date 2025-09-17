@@ -54,13 +54,13 @@ class glob final {
     }
 
     inline auto render(glm::mat4 const& Mmw) const -> void {
-        glUniformMatrix4fv(shaders::umtx_mw, 1, GL_FALSE, glm::value_ptr(Mmw));
+        glUniformMatrix4fv(shaders.umtx_mw, 1, GL_FALSE, glm::value_ptr(Mmw));
         glBindVertexArray(vertex_array_id);
         for (range const& rng : ranges) {
             material const& mtl = materials.at(rng.material_ix);
             glActiveTexture(GL_TEXTURE0);
             if (mtl.texture_id) {
-                glUniform1i(shaders::utex, 0);
+                glUniform1i(shaders.utex, 0);
                 glBindTexture(GL_TEXTURE_2D, mtl.texture_id);
             } else {
                 glBindTexture(GL_TEXTURE_2D, 0);
@@ -225,25 +225,34 @@ class glob final {
                      vertices.data(), GL_STATIC_DRAW);
 
         // describe the data format
-        glEnableVertexAttribArray(shaders::apos);
-        glVertexAttribPointer(shaders::apos, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(vertex),
-                              (GLvoid*)offsetof(vertex, position));
-        // note: 'vertex' defined in 'shaders.hpp'
+        if (shaders.apos != -1) {
+            glEnableVertexAttribArray(GLuint(shaders.apos));
+            glVertexAttribPointer(GLuint(shaders.apos), 3, GL_FLOAT, GL_FALSE,
+                                  sizeof(vertex),
+                                  (GLvoid*)offsetof(vertex, position));
+            // note: 'vertex' defined in 'shaders.hpp'
+        }
 
-        glEnableVertexAttribArray(shaders::argba);
-        glVertexAttribPointer(shaders::argba, 4, GL_FLOAT, GL_FALSE,
-                              sizeof(vertex), (GLvoid*)offsetof(vertex, color));
+        if (shaders.argba != -1) {
+            glEnableVertexAttribArray(GLuint(shaders.argba));
+            glVertexAttribPointer(GLuint(shaders.argba), 4, GL_FLOAT, GL_FALSE,
+                                  sizeof(vertex),
+                                  (GLvoid*)offsetof(vertex, color));
+        }
 
-        glEnableVertexAttribArray(shaders::anorm);
-        glVertexAttribPointer(shaders::anorm, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(vertex),
-                              (GLvoid*)offsetof(vertex, normal));
+        if (shaders.anorm != -1) {
+            glEnableVertexAttribArray(GLuint(shaders.anorm));
+            glVertexAttribPointer(GLuint(shaders.anorm), 3, GL_FLOAT, GL_FALSE,
+                                  sizeof(vertex),
+                                  (GLvoid*)offsetof(vertex, normal));
+        }
 
-        glEnableVertexAttribArray(shaders::atex);
-        glVertexAttribPointer(shaders::atex, 2, GL_FLOAT, GL_FALSE,
-                              sizeof(vertex),
-                              (GLvoid*)offsetof(vertex, texture));
+        if (shaders.atex != -1) {
+            glEnableVertexAttribArray(GLuint(shaders.atex));
+            glVertexAttribPointer(GLuint(shaders.atex), 2, GL_FLOAT, GL_FALSE,
+                                  sizeof(vertex),
+                                  (GLvoid*)offsetof(vertex, texture));
+        }
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
