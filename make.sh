@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # dependencies in ubuntu 24.04 installation:
 # * clang++ 18.1.3
 # * libglm-dev/noble,noble,now 0.9.9.8+ds-7
