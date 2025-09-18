@@ -489,8 +489,7 @@ void main() {
                     printf(" * window resize to  %d x %d\n", w, h);
                     break;
                 }
-                default:
-                    // ignored
+                default: // ignored
                     break;
                 }
                 break;
