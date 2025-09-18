@@ -6,6 +6,7 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-10
 
+#include <numbers>
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "camera.hpp"
@@ -64,7 +65,8 @@ static glm::vec3 ambient_light = glm::normalize(glm::vec3{0, 1, 1});
 static object* camera_follow_object = nullptr;
 
 // mouse settings
-static float constexpr mouse_rad_over_pixels = float(M_PI * 0.02 / 180.0);
+static float constexpr mouse_rad_over_pixels =
+    float(std::numbers::pi * 0.02 / 180.0);
 static float mouse_sensitivity = 1.5f;
 
 // a sphere used when debugging object bounding sphere (set at 'init()')
