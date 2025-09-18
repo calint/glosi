@@ -1,3 +1,4 @@
+[ ] rename cell.objects_count()
 [x] adjust source to be workable with neovim
 [x] static_object map
 [ ] cartoon physics:
