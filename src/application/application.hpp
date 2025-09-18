@@ -105,11 +105,12 @@ static inline auto application_init() -> void {
                                            "assets/obj/landing_pad_bp.obj");
 
     // the dome
-    // object *skydome = new (objects.alloc()) object{};
-    // skydome->glob_ix(glob_ix_skydome);
-    // float const skydome_scale = length(vec2{grid_size / 2, grid_size / 2});
-    // skydome->bounding_radius = skydome_scale;
-    // skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
+    glos::object* skydome = new (glos::objects.alloc()) glos::object{};
+    skydome->is_static = true;
+    skydome->glob_ix(glob_ix_skydome);
+    float const skydome_scale = length(glm::vec2{grid_size / 2, grid_size / 2});
+    skydome->bounding_radius = skydome_scale;
+    skydome->scale = {skydome_scale, skydome_scale, skydome_scale};
 
     glos::background_color = {0, 0, 0};
 
