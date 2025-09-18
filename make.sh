@@ -20,20 +20,21 @@ if [[ "$COMPILER" == "gcc" ]]; then
   # note: -flifetime-dse=1 : workaround for issue when compiler optimizes away stores before new in place
   #       falsely assuming that all object fields are initialized by constructor resulting in crash
   WARNINGS="-Wall -Wextra -Wpedantic \
-  -Wshadow -Wconversion -Wsign-conversion \
-  -Wnull-dereference -Warray-bounds -Wdouble-promotion -Wnon-virtual-dtor \
-  -Wformat -Wctor-dtor-privacy -Woverloaded-virtual -Wcast-align \
-  -Wzero-as-null-pointer-constant -Wdeprecated -Wdefaulted-function-deleted \
-  -Wmismatched-new-delete -Wpessimizing-move -Wreturn-type -Wformat=2 \
-  -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
+            -Wshadow -Wconversion -Wsign-conversion \
+            -Wnull-dereference -Warray-bounds -Wdouble-promotion \
+            -Wnon-virtual-dtor -Wformat -Wctor-dtor-privacy \
+            -Woverloaded-virtual -Wcast-align -Wzero-as-null-pointer-constant \
+            -Wdeprecated -Wdefaulted-function-deleted -Wmismatched-new-delete \
+            -Wpessimizing-move -Wreturn-type -Wformat=2 \
+            -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
 
 elif [[ "$COMPILER" == "clang" ]]; then
   CC="clang++ -std=c++23"
   WARNINGS="-Weverything \
-          -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
-          -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
-          -Wno-old-style-cast -Wno-weak-vtables -Wno-unsafe-buffer-usage \
-          -Wno-unsafe-buffer-usage-in-libc-call"
+            -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
+            -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
+            -Wno-old-style-cast -Wno-weak-vtables -Wno-unsafe-buffer-usage \
+            -Wno-unsafe-buffer-usage-in-libc-call"
 fi
 
 SRC="src/main.cpp"
