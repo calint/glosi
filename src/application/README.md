@@ -2,7 +2,7 @@
 
 * `configuration.hpp` contains constants used by engine and game
 * `application.hpp` contains game logic and implements the interface to engine
-  * application_print_hello() called at initialization
+  * `application_print_hello()` called at initialization
   * `application_init()` called at initialization
   * `application_on_update_done()` called after objects have been updated and
   collisions resolved. may create and change state of objects
