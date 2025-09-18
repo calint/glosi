@@ -598,6 +598,11 @@ void main() {
                 case SDLK_SPACE:
                     net.next_state.keys &= ~key_space;
                     break;
+                case SDLK_ESCAPE:
+                    is_mouse_mode = is_mouse_mode ? SDL_FALSE : SDL_TRUE;
+                    SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE
+                                                           : SDL_FALSE);
+                    break;
                 case SDLK_F1:
                     is_print_grid = !is_print_grid;
                     break;
@@ -628,11 +633,6 @@ void main() {
                     is_render_grid = !is_render_grid;
                     break;
                 case SDLK_F9:
-                    is_mouse_mode = is_mouse_mode ? SDL_FALSE : SDL_TRUE;
-                    SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE
-                                                           : SDL_FALSE);
-                    break;
-                case SDLK_F10:
                     shaders.print_current_shader_info();
                     break;
                 }
