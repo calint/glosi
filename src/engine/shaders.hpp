@@ -125,22 +125,20 @@ void main() {
 
     inline auto print_current_shader_info() -> void {
         printf("shader uniforms locations:\n");
-        printf(":-%10s-:-%7s-:\n", "----------", "-------");
-        printf(": %10s : %-7d :\n", "umtx_mw", umtx_mw);
-        printf(": %10s : %-7d :\n", "umtx_wvp", umtx_wvp);
-        printf(": %10s : %-7d :\n", "utex", utex);
-        printf(": %10s : %-7d :\n", "ulht", ulht);
-        printf(":-%10s-:-%7s-:\n", "----------", "-------");
+        printf(":-%10s-:-%4s-:\n", "----------", "----");
+        printf(": %10s : %-4d :\n", "umtx_mw", umtx_mw);
+        printf(": %10s : %-4d :\n", "umtx_wvp", umtx_wvp);
+        printf(": %10s : %-4d :\n", "utex", utex);
+        printf(": %10s : %-4d :\n", "ulht", ulht);
+        printf(":-%10s-:-%4s-:\n", "----------", "----");
 
-        puts("");
         printf("shader attributes locations:\n");
-        printf(":-%10s-:-%7s-:\n", "----------", "-------");
-        printf(": %10s : %-7d :\n", "apos", apos);
-        printf(": %10s : %-7d :\n", "argba", argba);
-        printf(": %10s : %-7d :\n", "anorm", anorm);
-        printf(": %10s : %-7d :\n", "atex", atex);
-        printf(":-%10s-:-%7s-:\n", "----------", "-------");
-        puts("");
+        printf(":-%10s-:-%4s-:\n", "----------", "----");
+        printf(": %10s : %-4d :\n", "apos", apos);
+        printf(": %10s : %-4d :\n", "argba", argba);
+        printf(": %10s : %-4d :\n", "anorm", anorm);
+        printf(": %10s : %-4d :\n", "atex", atex);
+        printf(":-%10s-:-%4s-:\n", "----------", "----");
     }
 
     inline auto free() -> void {
