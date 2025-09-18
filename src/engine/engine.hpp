@@ -6,7 +6,6 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-10
 
-#include <SDL2/SDL_keycode.h>
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "camera.hpp"
@@ -25,6 +24,7 @@
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_ttf.h>
 #include <arpa/inet.h>
 #include <condition_variable>
