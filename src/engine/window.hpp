@@ -109,7 +109,6 @@ class window final {
         }
         printf("SDL_GL_CONTEXT_MINOR_VERSION = %d\n", value);
     }
-};
+} static window{};
 
-static window window{};
 } // namespace glos

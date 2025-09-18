@@ -273,4 +273,5 @@ class planes final {
                pns2.is_any_point_in_volume(pns1);
     }
 };
+
 } // namespace glos

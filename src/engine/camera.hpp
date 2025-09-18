@@ -76,7 +76,6 @@ class camera final {
             throw exception{"unknown case"};
         }
     }
-};
+} static camera{};
 
-static camera camera{};
 } // namespace glos

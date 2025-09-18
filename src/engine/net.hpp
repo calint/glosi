@@ -151,7 +151,6 @@ class net final {
             throw exception{"incomplete send"};
         }
     }
-};
+} static net{};
 
-static net net{};
 } // namespace glos

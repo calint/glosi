@@ -33,7 +33,6 @@ class sdl final {
     }
 
     inline auto free() -> void { SDL_Quit(); }
-};
+} static sdl{};
 
-static sdl sdl{};
 } // namespace glos

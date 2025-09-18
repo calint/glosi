@@ -271,7 +271,6 @@ class objects final {
         store_{};
     object** allocated_list_end_ = nullptr;
     uint32_t allocated_list_len_ = 0;
-};
+} static objects{};
 
-static objects objects{};
 } // namespace glos

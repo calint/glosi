@@ -216,4 +216,5 @@ class o1store final {
         lock.clear(std::memory_order_release);
     }
 };
+
 } // namespace glos

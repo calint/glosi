@@ -136,7 +136,6 @@ class materials final {
     }
 
     inline auto at(uint32_t ix) const -> material const& { return store[ix]; }
-};
+} static materials{};
 
-static materials materials{};
 } // namespace glos

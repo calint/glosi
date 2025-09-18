@@ -340,7 +340,6 @@ class globs final {
     inline auto at(uint32_t const ix) const -> glob const& {
         return store.at(ix);
     }
-};
+} static globs{};
 
-static globs globs{};
 } // namespace glos

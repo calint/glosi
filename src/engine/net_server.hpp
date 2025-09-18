@@ -149,7 +149,6 @@ class net_server final {
     std::array<net_state, net_players + 1> state{};
     // note: state[0] is used by server to broadcast to all clients
     //       delta time for frame (dt) and current server time in ms
-};
+} static net_server{};
 
-static net_server net_server{};
 } // namespace glos

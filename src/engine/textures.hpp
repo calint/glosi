@@ -75,7 +75,6 @@ class textures final {
 
   private:
     std::unordered_map<std::string, texture> store{};
-};
+} static textures{};
 
-static textures textures{};
 } // namespace glos

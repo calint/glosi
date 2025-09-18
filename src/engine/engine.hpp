@@ -645,9 +645,7 @@ void main() {
             }
         }
     }
-};
-
-static engine engine{};
+} static engine{};
 
 // debugging (highly inefficient) function for rendering world coordinate system
 //  lines

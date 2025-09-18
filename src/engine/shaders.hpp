@@ -227,7 +227,6 @@ void main() {
             return "unknown";
         }
     }
-};
+} static shaders{};
 
-static shaders shaders{};
 } // namespace glos

@@ -128,7 +128,6 @@ class metrics final {
 
         print(f);
     }
-};
+} static metrics{};
 
-static metrics metrics{};
 } // namespace glos

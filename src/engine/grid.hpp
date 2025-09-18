@@ -156,7 +156,6 @@ class grid final {
 
         return xil != xir || zit != zib;
     }
-};
+} static grid{};
 
-static grid grid{};
 } // namespace glos

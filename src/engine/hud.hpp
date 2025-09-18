@@ -186,7 +186,6 @@ void main() {
     rgba = texture(utex, vtex);
 }
 )";
-};
+} static hud{};
 
-static hud hud{};
 } // namespace glos
