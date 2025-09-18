@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#
 # dependencies in ubuntu 24.04 installation:
 # * clang++ 18.1.3
 # * libglm-dev/noble,noble,now 0.9.9.8+ds-7
@@ -19,7 +19,7 @@
 # * sdl2_ttf 2.24.0-2
 # * sdl2_image 2.8.8-1
 # * intel-oneapi-tbb 2021.12.0-2
-
+#
 set -e
 cd $(dirname "$0")
 
