@@ -85,7 +85,7 @@ class net_server final {
         }
     }
 
-    inline auto run() -> void {
+    [[noreturn]] inline auto run() -> void {
         printf(" * entering loop\n");
         uint64_t t0 = SDL_GetPerformanceCounter();
         while (true) {

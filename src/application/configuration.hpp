@@ -42,7 +42,7 @@ static int constexpr random_seed = 2;
 
 // helper function
 static inline auto constexpr deg_to_rad(float const deg) -> float {
-    return float(std::numbers::pi * deg / 180.0);
+    return std::numbers::pi_v<float> * deg / 180.0f;
 }
 
 // game or performance test

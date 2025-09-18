@@ -212,7 +212,7 @@ void main() {
     //
     static inline auto gl_print_string(char const* name, GLenum const gl_str)
         -> void {
-        char const* str = (char const*)glGetString(gl_str);
+        GLubyte const* str = glGetString(gl_str);
         printf("%s = %s\n", name, str);
     }
 

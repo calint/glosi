@@ -6,9 +6,6 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-10
 
-#include <numbers>
-#define GLM_ENABLE_EXPERIMENTAL
-
 #include "camera.hpp"
 #include "decouple.hpp"
 #include "globs.hpp"
@@ -36,6 +33,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <mutex>
 #include <netinet/tcp.h>
+#include <numbers>
 
 //
 // application interface
@@ -66,7 +64,7 @@ static object* camera_follow_object = nullptr;
 
 // mouse settings
 static float constexpr mouse_rad_over_pixels =
-    float(std::numbers::pi * 0.02 / 180.0);
+    std::numbers::pi_v<float> * 0.02f / 180.0f;
 static float mouse_sensitivity = 1.5f;
 
 // a sphere used when debugging object bounding sphere (set at 'init()')
@@ -479,7 +477,8 @@ void main() {
         SDL_Event event{};
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
-
+            default: // unknown
+                break;
             case SDL_WINDOWEVENT: {
                 switch (event.window.event) {
                 case SDL_WINDOWEVENT_SIZE_CHANGED: {
@@ -487,9 +486,12 @@ void main() {
                     camera.width = float(w);
                     camera.height = float(h);
                     glViewport(0, 0, w, h);
-                    printf(" * window resize to  %u x %u\n", w, h);
+                    printf(" * window resize to  %d x %d\n", w, h);
                     break;
                 }
+                default:
+                    // ignored
+                    break;
                 }
                 break;
             }
@@ -553,6 +555,8 @@ void main() {
                     break;
                 case SDLK_SPACE:
                     net.next_state.keys |= key_space;
+                    break;
+                default: // ignored
                     break;
                 }
                 break;
@@ -635,6 +639,8 @@ void main() {
                 case SDLK_F9:
                     shaders.print_current_shader_info();
                     break;
+                default: // ignored
+                    break;
                 }
                 break;
             }
@@ -663,7 +669,7 @@ static inline auto debug_render_wcs_line(glm::vec3 const& from_wcs,
     glBufferData(GL_ARRAY_BUFFER, sizeof(line_vertices), line_vertices,
                  GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     camera.update_matrix_wvp();
 
@@ -715,7 +721,7 @@ static inline auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
     glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(points.size() * sizeof(glm::vec3)),
                  points.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     camera.update_matrix_wvp();
 

@@ -56,7 +56,7 @@ class textures final {
             metrics.buffered_texture_data -= pair.second.size_B;
         }
         store.clear();
-    };
+    }
 
     inline auto find_id_or_load(std::string const& path) -> GLuint {
         auto it = store.find(path);

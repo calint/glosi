@@ -12,9 +12,6 @@ auto main(int argc, char const* argv[]) -> int {
         // instance is server
         glos::net_server.init();
         glos::net_server.run();
-        glos::net_server.free();
-
-        return EXIT_SUCCESS;
     }
 
     // instance is client

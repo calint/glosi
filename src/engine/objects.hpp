@@ -115,7 +115,9 @@ class object {
     // called from 'cell'
     // note: only on thread at a time is active in this section
     // @return false if object has died, true otherwise
-    inline virtual auto on_collision(object* obj) -> bool { return true; }
+    inline virtual auto on_collision([[maybe_unused]] object* obj) -> bool {
+        return true;
+    }
 
     inline auto updated_Mmw() -> glm::mat4 const& {
         // * synchronize if render and update run on different threads; both

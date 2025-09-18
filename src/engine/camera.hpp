@@ -6,6 +6,8 @@
 // reviewed: 2024-07-08
 
 #define GLM_ENABLE_EXPERIMENTAL
+
+#include "exception.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
@@ -70,6 +72,8 @@ class camera final {
             Mwvp = Mp * Mv;
             break;
         }
+        default:
+            throw exception{"unknown case"};
         }
     }
 };

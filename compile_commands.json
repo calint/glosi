@@ -8,16 +8,19 @@
       "-O3",
       "-march=native",
       "-Wfatal-errors",
-      "-Wall",
-      "-Wextra",
-      "-Wpedantic",
-      "-Wshadow",
-      "-Wconversion",
-      "-Wsign-conversion",
-      "-Wno-unused-variable",
-      "-Wno-unused-function",
-      "-Wno-unused-parameter",
-      "-Wno-undefined-internal",
+      "-Werror",
+      "-Weverything",
+      "-Wno-c++98-compat",
+      "-Wno-float-equal",
+      "-Wno-covered-switch-default",
+      "-Wno-padded",
+      "-Wno-exit-time-destructors",
+      "-Wno-global-constructors",
+      "-Wno-old-style-cast",
+      "-Wno-weak-vtables",
+      "-Wno-unsafe-buffer-usage",
+      "-Wno-unsafe-buffer-usage-in-libc-call",
+      "-Wno-undefined-internal", // added to avoid warning in neovim
       "-o",
       "glosi",
       "src/main.cpp"
@@ -25,5 +28,5 @@
     "directory": "/home/c/w/glosi",
     "file": "/home/c/w/glosi/src/main.cpp",
     "output": "/home/c/w/glosi/glosi"
-  }
+  },
 ]

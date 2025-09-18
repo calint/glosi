@@ -112,4 +112,4 @@ class window final {
 };
 
 static window window{};
-}; // namespace glos
+} // namespace glos

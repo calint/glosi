@@ -12,33 +12,50 @@ set -e
 cd $(dirname "$0")
 
 BIN="glosi"
-#CC="g++ -std=c++23 -Wno-changes-meaning -flifetime-dse=1"
-# note: -flifetime-dse=1 : workaround for issue when compiler optimizes away stores before new in place
-#                          falsely assuming that all object fields are initialized by constructor
-CC="clang++ -std=c++23" # -Xclang -fdump-record-layouts"
+
+# CC="g++ -std=c++23 -Wno-changes-meaning" # -flifetime-dse=1"
+# # note: -flifetime-dse=1 : workaround for issue when compiler optimizes away stores before new in place
+# #       falsely assuming that all object fields are initialized by constructor resulting in crash
+# WARNINGS="-Wall -Wextra -Wpedantic \
+#   -Wshadow -Wconversion -Wsign-conversion \
+#   -Wnull-dereference -Warray-bounds -Wdouble-promotion -Wnon-virtual-dtor \
+#   -Wformat -Wctor-dtor-privacy -Woverloaded-virtual -Wcast-align \
+#   -Wzero-as-null-pointer-constant -Wdeprecated -Wdefaulted-function-deleted \
+#   -Wmismatched-new-delete -Wpessimizing-move -Wreturn-type -Wformat=2 \
+#   -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
+
+CC="clang++ -std=c++23"
+WARNINGS="-Weverything \
+          -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
+          -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
+          -Wno-old-style-cast -Wno-weak-vtables -Wno-unsafe-buffer-usage \
+          -Wno-unsafe-buffer-usage-in-libc-call"
+
 SRC="src/main.cpp"
-CFLAGS="-Wfatal-errors"
-LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
-WARNINGS="-Wall -Wextra -Wpedantic \
-          -Wshadow -Wconversion -Wsign-conversion \
-          -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
+CFLAGS="-Wfatal-errors -Werror"
 OPTIMIZATION="-O3 -march=native"
+LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 DEBUG="-g"
+
 if [[ "$1" == "release" ]]; then
   DEBUG=""
 fi
+
 PROFILE=""
 if [[ "$1" == "profile" ]]; then
   PROFILE="-pg"
 fi
+
 LDFLAGS=""
 if [[ "$1" == "sanitize1" ]]; then
   LDFLAGS="-fsanitize=address,undefined -fsanitize-address-use-after-scope"
 fi
+
 if [[ "$1" == "sanitize2" ]]; then
   # note: run > MSAN_OPTIONS=halt_on_error=0 ./glosi
   LDFLAGS="-fsanitize=memory,undefined -fno-omit-frame-pointer -fsanitize-address-use-after-scope"
 fi
+
 if [[ "$1" == "sanitize3" ]]; then
   LDFLAGS="-fsanitize=thread"
 fi

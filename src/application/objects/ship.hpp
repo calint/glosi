@@ -187,8 +187,8 @@ class ship final : public glos::object {
         ready_to_fire_at_ms = glos::frame_context.ms + bl.fire_interval_ms;
     }
 
-    static inline auto normalize_angle_rad(float const angle) -> float {
-        return glm::mod(angle + glm::pi<float>(), glm::two_pi<float>()) -
+    static inline auto normalize_angle_rad(float const agl) -> float {
+        return glm::mod(agl + glm::pi<float>(), glm::two_pi<float>()) -
                glm::pi<float>();
     }
 };

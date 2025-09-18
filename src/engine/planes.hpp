@@ -6,9 +6,10 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-31
 
-#include <algorithm>
 #define GLM_ENABLE_EXPERIMENTAL
+
 #include "decouple.hpp"
+#include <algorithm>
 #include <atomic>
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>

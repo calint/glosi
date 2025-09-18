@@ -204,6 +204,8 @@ static inline auto application_on_update_done() -> void {
             state = state::asteroids;
         }
         break;
+    default:
+        throw glos::exception{"unknown case"};
     }
 }
 

@@ -208,7 +208,7 @@ class glob final {
                ranges.size(), ranges.size() == 1 ? ' ' : 's',
                vertices.size() * sizeof(float) / sizeof(vertex),
                triangles_count, vertices.size() * sizeof(float),
-               bounding_radius);
+               double(bounding_radius));
 
         ++metrics.allocated_globs;
 

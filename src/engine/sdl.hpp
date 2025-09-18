@@ -16,7 +16,7 @@ class sdl final {
   public:
     inline auto init() -> void {
         SDL_version compiled{};
-        SDL_VERSION(&compiled);
+        SDL_VERSION(&compiled)
 
         SDL_version linked{};
         SDL_GetVersion(&linked);

@@ -65,9 +65,10 @@ class metrics final {
         fprintf(f,
                 " %07lu  %7.4f  %05u  %7.4f  %7.4f  %7.4f  %06u  %06u  %06u  "
                 "%09u\n",
-                ms, dt * 1000, fps.average_during_last_interval, render_pass_ms,
-                update_pass_ms, net_ms, allocated_objects, rendered_objects,
-                rendered_globs, rendered_triangles);
+                ms, double(dt) * 1000, fps.average_during_last_interval,
+                double(render_pass_ms), double(update_pass_ms), double(net_ms),
+                allocated_objects, rendered_objects, rendered_globs,
+                rendered_triangles);
     }
 
     inline auto update_begin() -> void {
