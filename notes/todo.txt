@@ -1,6 +1,4 @@
 [ ] rename cell.objects_count()
-[x] adjust source to be workable with neovim
-[x] static_object map
 [ ] cartoon physics:
     at collision detection, when a point is in volume, select the nearest plane as
      collision plane and its normal as collision normal
@@ -15,12 +13,6 @@
 [ ] object data member align Mmw to cache line
 [ ] timer and events instead of checking time at every update
 [ ] camera follow object: lock x, y or z
-[x] static object: position, angle, scale do not change
-    => rotation and angle is ok if bounding radius does not change
-    => can be removed and re-inserted in the grid
-[x] grid: static vs moving
-[x]   cell.add_static(object*);
-[x]   cell.remove_static(object*);
 [ ] memory_order_relaxed on: score, object_id, asteroids_alive, ufos_alive
 [ ] gravitos: amiga game "gravity" inspired game
 [ ] font with transparency to be used in the hud
@@ -38,7 +30,6 @@
 [ ]   glosi: "atoms" bonded by "springs" instead of rigid body physics
 [ ]   render cull cells
 [ ]   render cull objects
-[x]   fix multithreading issues
 [ ]     in multiplayer threaded grid
         if objects max bounding radius is less than half a grid cell size then threading
         can be done in deterministic way
@@ -107,6 +98,15 @@
 [ ] shader: mtx_wvp * mtx_mw   is it better with mtx_mwvp?
 [ ] consider: https://github.com/alugowski/task-thread-pool for simple multithreading
 ------------------------------------------------------------------------------------------
+[x] adjust source to be workable with neovim
+[x] static_object map
+[x] static object: position, angle, scale do not change
+    => rotation and angle is ok if bounding radius does not change
+    => can be removed and re-inserted in the grid
+[x] grid: static vs moving
+[x]   cell.add_static(object*);
+[x]   cell.remove_static(object*);
+[x]   fix multithreading issues
 [x] o1store: cache line aligned allocation when custom instance size
 [x] o1store: check alignment of '*all' calloc to match object size
     => use std::aligned_alloc and std::free
