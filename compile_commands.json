@@ -20,9 +20,7 @@
       "-Wno-weak-vtables",
       "-Wno-unsafe-buffer-usage",
       "-Wno-unsafe-buffer-usage-in-libc-call",
-      "-Wno-undefined-internal", // added to avoid warning in neovim
-      "-o",
-      "glosi",
+      "-Wno-undefined-internal",
       "src/main.cpp"
     ],
     "directory": "/home/c/w/glosi",
