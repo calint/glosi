@@ -22,7 +22,7 @@ class cube final : public glos::object {
         }
         glob_ix(glob_ix_cube);
         scale = {1.0f, 1.0f, 1.0f};
-        bounding_radius = glob().bounding_radius;
+        bounding_radius = glob().bounding_radius * scale.x;
         mass = 10;
         collision_bits = cb_power_up;
         collision_mask = cb_power_up;
@@ -89,7 +89,7 @@ class cube final : public glos::object {
                    name.c_str(), o->name.c_str());
         }
 
-        ++score;
+        score += 1;
 
         return true;
     }
