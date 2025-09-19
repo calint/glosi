@@ -1,10 +1,9 @@
 [
   {
     "arguments": [
-      "/usr/bin/clang++",
+      "clang++",
       "-c",
       "-std=c++23",
-      "-g",
       "-O3",
       "-march=native",
       "-Wfatal-errors",
@@ -21,10 +20,8 @@
       "-Wno-unsafe-buffer-usage",
       "-Wno-unsafe-buffer-usage-in-libc-call",
       "-Wno-undefined-internal",
-      "src/main.cpp"
     ],
     "directory": "/home/c/w/glosi",
-    "file": "/home/c/w/glosi/src/main.cpp",
-    "output": "/home/c/w/glosi/glosi"
+    "file": "src/main.cpp",
   },
 ]
