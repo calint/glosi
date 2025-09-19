@@ -51,7 +51,7 @@ fi
 
 SRC="src/main.cpp"
 CFLAGS="-Wfatal-errors -Werror"
-OPTIMIZATION="-O3 -march=native"
+OPTIMIZATION="-O3"
 LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
 DEBUG="-g"
 
