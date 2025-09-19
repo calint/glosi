@@ -33,9 +33,8 @@ class object {
     bool overlaps_cells = false; // used by grid to flag cell overlap
   public:
     bool is_static = false; // immovable object
-
-    // -- cell::update
   private:
+    // -- cell::update
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
     uint32_t updated_at_tick = 0; // used by cell to avoid updating twice
   public:
