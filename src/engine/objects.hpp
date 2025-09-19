@@ -19,11 +19,10 @@ class object {
     friend class grid;
     friend class cell;
 
-  public:
     // members in order they are accessed by 'grid::add', 'cell::add',
     //  'cell::update', 'cell:resolve_collisions', 'cell::render' with cache
     //   coherence in mind
-
+  public:
     // -- grid::add, cell::add
     glm::vec3 position{};        // in meters
     float bounding_radius = 0;   // in meters
