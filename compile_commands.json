@@ -2,11 +2,7 @@
   {
     "arguments": [
       "clang++",
-      "-c",
       "-std=c++23",
-      "-O3",
-      "-Wfatal-errors",
-      "-Werror",
       "-Weverything",
       "-Wno-c++98-compat",
       "-Wno-float-equal",
