@@ -502,12 +502,12 @@ void main() {
 
             case SDL_MOUSEMOTION: {
                 if (event.motion.xrel != 0) {
-                    net.next_state.look_angle_y += (float)event.motion.xrel *
+                    net.next_state.look_angle_y += float(event.motion.xrel) *
                                                    mouse_rad_over_pixels *
                                                    mouse_sensitivity;
                 }
                 if (event.motion.yrel != 0) {
-                    net.next_state.look_angle_x += (float)event.motion.yrel *
+                    net.next_state.look_angle_x += float(event.motion.yrel) *
                                                    mouse_rad_over_pixels *
                                                    mouse_sensitivity;
                 }
