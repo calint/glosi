@@ -24,10 +24,7 @@ class frame_context final {
     uint64_t frame_num = 0; // frame number (will rollover)
     uint64_t ms = 0; // current time since start in milliseconds (will rollover)
     float dt = 0;    // frame delta time in seconds (time step)
-};
-
-// globally accessible current frame info
-static frame_context frame_context{};
+} static frame_context{};
 
 // set and unset by engine
 static bool is_debug_object_planes_normals = false;
