@@ -68,7 +68,7 @@ static inline auto application_init() -> void {
 
     // load the objects and assign the glob indexes
     // note: use default program that defines the default attributes and
-    // uniforms
+    //       uniforms
 
     // stock objects
     glob_ix_cube =
