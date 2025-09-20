@@ -64,9 +64,9 @@ class planes final {
             // normals are not in sync with Mmw
 
             // the generalized solution is based on Polar Decomposition theorem
-            //  https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
-            //   but since it is known how Mmw is composed a less expensive
-            //    operations is done
+            // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
+            // but since it is known how Mmw is composed a less expensive
+            // operations is done
 
             // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
 
@@ -93,9 +93,8 @@ class planes final {
 
                 world_planes.emplace_back(glm::vec4{world_normal, 0});
                 // note: D component (distance to plane from origin along the
-                // normal)
-                //       in plane equation is set to 0 and will be updated when
-                //       'world_points' change
+                //       normal) in plane equation is set to 0 and will be
+                //       updated when 'world_points' change
             }
             // save the state of the cache
             Mmw_agl = agl;
@@ -152,11 +151,9 @@ class planes final {
     }
 
     // works in cases where the sphere is much smaller than the convex volume
-    //  e.g. bullets vs walls. gives false positives at corners because there
-    //  are
-    //   positions where the sphere is within the collision planes although
-    //    outside the volume
-    // workaround: add planes to the volume at the corners
+    // e.g. bullets vs walls. gives false positives at corners because there are
+    // positions where the sphere is within the collision planes although
+    // outside the volume workaround: add planes to the volume at the corners
     inline auto are_in_collision_with_sphere(glm::vec3 const& position,
                                              float const radius) const -> bool {
 
@@ -168,10 +165,9 @@ class planes final {
                 return glm::dot(point, plane) <=
                        radius * glm::length(glm::vec3{plane});
                 // note: division by length of plane normal is necessary because
-                // normal
-                //       may not be unit vector due to scaling. division moved
-                //       to the right-hand side as multiplication for slightly
-                //       faster operation
+                //       normal may not be unit vector due to scaling. division
+                //       moved to the right-hand side as multiplication for
+                //       slightly faster operation
             });
     }
 
@@ -266,7 +262,7 @@ class planes final {
     }
 
     // tests whether any point in 'pns1' is within the volume defined by 'pns2'
-    //  and vice versa
+    // and vice versa
     inline static auto are_in_collision(planes const& pns1, planes const& pns2)
         -> bool {
         return pns1.is_any_point_in_volume(pns2) ||

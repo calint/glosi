@@ -20,8 +20,8 @@ class object {
     friend class cell;
 
     // members in order they are accessed by 'grid::add', 'cell::add',
-    //  'cell::update', 'cell:resolve_collisions', 'cell::render' with cache
-    //   coherence in mind
+    // 'cell::update', 'cell:resolve_collisions', 'cell::render' with cache
+    // coherence in mind
   public:
     // -- grid::add, cell::add
     glm::vec3 position{};        // in meters
@@ -119,8 +119,7 @@ class object {
 
     inline auto updated_Mmw() -> glm::mat4 const& {
         // * synchronize if render and update run on different threads; both
-        // racing
-        //   for this function from 'render()' and 'update()'
+        //   racing for this function from 'render()' and 'update()'
         // * synchronize if 'threaded_grid' because objects in different cells
         //   running on different threads might race when calling this function
 
@@ -246,8 +245,8 @@ class objects final {
 
     inline auto apply_allocated_instances(auto&& callback) -> void {
         // retrieve the end of list because during objects' 'update' and
-        //  'on_collision' new objects might be created which would change the
-        //   end-of-list pointer
+        // 'on_collision' new objects might be created which would change the
+        // end-of-list pointer
         object** alloc_iter = store_.allocated_list() + allocated_list_len_;
         object** const alloc_end = store_.allocated_list_end();
         while (alloc_iter < alloc_end) {
