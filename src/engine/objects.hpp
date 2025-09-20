@@ -259,6 +259,7 @@ class objects final {
         allocated_list_end_ = alloc_end;
     }
 
+    // free instances and call their destructors
     inline auto apply_freed_instances(auto&& callback) -> void {
         store_.apply_free(callback);
     }

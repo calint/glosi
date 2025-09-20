@@ -25,8 +25,8 @@ class cell final {
     };
 
     // entry in list of objects whose bounding spheres are in collision. if not
-    //  both spheres further processed to check for collision using bounding
-    //   planes
+    // both spheres further processed to check for collision using bounding
+    // planes
     struct collision {
         object* o1 = nullptr;
         object* o2 = nullptr;
@@ -281,8 +281,7 @@ class cell final {
                     cc.notify2 ? dispatch_collision(o2, o1) : false;
 
                 // check if collision has already been handled, possibly on a
-                // different
-                //  thread in a different cell
+                // different thread in a different cell
                 if (!o1_handled_o2 && !o2_handled_o1) [[likely]] {
                     // collision has not been handled during this frame by any
                     // cell
@@ -357,7 +356,7 @@ class cell final {
     static inline auto dispatch_collision(object* receiver, object* obj)
         -> bool {
         // if object overlaps cells then this code might be called by several
-        //  threads at the same time from different cells
+        // threads at the same time from different cells
 
         bool const receiver_overlaps_cells = receiver->overlaps_cells;
 
@@ -370,7 +369,7 @@ class cell final {
         // only one thread at a time can be here for 'receiver'
 
         // if both objects overlap cells then the same collision is detected and
-        //  dispatched in multiple cells
+        // dispatched in multiple cells
         if (receiver_overlaps_cells && obj->overlaps_cells &&
             receiver->is_collision_handled_and_if_not_add(obj)) {
             // collision already dispatched for this 'receiver' and 'obj'
@@ -411,9 +410,8 @@ class cell final {
         o2->update_planes_world_coordinates();
 
         // planes can be update only once per 'resolve_collisions' pass because
-        //  bounding plane objects state do not change because there is no
-        //  handle
-        //   collision implementation such as spheres do
+        // bounding plane objects state do not change because there is no handle
+        // collision implementation such as spheres do
 
         return planes::are_in_collision(o1->planes, o2->planes);
     }

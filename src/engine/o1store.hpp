@@ -154,7 +154,8 @@ class o1store final {
         }
     }
 
-    // deallocates the instances that have been freed
+    // deallocates the instances that have been freed and their destructor is
+    // called
     inline auto apply_free(auto&& callback) -> void {
         for (type** it = del_bgn_; it < del_ptr_; ++it) {
             type* inst_deleted = *it;

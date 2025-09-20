@@ -375,7 +375,7 @@ void main() {
 
         // remove freed static objects from grid
         // note: at 'update()' and 'resolve_collisions()' objects might be freed
-        // and created
+        // and created. same with destructors of freed objects
         objects.apply_freed_instances([](object* o) {
             if (o->is_static) {
                 grid.remove_static(o);
