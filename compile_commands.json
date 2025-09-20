@@ -15,6 +15,7 @@
       "-Wno-unsafe-buffer-usage",
       "-Wno-unsafe-buffer-usage-in-libc-call",
       "-Wno-undefined-internal",
+      "-Wno-unused"
     ],
     "directory": "/home/c/w/glosi",
     "file": "src/main.cpp",

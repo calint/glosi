@@ -39,6 +39,9 @@
 // application interface
 //
 
+// called from 'main.cpp' to make the first print
+static auto application_print_hello() -> void;
+
 // called at initiation
 static auto application_init() -> void;
 

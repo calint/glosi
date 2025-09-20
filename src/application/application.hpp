@@ -23,7 +23,9 @@ static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
 // engine interface
-static inline auto application_print_hello() { printf("\nprogram glosi\n\n"); }
+static inline auto application_print_hello() -> void {
+    printf("\nprogram glosi\n\n");
+}
 
 // engine interface
 static inline auto application_init() -> void {
