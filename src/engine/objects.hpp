@@ -75,7 +75,7 @@ class object {
   public:
     inline virtual ~object() = default;
     // note: 'delete obj;' may not be used because memory is managed by
-    // 'o1store'. destructor is invoked at 'objects.apply_free(...)'
+    //       'o1store'. destructor is invoked at 'objects.apply_free(...)'
 
     // called from 'cell'
     inline virtual auto render() -> void {
