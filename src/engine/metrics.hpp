@@ -14,7 +14,7 @@ namespace glos {
 
 class metrics final {
   public:
-    struct fps {
+    struct fps final {
         uint32_t calculation_interval_ms = 1000;
         uint64_t time_at_start_of_interval_ms = 0;
         uint32_t frame_count = 0;

@@ -16,7 +16,7 @@ namespace glos {
 class cell final {
     // object entry in a cell. object members used in the hot code path copied
     // for better cache utilization
-    struct entry {
+    struct entry final {
         glm::vec3 position{};
         float radius = 0;
         uint32_t collision_bits = 0;
@@ -27,7 +27,7 @@ class cell final {
     // entry in list of objects whose bounding spheres are in collision. if not
     // both spheres further processed to check for collision using bounding
     // planes
-    struct collision {
+    struct collision final {
         object* o1 = nullptr;
         object* o2 = nullptr;
         bool notify1 = false;
