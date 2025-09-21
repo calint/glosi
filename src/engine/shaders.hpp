@@ -99,7 +99,7 @@ void main() {
     // world -> view -> projection matrix
     GLint umtx_wvp = -1;
 
-    // texture mapper uniform
+    // texture mapper
     GLint utex = -1;
 
     // ambient light vector
