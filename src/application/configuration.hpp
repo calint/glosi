@@ -47,7 +47,7 @@ static inline auto constexpr deg_to_rad(float const deg) -> float {
 
 // game or performance test
 // 0: none (game)  1: cubes  2: spheres
-static uint32_t constexpr performance_test_type = 0;
+static uint32_t constexpr performance_test_type = 1;
 
 static bool constexpr is_performance_test = performance_test_type != 0;
 static float constexpr cube_speed = 10;
