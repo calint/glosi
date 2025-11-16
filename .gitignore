@@ -8,3 +8,4 @@
 /sanitize.log*
 /qa/linaro-map/
 /.cache/
+/tsan.*
