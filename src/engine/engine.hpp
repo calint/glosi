@@ -240,6 +240,7 @@ void main() {
                     // threads after this
                     std::atomic_thread_fence(std::memory_order_release);
                 }
+
                 update_pass_2();
                 if (threaded_grid) {
                     // writes done in `update_pass_2` are visible to this thread
