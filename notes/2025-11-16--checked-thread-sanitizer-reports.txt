@@ -10,6 +10,10 @@ in different phases of the system execution. e.g.,
   accessing data written by `update_pass_1` reported as race condition although
   their execution never overlap (intended, how to prove?)
 * fencing tried and also run `seq` instead of `seq_par` with same tsan reports
+* see:
+        if (threaded_grid) {
+            std::atomic_thread_fence(std::memory_order_seq_cst);
+        }
 
 -------------------------------------------------------------------------------
 [01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/cell.hpp:44:59 in glos::cell::update_objects_in_vector(std::vector<glos::cell::entry, std::allocator<glos::cell::entry>> const&) const

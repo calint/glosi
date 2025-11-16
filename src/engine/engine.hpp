@@ -235,9 +235,9 @@ void main() {
 
                 metrics.update_begin();
                 update_pass_1();
-                if (threaded_grid) {
-                    std::atomic_thread_fence(std::memory_order_seq_cst);
-                }
+                // if (threaded_grid) {
+                //     std::atomic_thread_fence(std::memory_order_seq_cst);
+                // }
                 update_pass_2();
                 metrics.update_end();
 
@@ -375,17 +375,17 @@ void main() {
 
         grid.update();
 
-        if (threaded_grid) {
-            std::atomic_thread_fence(std::memory_order_seq_cst);
-        }
+        // if (threaded_grid) {
+        //     std::atomic_thread_fence(std::memory_order_seq_cst);
+        // }
 
         if (is_resolve_collisions) {
             grid.resolve_collisions();
         }
 
-        if (threaded_grid) {
-            std::atomic_thread_fence(std::memory_order_seq_cst);
-        }
+        // if (threaded_grid) {
+        //     std::atomic_thread_fence(std::memory_order_seq_cst);
+        // }
 
         // remove freed static objects from grid
         // note: at 'update()' and 'resolve_collisions()' objects might be freed
