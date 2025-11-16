@@ -235,7 +235,15 @@ void main() {
 
                 metrics.update_begin();
                 update_pass_1();
+                if (threaded_grid) {
+                    // make sure writes done in `update_pass_1` are visible
+                    // after this
+                    std::atomic_thread_fence(std::memory_order_release);
+                }
                 update_pass_2();
+                if (threaded_grid) {
+                    std::atomic_thread_fence(std::memory_order_acquire);
+                }
                 metrics.update_end();
 
                 // swap buffers after update to allow debugging rendering
