@@ -209,7 +209,7 @@ void main() {
         }
 
         // start metrics
-        metrics.print_headers(stderr);
+        metrics.print_headers(stdout);
         metrics.begin();
 
         SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE : SDL_FALSE);
@@ -243,7 +243,7 @@ void main() {
             }
 
             metrics.allocated_objects = uint32_t(objects.allocated_list_len());
-            metrics.at_frame_end(stderr);
+            metrics.at_frame_end(stdout);
         }
 
         // exit
