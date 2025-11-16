@@ -1,0 +1,22 @@
+notes
+
+selected matches:
+p tsan.1 | f 'SUMMARY:.*/src/application/' | sort -u
+
+conclusion:
+false positives reports reads and writes from different threads of same data
+in different phases of the system execution. e.g.,
+* main thread runs `update_pass_1`, then threads run in `update_pass_2`
+  accessing data written by `update_pass_1` reported as race condition although
+  their execution never overlap (intended, how to prove?)
+* fencing tried and also run `seq` instead of `seq_par` with same tsan reports
+
+-------------------------------------------------------------------------------
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/cell.hpp:44:59 in glos::cell::update_objects_in_vector(std::vector<glos::cell::entry, std::allocator<glos::cell::entry>> const&) const
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/cell.hpp:46:30 in glos::cell::update_objects_in_vector(std::vector<glos::cell::entry, std::allocator<glos::cell::entry>> const&) const
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/cell.hpp:49:24 in glos::cell::update_objects_in_vector(std::vector<glos::cell::entry, std::allocator<glos::cell::entry>> const&) const
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/cell.hpp:49:32 in glos::cell::update_objects_in_vector(std::vector<glos::cell::entry, std::allocator<glos::cell::entry>> const&) const
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/grid.hpp:81:27 in glos::grid::add(glos::object*)
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/objects.hpp:172:28 in glos::object::clear_handled_collisions()
+[01;31m[KSUMMARY: ThreadSanitizer: data race /home/c/w/glosi/src/application/[m[K../engine/objects.hpp:97:40 in glos::object::update()
+-------------------------------------------------------------------------------
