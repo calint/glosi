@@ -11,6 +11,7 @@
 #include <execution>
 
 // if enabled implementation of parallelization is done with a jthread per row
+// note: to be used with tsan because tsan does not handle tbb threads well
 // #define MODE_JTHREADS
 
 namespace glos {
