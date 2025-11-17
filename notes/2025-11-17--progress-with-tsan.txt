@@ -5,3 +5,6 @@ see commit f22769be for atomic bool operations that reduces tsan reports
 
 see commit after that using fences, now commented out until more study is being
 done
+
+changed from for_each(par_unseq to par) because par_unseq cannot access shared
+data: https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t.html

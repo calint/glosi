@@ -23,7 +23,7 @@ class grid final {
     // called from engine
     inline auto update() -> void {
         if (threaded_grid) {
-            std::for_each(std::execution::par_unseq, std::cbegin(cells),
+            std::for_each(std::execution::par, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
                               for (cell const& c : row) {
                                   c.update();
@@ -43,7 +43,7 @@ class grid final {
     // called from engine
     inline auto resolve_collisions() -> void {
         if (threaded_grid) {
-            std::for_each(std::execution::par_unseq, std::begin(cells),
+            std::for_each(std::execution::par, std::begin(cells),
                           std::end(cells), [](auto& row) {
                               for (cell& c : row) {
                                   c.resolve_collisions();
