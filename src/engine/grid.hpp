@@ -43,7 +43,7 @@ class grid final {
                                   c.update();
                               }
                           });
-            // std::atomic_thread_fence(std::memory_order::seq_cst);
+            std::atomic_thread_fence(std::memory_order::seq_cst);
 #endif
             return;
         }
@@ -75,7 +75,7 @@ class grid final {
                                   c.resolve_collisions();
                               }
                           });
-            // std::atomic_thread_fence(std::memory_order::seq_cst);
+            std::atomic_thread_fence(std::memory_order::seq_cst);
             return;
 #endif
         }
