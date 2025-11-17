@@ -8,3 +8,6 @@ done
 
 changed from for_each(par_unseq to par) because par_unseq cannot access shared
 data: https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t.html
+
+added TSAN_MODE in grid.hpp that creates a thread per row at "update" and 
+"resolve_collisions" to be able run tsan on rest of code

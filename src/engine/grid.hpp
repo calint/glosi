@@ -10,6 +10,9 @@
 #include "cell.hpp"
 #include <execution>
 
+// defines if it is run with tsan which does not handle tbb
+// #define TSAN_MODE
+
 namespace glos {
 
 class grid final {
@@ -23,6 +26,17 @@ class grid final {
     // called from engine
     inline auto update() -> void {
         if (threaded_grid) {
+#ifdef TSAN_MODE
+            std::vector<std::jthread> workers;
+            workers.reserve(grid_rows);
+            for (auto const& row : cells) {
+                workers.emplace_back([&row] {
+                    for (cell const& c : row) {
+                        c.update();
+                    }
+                });
+            }
+#else
             std::for_each(std::execution::par, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
                               for (cell const& c : row) {
@@ -30,6 +44,7 @@ class grid final {
                               }
                           });
             // std::atomic_thread_fence(std::memory_order::seq_cst);
+#endif
             return;
         }
 
@@ -43,6 +58,17 @@ class grid final {
     // called from engine
     inline auto resolve_collisions() -> void {
         if (threaded_grid) {
+#ifdef TSAN_MODE
+            std::vector<std::jthread> workers;
+            workers.reserve(grid_rows);
+            for (auto& row : cells) {
+                workers.emplace_back([&row] {
+                    for (cell& c : row) {
+                        c.resolve_collisions();
+                    }
+                });
+            }
+#else
             std::for_each(std::execution::par, std::begin(cells),
                           std::end(cells), [](auto& row) {
                               for (cell& c : row) {
@@ -51,6 +77,7 @@ class grid final {
                           });
             // std::atomic_thread_fence(std::memory_order::seq_cst);
             return;
+#endif
         }
 
         for (auto& row : cells) {
