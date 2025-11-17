@@ -25,6 +25,7 @@
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_ttf.h>
 #include <arpa/inet.h>
+#include <atomic>
 #include <condition_variable>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
@@ -234,8 +235,11 @@ void main() {
                 render();
 
                 metrics.update_begin();
+                while (!update_pass_2_done.load(std::memory_order::acquire)) {
+                }
                 update_pass_1();
-                tsan_sync.store(true, std::memory_order_release);
+                update_pass_1_done.store(true, std::memory_order::release);
+                update_pass_2_done.store(false, std::memory_order::release);
                 update_pass_2();
                 metrics.update_end();
 
@@ -376,6 +380,9 @@ void main() {
         if (is_resolve_collisions) {
             grid.resolve_collisions();
         }
+
+        update_pass_1_done.store(false, std::memory_order::release);
+        update_pass_2_done.store(true, std::memory_order::release);
 
         // remove freed static objects from grid
         // note: at 'update()' and 'resolve_collisions()' objects might be freed

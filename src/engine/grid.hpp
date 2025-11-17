@@ -12,7 +12,8 @@
 
 namespace glos {
 
-static std::atomic<bool> tsan_sync{false};
+static std::atomic<bool> update_pass_1_done{false};
+static std::atomic<bool> update_pass_2_done{true};
 // note: used to reduce tsan false positive racing conditions reports (prove?)
 
 class grid final {
@@ -28,8 +29,8 @@ class grid final {
         if (threaded_grid) {
             std::for_each(std::execution::par_unseq, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
-                              while (
-                                  !tsan_sync.load(std::memory_order_acquire)) {
+                              while (!update_pass_1_done.load(
+                                  std::memory_order::acquire)) {
                               }
                               for (cell const& c : row) {
                                   c.update();
@@ -50,6 +51,9 @@ class grid final {
         if (threaded_grid) {
             std::for_each(std::execution::par_unseq, std::begin(cells),
                           std::end(cells), [](auto& row) {
+                              while (!update_pass_1_done.load(
+                                  std::memory_order::acquire)) {
+                              }
                               for (cell& c : row) {
                                   c.resolve_collisions();
                               }
