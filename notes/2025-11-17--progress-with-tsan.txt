@@ -16,3 +16,11 @@ application code reported
 added fences at end of `update_pass_1` and between stages in `update_pass_2`
 does effect performance
 
+removed fences because:
+From the C++ standard (§[algorithms.parallel.exec]):
+Parallel algorithms have the same semantics as their sequential counterparts, 
+except that they may execute in parallel.
+And critically (§[algorithms.parallel.overloads]):
+Unless otherwise specified, parallel algorithms shall not participate in data 
+races. The implementation must ensure proper synchronization.
+

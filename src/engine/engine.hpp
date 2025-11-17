@@ -359,10 +359,6 @@ void main() {
         } else {
             frame_context = {frame_num, SDL_GetTicks64(), metrics.dt};
         }
-
-        if (threaded_grid) {
-            std::atomic_thread_fence(std::memory_order::seq_cst);
-        }
     }
 
     // in 'threaded_update' runs in parallel with rendering
