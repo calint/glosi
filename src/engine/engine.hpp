@@ -236,9 +236,6 @@ void main() {
 
                 metrics.update_begin();
                 update_pass_1();
-                if (threaded_grid) {
-                    std::atomic_thread_fence(std::memory_order::seq_cst);
-                }
                 update_pass_2();
                 metrics.update_end();
 
@@ -362,6 +359,10 @@ void main() {
             frame_context = {frame_num, net.ms, net.dt};
         } else {
             frame_context = {frame_num, SDL_GetTicks64(), metrics.dt};
+        }
+
+        if (threaded_grid) {
+            std::atomic_thread_fence(std::memory_order::seq_cst);
         }
     }
 
