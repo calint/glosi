@@ -1,0 +1,4 @@
+using atomic bool release and aquires managed to reduce the tsan reports but it
+is not satisfactory using fences does not help but it is more correct
+
+see commit f22769be for atomic bool operations that reduces tsan reports

@@ -12,10 +12,6 @@
 
 namespace glos {
 
-static std::atomic<bool> update_pass_1_done{false};
-static std::atomic<bool> update_pass_2_done{true};
-// note: used to reduce tsan false positive racing conditions reports (prove?)
-
 class grid final {
     std::array<std::array<cell, grid_columns>, grid_rows> cells{};
 
@@ -29,13 +25,11 @@ class grid final {
         if (threaded_grid) {
             std::for_each(std::execution::par_unseq, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
-                              while (!update_pass_1_done.load(
-                                  std::memory_order::acquire)) {
-                              }
                               for (cell const& c : row) {
                                   c.update();
                               }
                           });
+            std::atomic_thread_fence(std::memory_order::seq_cst);
             return;
         }
 
@@ -51,13 +45,11 @@ class grid final {
         if (threaded_grid) {
             std::for_each(std::execution::par_unseq, std::begin(cells),
                           std::end(cells), [](auto& row) {
-                              while (!update_pass_1_done.load(
-                                  std::memory_order::acquire)) {
-                              }
                               for (cell& c : row) {
                                   c.resolve_collisions();
                               }
                           });
+            std::atomic_thread_fence(std::memory_order::seq_cst);
             return;
         }
 
