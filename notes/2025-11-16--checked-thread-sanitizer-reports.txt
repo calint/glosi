@@ -9,7 +9,7 @@ in different phases of the system execution. e.g.,
 * main thread runs `update_pass_1`, then threads run in `update_pass_2`
   accessing data written by `update_pass_1` reported as race condition although
   their execution never overlap (intended, how to prove?)
-* fencing tried and also run `seq` instead of `seq_par` with same tsan reports
+* fencing tried and also run `par` instead of `par_unseq` with same tsan reports
 * see:
         if (threaded_grid) {
             std::atomic_thread_fence(std::memory_order_seq_cst);
