@@ -235,6 +235,7 @@ void main() {
 
                 metrics.update_begin();
                 update_pass_1();
+                tsan_sync.store(true, std::memory_order_release);
                 update_pass_2();
                 metrics.update_end();
 

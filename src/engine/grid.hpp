@@ -12,6 +12,9 @@
 
 namespace glos {
 
+static std::atomic<bool> tsan_sync{false};
+// note: used to reduce tsan false positive racing conditions reports (prove?)
+
 class grid final {
     std::array<std::array<cell, grid_columns>, grid_rows> cells{};
 
@@ -25,6 +28,9 @@ class grid final {
         if (threaded_grid) {
             std::for_each(std::execution::par_unseq, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
+                              while (
+                                  !tsan_sync.load(std::memory_order_acquire)) {
+                              }
                               for (cell const& c : row) {
                                   c.update();
                               }
