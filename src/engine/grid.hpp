@@ -10,8 +10,8 @@
 #include "cell.hpp"
 #include <execution>
 
-// defines if it is run with tsan which does not handle tbb
-// #define TSAN_MODE
+// if enabled implementation of parallelization is done with a jthread per row
+// #define MODE_JTHREADS
 
 namespace glos {
 
@@ -26,7 +26,7 @@ class grid final {
     // called from engine
     inline auto update() -> void {
         if (threaded_grid) {
-#ifdef TSAN_MODE
+#if defined(MODE_JTHREADS)
             std::vector<std::jthread> workers;
             workers.reserve(grid_rows);
             for (auto const& row : cells) {
@@ -58,7 +58,7 @@ class grid final {
     // called from engine
     inline auto resolve_collisions() -> void {
         if (threaded_grid) {
-#ifdef TSAN_MODE
+#if defined(MODE_JTHREADS)
             std::vector<std::jthread> workers;
             workers.reserve(grid_rows);
             for (auto& row : cells) {
