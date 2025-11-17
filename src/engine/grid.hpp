@@ -38,6 +38,8 @@ class grid final {
                 });
             }
 #else
+            // note: not `par_unseq` because that mode does not allow
+            //       concurrency
             std::for_each(std::execution::par, std::cbegin(cells),
                           std::cend(cells), [](auto const& row) {
                               for (cell const& c : row) {
@@ -69,6 +71,8 @@ class grid final {
                 });
             }
 #else
+            // note: not `par_unseq` because that mode does not allow
+            //       concurrency
             std::for_each(std::execution::par, std::begin(cells),
                           std::end(cells), [](auto& row) {
                               for (cell& c : row) {
