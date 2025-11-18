@@ -337,9 +337,7 @@ class globs final {
         return uint32_t(store.size() - 1);
     }
 
-    inline auto at(uint32_t const ix) const -> glob const& {
-        return store.at(ix);
-    }
+    inline auto at(uint32_t const ix) const -> glob const& { return store[ix]; }
 } static globs{};
 
 } // namespace glos

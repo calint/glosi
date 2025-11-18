@@ -119,14 +119,14 @@ class planes final {
         acquire_lock();
         size_t const n = world_planes.size();
         for (uint32_t i = 0; i < n; ++i) {
-            glm::vec4 const& point = world_points.at(i);
-            glm::vec4 const& plane = world_planes.at(i);
+            glm::vec4 const& point = world_points[i];
+            glm::vec4 const& plane = world_planes[i];
             debug_render_wcs_line(point, point + plane, {1, 0, 0, 0.5f}, false);
         }
         size_t const m = world_points.size();
         std::vector<glm::vec3> points{};
         for (size_t i = n; i < m; ++i) {
-            points.emplace_back(world_points.at(i));
+            points.emplace_back(world_points[i]);
         }
         debug_render_wcs_points(points, {1, 1, 1, 0.5f});
         release_lock();
