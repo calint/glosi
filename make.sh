@@ -75,7 +75,7 @@ if [[ "$1" == "sanitize2" ]]; then
 fi
 
 if [[ "$1" == "sanitize3" ]]; then
-    LDFLAGS="-fsanitize=thread"
+    LDFLAGS="-fsanitize=thread -DMODE_JTHREADS"
 fi
 
 CMD="$CC -o $BIN $SRC $DEBUG $PROFILE $OPTIMIZATION $CFLAGS $LDFLAGS $WARNINGS $LIBS"
