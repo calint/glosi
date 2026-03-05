@@ -31,7 +31,9 @@ class shaders final {
 
     // default shader source
     static inline char const* vertex_shader_source = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform mat4 umtx_mw;  // model-to-world-matrix
 uniform mat4 umtx_wvp; // world-to-view-to-projection
 in vec4 apos;
@@ -61,7 +63,9 @@ void main() {
   )";
 
     static inline char const* fragment_shader_source = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform sampler2D utex;
 uniform vec3 ulht; // ambient light vector
 in vec4 vrgba;

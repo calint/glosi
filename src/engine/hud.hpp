@@ -167,7 +167,9 @@ class hud final {
     static GLsizei constexpr texture_height = 256;
 
     static inline char const* vertex_shader_source = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 layout(location = 0) in vec2 apos;
 layout(location = 1) in vec2 atex;
 out vec2 vtex;
@@ -178,7 +180,9 @@ void main() {
 )";
 
     static inline char const* fragment_shader_source = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform sampler2D utex;
 in vec2 vtex;
 out vec4 rgba;

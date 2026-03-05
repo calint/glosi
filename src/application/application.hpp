@@ -23,10 +23,10 @@ static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
 // engine interface
-static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
+auto inline application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
 
 // engine interface
-static auto application_init() -> void {
+auto inline application_init() -> void {
     application_init_shaders();
 
     printf("\ntime is %lu ms\n\n", glos::frame_context.ms);
@@ -175,7 +175,7 @@ static auto application_init() -> void {
 }
 
 // engine interface
-static auto application_on_update_done() -> void {
+auto inline application_on_update_done() -> void {
     if (is_performance_test) {
         return;
     }
@@ -210,7 +210,7 @@ static auto application_on_update_done() -> void {
 }
 
 // engine interface
-static auto application_on_render_done() -> void {
+auto inline application_on_render_done() -> void {
     std::array<char, 128> buf;
     int const s = score;
     if (performance_test_type == 0) {
@@ -223,7 +223,7 @@ static auto application_on_render_done() -> void {
 }
 
 // engine interface
-static auto application_free() -> void {}
+auto inline application_free() -> void {}
 
 static auto create_asteroids(uint32_t const num) -> void {
     float constexpr v = asteroid_large_speed;
@@ -358,7 +358,9 @@ static auto load_map(std::filesystem::path path) -> void {
 static auto application_init_shaders() -> void {
     {
         char constexpr const* vtx = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform mat4 umtx_mw; // model-to-world-matrix
 uniform mat4 umtx_wvp;// world-to-view-to-projection
 layout(location = 0) in vec4 apos;
@@ -371,7 +373,9 @@ void main() {
 }
     )";
         char constexpr const* frag = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 out vec4 rgba;
 void main() {
   rgba = vec4(vec3(gl_FragCoord.z), 1.0);
@@ -381,7 +385,9 @@ void main() {
     }
     {
         char constexpr const* vtx = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform mat4 umtx_mw; // model-to-world-matrix
 uniform mat4 umtx_wvp;// world-to-view-to-projection
 in vec4 apos;
@@ -393,7 +399,9 @@ void main() {
 }
     )";
         char constexpr const* frag = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 in vec4 vrgba;
 out vec4 rgba;
 void main(){

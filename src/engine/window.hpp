@@ -8,7 +8,6 @@
 
 #include "../application/configuration.hpp"
 #include "exception.hpp"
-#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <utility>
 
@@ -20,7 +19,7 @@ class window final {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_ES);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -38,21 +37,10 @@ class window final {
                 std::format("cannot create gl context: {}", SDL_GetError())};
         }
 
-        sdl_renderer = SDL_CreateRenderer(
-            sdl_window, -1,
-            window_vsync
-                ? (SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
-                : (SDL_RENDERER_ACCELERATED));
-        if (!sdl_renderer) {
-            throw exception{
-                std::format("cannot create renderer: {}", SDL_GetError())};
-        }
-
         gl_print_context_profile_and_version();
     }
 
     auto free() -> void {
-        SDL_DestroyRenderer(sdl_renderer);
         SDL_GL_DeleteContext(sdl_gl_context);
         SDL_DestroyWindow(sdl_window);
     }
@@ -68,7 +56,6 @@ class window final {
 
   private:
     SDL_Window* sdl_window = nullptr;
-    SDL_Renderer* sdl_renderer = nullptr;
     SDL_GLContext sdl_gl_context = nullptr;
 
     static auto gl_print_context_profile_and_version() -> void {

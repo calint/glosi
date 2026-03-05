@@ -40,19 +40,19 @@
 //
 
 // called from 'main.cpp' to make the first print
-static auto application_print_hello() -> void;
+auto application_print_hello() -> void;
 
 // called at initiation
-static auto application_init() -> void;
+auto application_init() -> void;
 
 // called by update thread when an update is done
-static auto application_on_update_done() -> void;
+auto application_on_update_done() -> void;
 
 // called by render thread when a frame has been rendered
-static auto application_on_render_done() -> void;
+auto application_on_render_done() -> void;
 
 // called at shutdown
-static auto application_free() -> void;
+auto application_free() -> void;
 
 namespace glos {
 
@@ -95,7 +95,9 @@ class engine final {
         // line rendering shader
         {
             char constexpr const* vtx = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform mat4 umtx_wvp; // world-to-view-to-projection
 layout(location = 0) in vec4 apos; // world coordinates
 void main() {
@@ -104,7 +106,9 @@ void main() {
       )";
 
             char constexpr const* frag = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform vec4 ucolor;
 out vec4 rgba;
 void main() {
@@ -118,7 +122,9 @@ void main() {
         // points rendering shader
         {
             char constexpr const* vtx = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform mat4 umtx_wvp; // world-to-view-to-projection
 layout(location = 0) in vec4 apos; // world coordinates
 void main() {
@@ -128,7 +134,9 @@ void main() {
       )";
 
             char constexpr const* frag = R"(
-#version 330 core
+#version 320 es
+precision highp float;
+
 uniform vec4 ucolor;
 out vec4 rgba;
 void main() {
