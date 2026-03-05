@@ -12,6 +12,7 @@
       "-Wno-exit-time-destructors",
       "-Wno-weak-vtables",
       "-Wno-unsafe-buffer-usage",
+      "-Wno-undefined-internal",
       "-Wno-unused"
     ],
     "directory": "/home/c/w/glosi",

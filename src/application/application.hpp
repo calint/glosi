@@ -23,10 +23,10 @@ static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
 // engine interface
-auto inline application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
+static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
 
 // engine interface
-auto inline application_init() -> void {
+static auto application_init() -> void {
     application_init_shaders();
 
     printf("\ntime is %lu ms\n\n", glos::frame_context.ms);
@@ -175,7 +175,7 @@ auto inline application_init() -> void {
 }
 
 // engine interface
-auto inline application_on_update_done() -> void {
+static auto application_on_update_done() -> void {
     if (is_performance_test) {
         return;
     }
@@ -210,7 +210,7 @@ auto inline application_on_update_done() -> void {
 }
 
 // engine interface
-auto inline application_on_render_done() -> void {
+static auto application_on_render_done() -> void {
     std::array<char, 128> buf;
     int const s = score;
     if (performance_test_type == 0) {
@@ -223,7 +223,7 @@ auto inline application_on_render_done() -> void {
 }
 
 // engine interface
-auto inline application_free() -> void {}
+static auto application_free() -> void {}
 
 static auto create_asteroids(uint32_t const num) -> void {
     float constexpr v = asteroid_large_speed;

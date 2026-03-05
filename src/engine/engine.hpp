@@ -40,19 +40,19 @@
 //
 
 // called from 'main.cpp' to make the first print
-auto application_print_hello() -> void;
+static auto application_print_hello() -> void;
 
 // called at initiation
-auto application_init() -> void;
+static auto application_init() -> void;
 
 // called by update thread when an update is done
-auto application_on_update_done() -> void;
+static auto application_on_update_done() -> void;
 
 // called by render thread when a frame has been rendered
-auto application_on_render_done() -> void;
+static auto application_on_render_done() -> void;
 
 // called at shutdown
-auto application_free() -> void;
+static auto application_free() -> void;
 
 namespace glos {
 
