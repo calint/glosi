@@ -27,11 +27,6 @@
 * rather than component-based and streaming data, a monolithic approach with
 shallow hierarchy is used, where object data is ordered in slices, as used by
 sub-systems with cache coherence in mind
-* `inline` functions
-  * functions are requested to be inlined assuming compilers won't adhere to
-  the hint when it does not make sense, such as big functions called from
-  multiple locations
-  * functions called from only one location should be inlined
 * `const` is preferred and used where applicable
 * `auto` is used when the type name is too verbose, such as iterators and
 templates; otherwise, types are spelled out for readability
