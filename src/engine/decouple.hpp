@@ -35,14 +35,14 @@ static bool is_debug_object_planes_normals = false;
 static bool is_debug_object_bounding_sphere = false;
 
 // forward declaration of debugging functions
-static auto debug_render_wcs_line(glm::vec3 const& from_wcs,
+auto static debug_render_wcs_line(glm::vec3 const& from_wcs,
                                   glm::vec3 const& to_wcs,
                                   glm::vec4 const& color, bool const depth_test)
     -> void;
 
-static auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
+auto static debug_render_wcs_points(std::vector<glm::vec3> const& points,
                                     glm::vec4 const& color) -> void;
 
-static auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void;
+auto static debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void;
 
 } // namespace glos

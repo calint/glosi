@@ -58,7 +58,7 @@ class window final {
     SDL_Window* sdl_window = nullptr;
     SDL_GLContext sdl_gl_context = nullptr;
 
-    static auto gl_print_context_profile_and_version() -> void {
+    auto static gl_print_context_profile_and_version() -> void {
         int value = 0;
         if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &value)) {
             throw exception{

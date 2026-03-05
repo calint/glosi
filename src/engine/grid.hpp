@@ -148,7 +148,7 @@ class grid final {
     }
 
   private:
-    static auto clamp(int32_t const i, uint32_t const max) -> uint32_t {
+    auto static clamp(int32_t const i, uint32_t const max) -> uint32_t {
         if (i < 0) {
             return 0;
         }
