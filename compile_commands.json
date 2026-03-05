@@ -8,12 +8,10 @@
       "-Wno-float-equal",
       "-Wno-covered-switch-default",
       "-Wno-padded",
-      "-Wno-exit-time-destructors",
       "-Wno-global-constructors",
+      "-Wno-exit-time-destructors",
       "-Wno-weak-vtables",
       "-Wno-unsafe-buffer-usage",
-      "-Wno-unsafe-buffer-usage-in-libc-call",
-      "-Wno-undefined-internal",
       "-Wno-unused"
     ],
     "directory": "/home/c/w/glosi",

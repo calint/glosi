@@ -44,9 +44,8 @@ elif [[ "$COMPILER" == "clang" ]]; then
     CC="clang++ -std=c++26"
     WARNINGS="-Weverything \
             -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
-            -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
-            -Wno-weak-vtables -Wno-unsafe-buffer-usage \
-            -Wno-unsafe-buffer-usage-in-libc-call -Wno-unused"
+            -Wno-padded -Wno-global-constructors -Wno-exit-time-destructors \
+            -Wno-weak-vtables -Wno-unsafe-buffer-usage -Wno-unused"
 fi
 
 SRC="src/main.cpp"
