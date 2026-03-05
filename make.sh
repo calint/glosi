@@ -28,7 +28,7 @@ BIN="glosi"
 COMPILER="clang" # "gcc"" or "clang"
 
 if [[ "$COMPILER" == "gcc" ]]; then
-    CC="g++ -std=c++23 -Wno-changes-meaning -flifetime-dse=1"
+    CC="g++ -std=c++26 -Wno-changes-meaning -flifetime-dse=1"
     # note: -flifetime-dse=1 : workaround for issue when compiler optimizes away stores before new in place
     #       falsely assuming that all object fields are initialized by constructor resulting in crash
     WARNINGS="-Wall -Wextra -Wpedantic \
@@ -41,12 +41,12 @@ if [[ "$COMPILER" == "gcc" ]]; then
             -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter"
 
 elif [[ "$COMPILER" == "clang" ]]; then
-    CC="clang++ -std=c++23"
+    CC="clang++ -std=c++26"
     WARNINGS="-Weverything \
             -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
             -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
             -Wno-old-style-cast -Wno-weak-vtables -Wno-unsafe-buffer-usage \
-            -Wno-unsafe-buffer-usage-in-libc-call"
+            -Wno-unsafe-buffer-usage-in-libc-call -Wno-unused"
 fi
 
 SRC="src/main.cpp"

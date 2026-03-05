@@ -2,7 +2,7 @@
   {
     "arguments": [
       "clang++",
-      "-std=c++23",
+      "-std=c++26",
       "-Weverything",
       "-Wno-c++98-compat",
       "-Wno-float-equal",
