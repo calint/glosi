@@ -260,7 +260,7 @@ class planes final {
 
     // tests whether any point in 'pns1' is within the volume defined by 'pns2'
     // and vice versa
-    auto static are_in_collision(planes const& pns1, planes const& pns2)
+    static auto are_in_collision(planes const& pns1, planes const& pns2)
         -> bool {
         return pns1.is_any_point_in_volume(pns2) ||
                pns2.is_any_point_in_volume(pns1);

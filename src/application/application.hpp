@@ -16,11 +16,11 @@
 #include "objects/ufo.hpp"
 
 // forward declarations
-auto static application_init_shaders() -> void;
-auto static create_asteroids(uint32_t num) -> void;
-auto static create_ufo() -> void;
-auto static create_cubes(uint32_t const num) -> void;
-auto static load_map(std::filesystem::path path) -> void;
+static auto application_init_shaders() -> void;
+static auto create_asteroids(uint32_t num) -> void;
+static auto create_ufo() -> void;
+static auto create_cubes(uint32_t const num) -> void;
+static auto load_map(std::filesystem::path path) -> void;
 
 // engine interface
 auto inline application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
@@ -225,7 +225,7 @@ auto inline application_on_render_done() -> void {
 // engine interface
 auto inline application_free() -> void {}
 
-auto static create_asteroids(uint32_t const num) -> void {
+static auto create_asteroids(uint32_t const num) -> void {
     float constexpr v = asteroid_large_speed;
     float constexpr d = game_area_max_x - game_area_min_x;
     for (uint32_t i = 0; i < num; ++i) {
@@ -235,7 +235,7 @@ auto static create_asteroids(uint32_t const num) -> void {
     }
 }
 
-auto static create_ufo() -> void {
+static auto create_ufo() -> void {
     ufo* u = new (glos::objects.alloc()) ufo{};
     u->position = {-grid_size / 2, 0, -grid_size / 2};
     u->angle = {glm::radians(-65.0f), 0, 0};
@@ -243,7 +243,7 @@ auto static create_ufo() -> void {
     u->linear_velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
 }
 
-auto static create_cubes(uint32_t const num) -> void {
+static auto create_cubes(uint32_t const num) -> void {
     float constexpr a = cube_angular_velocity;
     float constexpr v = cube_speed;
     float constexpr gx = game_area_max_x - game_area_min_x;
@@ -256,7 +256,7 @@ auto static create_cubes(uint32_t const num) -> void {
     }
 }
 
-auto static load_static_object_list(std::filesystem::path path) -> void {
+static auto load_static_object_list(std::filesystem::path path) -> void {
     printf(" * loading map from '%s'\n", path.string().c_str());
 
     std::ifstream file{path};
@@ -299,7 +299,7 @@ auto static load_static_object_list(std::filesystem::path path) -> void {
     }
 }
 
-auto static load_map(std::filesystem::path path) -> void {
+static auto load_map(std::filesystem::path path) -> void {
     printf(" * loading map from '%s'\n", path.string().c_str());
 
     std::ifstream file{path};
@@ -355,7 +355,7 @@ auto static load_map(std::filesystem::path path) -> void {
 }
 
 // some additional shaders
-auto static application_init_shaders() -> void {
+static auto application_init_shaders() -> void {
     {
         char constexpr const* vtx = R"(
 #version 320 es

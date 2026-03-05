@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 
 // @return random from -range to +range
-auto static rnd1(float const range) -> float {
+static auto rnd1(float const range) -> float {
     int const r = rand();
     if (debug_multiplayer) {
         printf("%lu: %lu: rnd1: %d\n", glos::frame_context.frame_num,
@@ -20,7 +20,7 @@ auto static rnd1(float const range) -> float {
     return float(r) / float(RAND_MAX) * range - range / 2;
 }
 
-auto static rnd2(float const zero_to_range) -> float {
+static auto rnd2(float const zero_to_range) -> float {
     int const r = rand();
     if (debug_multiplayer) {
         printf("%lu: %lu: rnd2: %d\n", glos::frame_context.frame_num,
@@ -29,7 +29,7 @@ auto static rnd2(float const zero_to_range) -> float {
     return float(r) / float(RAND_MAX) * zero_to_range;
 }
 
-auto static rnd3(int const rem) -> bool {
+static auto rnd3(int const rem) -> bool {
     int const r = rand();
     if (debug_multiplayer) {
         printf("%lu: %lu: rnd3: %d\n", glos::frame_context.frame_num,
@@ -38,7 +38,7 @@ auto static rnd3(int const rem) -> bool {
     return (r % rem) == 0;
 }
 
-auto static game_area_roll(glm::vec3& position) -> void {
+static auto game_area_roll(glm::vec3& position) -> void {
     // approximately correct. can be done better.
 
     if (position.x < game_area_min_x) {
@@ -60,7 +60,7 @@ auto static game_area_roll(glm::vec3& position) -> void {
     }
 }
 
-auto static is_outside_game_area(glm::vec3 const& position) -> bool {
+static auto is_outside_game_area(glm::vec3 const& position) -> bool {
     return position.x < game_area_min_x || position.x > game_area_max_x ||
            position.y < game_area_min_y || position.y > game_area_max_y ||
            position.z < game_area_min_z || position.z > game_area_max_z;

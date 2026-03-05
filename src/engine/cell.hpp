@@ -298,7 +298,7 @@ class cell final {
         }
     }
 
-    auto static handle_sphere_collision(object* o1, object* o2) -> void {
+    static auto handle_sphere_collision(object* o1, object* o2) -> void {
         // synchronize objects that overlap cells
 
         bool const o1_overlaps_cells = o1->overlaps_cells;
@@ -349,7 +349,7 @@ class cell final {
 
     // @return true if collision with 'obj' has already been handled by
     // 'receiver'
-    auto static dispatch_collision(object* receiver, object* obj) -> bool {
+    static auto dispatch_collision(object* receiver, object* obj) -> bool {
         // if object overlaps cells then this code might be called by several
         // threads at the same time from different cells
 
@@ -386,7 +386,7 @@ class cell final {
         return false;
     }
 
-    auto static bounding_spheres_are_in_collision(entry const& ce1,
+    static auto bounding_spheres_are_in_collision(entry const& ce1,
                                                   entry const& ce2) -> bool {
 
         glm::vec3 const v = ce2.position - ce1.position;
@@ -397,7 +397,7 @@ class cell final {
         return diff < 0;
     }
 
-    auto static bounding_planes_are_in_collision(object* o1, object* o2)
+    static auto bounding_planes_are_in_collision(object* o1, object* o2)
         -> bool {
 
         o1->update_planes_world_coordinates();

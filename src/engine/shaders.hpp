@@ -193,7 +193,7 @@ void main() {
     }
 
   private:
-    auto static compile(GLenum const shader_type, char const* src) -> GLuint {
+    static auto compile(GLenum const shader_type, char const* src) -> GLuint {
         GLuint const shader_id = glCreateShader(shader_type);
         glShaderSource(shader_id, 1, &src, nullptr);
         glCompileShader(shader_id);
@@ -213,12 +213,12 @@ void main() {
     //
     // static functions
     //
-    auto static gl_print_string(char const* name, GLenum const gl_str) -> void {
+    static auto gl_print_string(char const* name, GLenum const gl_str) -> void {
         GLubyte const* str = glGetString(gl_str);
         printf("%s = %s\n", name, str);
     }
 
-    auto static shader_name_for_type(GLenum const shader_type) -> char const* {
+    static auto shader_name_for_type(GLenum const shader_type) -> char const* {
         switch (shader_type) {
         case GL_VERTEX_SHADER:
             return "vertex";

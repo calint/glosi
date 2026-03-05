@@ -660,7 +660,7 @@ void main() {
 
 // debugging (highly inefficient) function for rendering world coordinate system
 //  lines
-auto static debug_render_wcs_line(glm::vec3 const& from_wcs,
+static auto debug_render_wcs_line(glm::vec3 const& from_wcs,
                                   glm::vec3 const& to_wcs,
                                   glm::vec4 const& color, bool const depth_test)
     -> void {
@@ -707,7 +707,7 @@ auto static debug_render_wcs_line(glm::vec3 const& from_wcs,
     shaders.use_program(engine.shader_program_ix);
 }
 
-auto static debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
+static auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     globs.at(glob_ix_bounding_sphere).render(Mmw);
@@ -716,7 +716,7 @@ auto static debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
 
 // debugging (highly inefficient) function for rendering world coordinate system
 //  points
-auto static debug_render_wcs_points(std::vector<glm::vec3> const& points,
+static auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
                                     glm::vec4 const& color) -> void {
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
