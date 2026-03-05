@@ -11,7 +11,7 @@ class fragment final : public glos::object {
   public:
     uint64_t death_time_ms = 0;
 
-    inline fragment() {
+    fragment() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -27,14 +27,14 @@ class fragment final : public glos::object {
         collision_mask = cb_none;
     }
 
-    inline ~fragment() override {
+    ~fragment() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
         }
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }

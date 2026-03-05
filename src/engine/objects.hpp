@@ -73,12 +73,12 @@ class object {
     //       bit comparison source ok since only checking for equality
 
   public:
-    inline virtual ~object() = default;
+    virtual ~object() = default;
     // note: 'delete obj;' may not be used because memory is managed by
     //       'o1store'. destructor is invoked at 'objects.apply_free(...)'
 
     // called from 'cell'
-    inline virtual auto render() -> void {
+    virtual auto render() -> void {
         glob().render(updated_Mmw());
 
         if (is_debug_object_planes_normals) {
@@ -93,7 +93,7 @@ class object {
     // called from 'cell'
     // @return false if object has died, true otherwise
     // note: only one thread at a time is active in this section
-    inline virtual auto update() -> bool {
+    virtual auto update() -> bool {
         float const dt = frame_context.dt;
         linear_velocity += acceleration * dt;
         position += linear_velocity * dt;
@@ -113,11 +113,11 @@ class object {
     // called from 'cell'
     // note: only on thread at a time is active in this section
     // @return false if object has died, true otherwise
-    inline virtual auto on_collision([[maybe_unused]] object* obj) -> bool {
+    virtual auto on_collision([[maybe_unused]] object* obj) -> bool {
         return true;
     }
 
-    inline auto updated_Mmw() -> glm::mat4 const& {
+    auto updated_Mmw() -> glm::mat4 const& {
         // * synchronize if render and update run on different threads; both
         //   racing for this function from 'render()' and 'update()'
         // * synchronize if 'threaded_grid' because objects in different cells
@@ -155,25 +155,23 @@ class object {
         return Mmw;
     }
 
-    inline auto glob_ix(uint32_t const i) -> void {
+    auto glob_ix(uint32_t const i) -> void {
         if (glob_ix_ != i) {
             planes.invalidated = true;
         }
         glob_ix_ = i;
     }
 
-    inline auto glob_ix() const -> uint32_t { return glob_ix_; }
+    auto glob_ix() const -> uint32_t { return glob_ix_; }
 
-    inline auto glob() const -> glob const& { return globs.at(glob_ix_); }
+    auto glob() const -> glob const& { return globs.at(glob_ix_); }
 
   private:
     // called from 'cell' in thread safe way
-    inline auto clear_handled_collisions() -> void {
-        handled_collisions.clear();
-    }
+    auto clear_handled_collisions() -> void { handled_collisions.clear(); }
 
     // called from 'cell' in thread safe way
-    inline auto is_collision_handled_and_if_not_add(object const* obj) -> bool {
+    auto is_collision_handled_and_if_not_add(object const* obj) -> bool {
         bool const found = std::ranges::find(handled_collisions, obj) !=
                            handled_collisions.cend();
 
@@ -185,7 +183,7 @@ class object {
     }
 
     // called from 'cell'
-    inline auto update_planes_world_coordinates() -> void {
+    auto update_planes_world_coordinates() -> void {
         bool const synchronize = threaded_grid && overlaps_cells;
 
         class glob const& g = glob();
@@ -203,39 +201,35 @@ class object {
         }
     }
 
-    inline auto debug_get_Mmw_for_bounding_sphere() const -> glm::mat4 {
+    auto debug_get_Mmw_for_bounding_sphere() const -> glm::mat4 {
         return glm::scale(glm::translate(glm::mat4(1), Mmw_pos),
                           glm::vec3{bounding_radius});
     }
 
-    inline auto acquire_lock() -> void {
+    auto acquire_lock() -> void {
         while (lock.test_and_set(std::memory_order_acquire)) {
         }
     }
 
-    inline auto release_lock() -> void {
-        lock.clear(std::memory_order_release);
-    }
+    auto release_lock() -> void { lock.clear(std::memory_order_release); }
 };
 
 class objects final {
   public:
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {
+    auto free() -> void {
         for_each([](object* o) { o->~object(); });
         //? what if destructor created objects
     }
 
-    inline auto alloc() -> object* { return store_.allocate_instance(); }
+    auto alloc() -> object* { return store_.allocate_instance(); }
 
-    inline auto free(object* o) -> void { store_.free_instance(o); }
+    auto free(object* o) -> void { store_.free_instance(o); }
 
-    inline auto allocated_list_len() const -> size_t {
-        return allocated_list_len_;
-    }
+    auto allocated_list_len() const -> size_t { return allocated_list_len_; }
 
-    inline auto for_each(auto&& func) -> void {
+    auto for_each(auto&& func) -> void {
         for (object** it = store_.allocated_list(); it < allocated_list_end_;
              ++it) {
             object* obj = *it;
@@ -243,7 +237,7 @@ class objects final {
         }
     }
 
-    inline auto apply_allocated_instances(auto&& callback) -> void {
+    auto apply_allocated_instances(auto&& callback) -> void {
         // retrieve the end of list because during objects' 'update' and
         // 'on_collision' new objects might be created which would change the
         // end-of-list pointer
@@ -259,7 +253,7 @@ class objects final {
     }
 
     // free instances and call their destructors
-    inline auto apply_freed_instances(auto&& callback) -> void {
+    auto apply_freed_instances(auto&& callback) -> void {
         store_.apply_free(callback);
     }
 

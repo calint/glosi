@@ -34,7 +34,7 @@ class ship final : public glos::object {
   public:
     float fuel = fuel_capacity;
 
-    inline ship() {
+    ship() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -51,14 +51,14 @@ class ship final : public glos::object {
                          cb_static_object;
     }
 
-    inline ~ship() override {
+    ~ship() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
         }
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         previous_position = position;
         previous_velocity = linear_velocity;
         if (!object::update()) {
@@ -112,7 +112,7 @@ class ship final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,
@@ -165,7 +165,7 @@ class ship final : public glos::object {
     }
 
   private:
-    inline auto fire() -> void {
+    auto fire() -> void {
         if (ready_to_fire_at_ms > glos::frame_context.ms) {
             return;
         }
@@ -187,7 +187,7 @@ class ship final : public glos::object {
         ready_to_fire_at_ms = glos::frame_context.ms + bl.fire_interval_ms;
     }
 
-    static inline auto normalize_angle_rad(float const agl) -> float {
+    static auto normalize_angle_rad(float const agl) -> float {
         return glm::mod(agl + glm::pi<float>(), glm::two_pi<float>()) -
                glm::pi<float>();
     }

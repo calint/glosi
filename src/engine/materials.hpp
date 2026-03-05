@@ -37,9 +37,9 @@ class materials final {
     std::vector<material> store{};
 
   public:
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void { store.clear(); }
+    auto free() -> void { store.clear(); }
 
     // sample of text to parse:
 
@@ -54,7 +54,7 @@ class materials final {
     // illum 2
     // map_Kd /home/c/w/glos/logo.jpeg
 
-    inline auto load(char const* path) -> void {
+    auto load(char const* path) -> void {
         printf("   * loading materials from '%s'\n", path);
 
         std::ifstream file{path};
@@ -118,9 +118,8 @@ class materials final {
         }
     }
 
-    inline auto find_material_ix_or_throw(std::string const& path,
-                                          std::string const& name) const
-        -> uint32_t {
+    auto find_material_ix_or_throw(std::string const& path,
+                                   std::string const& name) const -> uint32_t {
 
         auto it =
             std::ranges::find_if(store, [&path, &name](material const& mtl) {
@@ -135,7 +134,7 @@ class materials final {
         return uint32_t(std::distance(store.cbegin(), it));
     }
 
-    inline auto at(uint32_t ix) const -> material const& { return store[ix]; }
+    auto at(uint32_t ix) const -> material const& { return store[ix]; }
 } static materials{};
 
 } // namespace glos

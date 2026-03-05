@@ -9,7 +9,7 @@
 
 class ship_bullet final : public glos::object {
   public:
-    inline ship_bullet() {
+    ship_bullet() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -25,14 +25,14 @@ class ship_bullet final : public glos::object {
         collision_mask = cb_asteroid | cb_ufo | cb_static_object;
     }
 
-    inline ~ship_bullet() override {
+    ~ship_bullet() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
         }
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }
@@ -44,7 +44,7 @@ class ship_bullet final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,

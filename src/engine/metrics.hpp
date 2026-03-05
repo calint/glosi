@@ -38,16 +38,16 @@ class metrics final {
     float net_ms = 0;
     bool enable_print = true;
 
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {}
+    auto free() -> void {}
 
-    inline auto begin() -> void {
+    auto begin() -> void {
         timer_tick_at_start_of_frame = SDL_GetPerformanceCounter();
         fps.time_at_start_of_interval_ms = SDL_GetTicks64();
     }
 
-    inline auto print_headers(FILE* f) const -> void {
+    auto print_headers(FILE* f) const -> void {
         if (!enable_print) {
             return;
         }
@@ -57,7 +57,7 @@ class metrics final {
                 "drw_g", "drw_t");
     }
 
-    inline auto print(FILE* f) const -> void {
+    auto print(FILE* f) const -> void {
         if (!enable_print) {
             return;
         }
@@ -71,27 +71,27 @@ class metrics final {
                 rendered_triangles);
     }
 
-    inline auto update_begin() -> void {
+    auto update_begin() -> void {
         update_begin_tick = SDL_GetPerformanceCounter();
     }
 
-    inline auto update_end() -> void {
+    auto update_end() -> void {
         uint64_t const tick = SDL_GetPerformanceCounter();
         update_pass_ms = float(tick - update_begin_tick) * 1000 /
                          float(SDL_GetPerformanceFrequency());
     }
 
-    inline auto render_begin() -> void {
+    auto render_begin() -> void {
         render_begin_tick = SDL_GetPerformanceCounter();
     }
 
-    inline auto render_end() -> void {
+    auto render_end() -> void {
         uint64_t const tick = SDL_GetPerformanceCounter();
         render_pass_ms = float(tick - render_begin_tick) * 1000 /
                          float(SDL_GetPerformanceFrequency());
     }
 
-    inline auto at_frame_begin() -> void {
+    auto at_frame_begin() -> void {
         ++fps.frame_count;
         rendered_objects = 0;
         rendered_globs = 0;
@@ -100,7 +100,7 @@ class metrics final {
         net_ms = 0;
     }
 
-    inline auto at_frame_end(FILE* f) -> void {
+    auto at_frame_end(FILE* f) -> void {
         {
             uint64_t const t1 = SDL_GetPerformanceCounter();
             uint64_t const dt_ticks = t1 - timer_tick_at_start_of_frame;

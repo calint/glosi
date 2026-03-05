@@ -16,7 +16,7 @@ namespace glos {
 
 class window final {
   public:
-    inline auto init() -> void {
+    auto init() -> void {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_ES);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -51,15 +51,15 @@ class window final {
         gl_print_context_profile_and_version();
     }
 
-    inline auto free() -> void {
+    auto free() -> void {
         SDL_DestroyRenderer(sdl_renderer);
         SDL_GL_DeleteContext(sdl_gl_context);
         SDL_DestroyWindow(sdl_window);
     }
 
-    inline auto swap_buffers() const -> void { SDL_GL_SwapWindow(sdl_window); }
+    auto swap_buffers() const -> void { SDL_GL_SwapWindow(sdl_window); }
 
-    inline auto get_width_and_height() const -> std::pair<int, int> {
+    auto get_width_and_height() const -> std::pair<int, int> {
         int w = 0;
         int h = 0;
         SDL_GetWindowSize(sdl_window, &w, &h);
@@ -71,7 +71,7 @@ class window final {
     SDL_Renderer* sdl_renderer = nullptr;
     SDL_GLContext sdl_gl_context = nullptr;
 
-    static inline auto gl_print_context_profile_and_version() -> void {
+    static auto gl_print_context_profile_and_version() -> void {
         int value = 0;
         if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &value)) {
             throw exception{

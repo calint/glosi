@@ -35,12 +35,11 @@ class planes final {
 
     // points and normals are in model coordinates
     // Mmw matrix was constructed using pos, agl, scl
-    inline auto update_model_to_world(std::vector<glm::vec4> const& points,
-                                      std::vector<glm::vec3> const& normals,
-                                      glm::mat4 const& Mmw,
-                                      glm::vec3 const& pos,
-                                      glm::vec3 const& agl,
-                                      glm::vec3 const& scl) -> void {
+    auto update_model_to_world(std::vector<glm::vec4> const& points,
+                               std::vector<glm::vec3> const& normals,
+                               glm::mat4 const& Mmw, glm::vec3 const& pos,
+                               glm::vec3 const& agl, glm::vec3 const& scl)
+        -> void {
 
         bool const inv_agl_scl =
             invalidated || Mmw_agl != agl || Mmw_scl != scl;
@@ -115,7 +114,7 @@ class planes final {
         invalidated = false;
     }
 
-    inline auto debug_render_normals() -> void {
+    auto debug_render_normals() -> void {
         acquire_lock();
         size_t const n = world_planes.size();
         for (uint32_t i = 0; i < n; ++i) {
@@ -135,7 +134,7 @@ class planes final {
     // assumes 'this' points and 'pns' planes are updated to world coordinate
     // system
     // @return true if any point in this is behind all planes in 'pns'
-    inline auto is_any_point_in_volume(planes const& pns) const -> bool {
+    auto is_any_point_in_volume(planes const& pns) const -> bool {
         return std::ranges::any_of(world_points,
                                    [&pns](glm::vec4 const& point) {
                                        return pns.is_point_in_volume(point);
@@ -143,7 +142,7 @@ class planes final {
     }
 
     // assumes updated planes to world coordinate system
-    inline auto is_point_in_volume(glm::vec4 const& point) const -> bool {
+    auto is_point_in_volume(glm::vec4 const& point) const -> bool {
         return std::ranges::all_of(world_planes,
                                    [&point](glm::vec4 const& plane) {
                                        return glm::dot(plane, point) <= 0;
@@ -154,8 +153,8 @@ class planes final {
     // e.g. bullets vs walls. gives false positives at corners because there are
     // positions where the sphere is within the collision planes although
     // outside the volume workaround: add planes to the volume at the corners
-    inline auto are_in_collision_with_sphere(glm::vec3 const& position,
-                                             float const radius) const -> bool {
+    auto are_in_collision_with_sphere(glm::vec3 const& position,
+                                      float const radius) const -> bool {
 
         // return are_in_collision_with_sphere_sat(position, radius);
 
@@ -172,7 +171,7 @@ class planes final {
     }
 
     // // note: gives false positives. works in 2D. (not used)
-    // inline auto
+    // auto
     // are_in_collision_with_sphere_sat(glm::vec3 const &position,
     //                                  float const radius) const -> bool {
 
@@ -252,18 +251,16 @@ class planes final {
     //   return true;
     // }
 
-    inline auto acquire_lock() -> void {
+    auto acquire_lock() -> void {
         while (lock.test_and_set(std::memory_order_acquire)) {
         }
     }
 
-    inline auto release_lock() -> void {
-        lock.clear(std::memory_order_release);
-    }
+    auto release_lock() -> void { lock.clear(std::memory_order_release); }
 
     // tests whether any point in 'pns1' is within the volume defined by 'pns2'
     // and vice versa
-    inline static auto are_in_collision(planes const& pns1, planes const& pns2)
+    static auto are_in_collision(planes const& pns1, planes const& pns2)
         -> bool {
         return pns1.is_any_point_in_volume(pns2) ||
                pns2.is_any_point_in_volume(pns1);

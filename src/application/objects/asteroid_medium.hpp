@@ -10,7 +10,7 @@
 
 class asteroid_medium final : public glos::object {
   public:
-    inline asteroid_medium() {
+    asteroid_medium() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -27,7 +27,7 @@ class asteroid_medium final : public glos::object {
         ++asteroids_alive;
     }
 
-    inline ~asteroid_medium() override {
+    ~asteroid_medium() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
@@ -36,7 +36,7 @@ class asteroid_medium final : public glos::object {
         --asteroids_alive;
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }
@@ -46,7 +46,7 @@ class asteroid_medium final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,

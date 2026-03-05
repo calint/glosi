@@ -26,7 +26,7 @@ class shaders final {
       public:
         GLuint id = 0;
 
-        inline auto use() const -> void { glUseProgram(id); }
+        auto use() const -> void { glUseProgram(id); }
     };
 
     // default shader source
@@ -105,7 +105,7 @@ void main() {
     // ambient light vector
     GLint ulht = -1;
 
-    inline auto init() -> void {
+    auto init() -> void {
         puts("");
         gl_print_string("GL_VENDOR", GL_VENDOR);
         gl_print_string("GL_RENDERER", GL_RENDERER);
@@ -123,7 +123,7 @@ void main() {
         use_program(default_program_ix);
     }
 
-    inline auto print_current_shader_info() -> void {
+    auto print_current_shader_info() -> void {
         printf("shader uniforms locations:\n");
         printf(":-%10s-:-%4s-:\n", "----------", "----");
         printf(": %10s : %-4d :\n", "umtx_mw", umtx_mw);
@@ -141,15 +141,15 @@ void main() {
         printf(":-%10s-:-%4s-:\n", "----------", "----");
     }
 
-    inline auto free() -> void {
+    auto free() -> void {
         for (program const& p : programs) {
             glDeleteProgram(p.id);
         }
         programs.clear();
     }
 
-    inline auto load_program_from_source(char const* vert_src,
-                                         char const* frag_src) -> uint32_t {
+    auto load_program_from_source(char const* vert_src, char const* frag_src)
+        -> uint32_t {
         GLuint const program_id = glCreateProgram();
         GLuint const vertex_shader_id = compile(GL_VERTEX_SHADER, vert_src);
         GLuint const fragment_shader_id = compile(GL_FRAGMENT_SHADER, frag_src);
@@ -173,9 +173,9 @@ void main() {
         return uint32_t(programs.size() - 1);
     }
 
-    inline auto programs_count() const -> size_t { return programs.size(); }
+    auto programs_count() const -> size_t { return programs.size(); }
 
-    inline auto use_program(uint32_t const ix) -> void {
+    auto use_program(uint32_t const ix) -> void {
         program const& prog = programs.at(ix);
         prog.use();
         umtx_mw = glGetUniformLocation(prog.id, "umtx_mw");
@@ -189,8 +189,7 @@ void main() {
     }
 
   private:
-    static inline auto compile(GLenum const shader_type, char const* src)
-        -> GLuint {
+    static auto compile(GLenum const shader_type, char const* src) -> GLuint {
         GLuint const shader_id = glCreateShader(shader_type);
         glShaderSource(shader_id, 1, &src, nullptr);
         glCompileShader(shader_id);
@@ -210,14 +209,12 @@ void main() {
     //
     // static functions
     //
-    static inline auto gl_print_string(char const* name, GLenum const gl_str)
-        -> void {
+    static auto gl_print_string(char const* name, GLenum const gl_str) -> void {
         GLubyte const* str = glGetString(gl_str);
         printf("%s = %s\n", name, str);
     }
 
-    static inline auto shader_name_for_type(GLenum const shader_type)
-        -> char const* {
+    static auto shader_name_for_type(GLenum const shader_type) -> char const* {
         switch (shader_type) {
         case GL_VERTEX_SHADER:
             return "vertex";

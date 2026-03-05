@@ -39,8 +39,7 @@ class cell final {
     std::vector<entry> static_entries_vector{};
     std::vector<collision> check_collisions_vector{};
 
-    inline auto update_objects_in_vector(std::vector<entry> const& vec) const
-        -> void {
+    auto update_objects_in_vector(std::vector<entry> const& vec) const -> void {
         uint32_t const frame_num = uint32_t(frame_context.frame_num);
         // note: ok to truncate because only equality is checked
         for (entry const& ce : vec) {
@@ -85,8 +84,7 @@ class cell final {
         }
     }
 
-    inline auto render_objects_in_vector(std::vector<entry> const& vec) const
-        -> void {
+    auto render_objects_in_vector(std::vector<entry> const& vec) const -> void {
         uint32_t const frame_num = uint32_t(frame_context.frame_num);
         // note: ok to truncate because only equality is checked
         for (entry const& ce : vec) {
@@ -104,43 +102,41 @@ class cell final {
 
   public:
     // called from grid
-    inline auto update() const -> void {
+    auto update() const -> void {
         update_objects_in_vector(moving_entries_vector);
         update_objects_in_vector(static_entries_vector);
     }
 
-    inline auto resolve_collisions() -> void {
+    auto resolve_collisions() -> void {
         make_check_collisions_vector();
         process_check_collisions_vector();
         handle_check_collisions_vector();
     }
 
     // called from grid (from only one thread)
-    inline auto render() const -> void {
+    auto render() const -> void {
         render_objects_in_vector(moving_entries_vector);
         render_objects_in_vector(static_entries_vector);
     }
 
     // called from grid (from only one thread)
-    inline auto clear_non_static_entries() -> void {
-        moving_entries_vector.clear();
-    }
+    auto clear_non_static_entries() -> void { moving_entries_vector.clear(); }
 
     // called from grid (from only one thread)
-    inline auto add(object* o) -> void {
+    auto add(object* o) -> void {
         moving_entries_vector.emplace_back(o->position, o->bounding_radius,
                                            o->collision_bits, o->collision_mask,
                                            o);
     }
 
     // called from grid (from only one thread)
-    inline auto add_static(object* o) -> void {
+    auto add_static(object* o) -> void {
         static_entries_vector.emplace_back(o->position, o->bounding_radius,
                                            o->collision_bits, o->collision_mask,
                                            o);
     }
 
-    inline auto remove_static(object* o) -> void {
+    auto remove_static(object* o) -> void {
         auto it = std::find_if(static_entries_vector.begin(),
                                static_entries_vector.end(),
                                [o](entry const& ce) { return ce.object == o; });
@@ -149,7 +145,7 @@ class cell final {
         static_entries_vector.pop_back();
     }
 
-    inline auto print() const -> void {
+    auto print() const -> void {
         uint32_t i = 0;
         for (entry const& ce : moving_entries_vector) {
             if (i++) {
@@ -168,17 +164,17 @@ class cell final {
         printf("\n");
     }
 
-    inline auto objects_count() const -> uint32_t {
+    auto objects_count() const -> uint32_t {
         return uint32_t(moving_entries_vector.size());
     }
 
-    inline auto static_objects_count() const -> uint32_t {
+    auto static_objects_count() const -> uint32_t {
         return uint32_t(static_entries_vector.size());
     }
 
   private:
     // called from one thread
-    inline auto make_check_collisions_vector() -> void {
+    auto make_check_collisions_vector() -> void {
         check_collisions_vector.clear();
 
         // check static objects vs moving objects
@@ -219,7 +215,7 @@ class cell final {
     }
 
     // called from one thread
-    inline auto process_check_collisions_vector() -> void {
+    auto process_check_collisions_vector() -> void {
         for (collision& cc : check_collisions_vector) {
             // bounding spheres are in collision
             object* o1 = cc.o1;
@@ -264,7 +260,7 @@ class cell final {
     }
 
     // called from one thread
-    inline auto handle_check_collisions_vector() const -> void {
+    auto handle_check_collisions_vector() const -> void {
         for (collision const& cc : check_collisions_vector) {
             if (!cc.is_collision) {
                 continue;
@@ -302,7 +298,7 @@ class cell final {
         }
     }
 
-    static inline auto handle_sphere_collision(object* o1, object* o2) -> void {
+    static auto handle_sphere_collision(object* o1, object* o2) -> void {
         // synchronize objects that overlap cells
 
         bool const o1_overlaps_cells = o1->overlaps_cells;
@@ -353,8 +349,7 @@ class cell final {
 
     // @return true if collision with 'obj' has already been handled by
     // 'receiver'
-    static inline auto dispatch_collision(object* receiver, object* obj)
-        -> bool {
+    static auto dispatch_collision(object* receiver, object* obj) -> bool {
         // if object overlaps cells then this code might be called by several
         // threads at the same time from different cells
 
@@ -391,9 +386,8 @@ class cell final {
         return false;
     }
 
-    static inline auto bounding_spheres_are_in_collision(entry const& ce1,
-                                                         entry const& ce2)
-        -> bool {
+    static auto bounding_spheres_are_in_collision(entry const& ce1,
+                                                  entry const& ce2) -> bool {
 
         glm::vec3 const v = ce2.position - ce1.position;
         float const d = ce1.radius + ce2.radius;
@@ -403,7 +397,7 @@ class cell final {
         return diff < 0;
     }
 
-    static inline auto bounding_planes_are_in_collision(object* o1, object* o2)
+    static auto bounding_planes_are_in_collision(object* o1, object* o2)
         -> bool {
 
         o1->update_planes_world_coordinates();

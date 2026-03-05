@@ -47,7 +47,7 @@ class net final {
     char const* host = "127.0.0.1";
     uint16_t port = 8085;
 
-    inline auto init() -> void {
+    auto init() -> void {
         if (net_players < 1) {
             throw exception{"configuration 'net_players' must be at least 1"};
         }
@@ -97,7 +97,7 @@ class net final {
         printf("[ net ] server time: %lu ms\n\n", ms);
     }
 
-    inline auto free() -> void {
+    auto free() -> void {
         if (!enabled) {
             return;
         }
@@ -108,9 +108,9 @@ class net final {
         }
     }
 
-    inline auto begin() -> void { send_state(); }
+    auto begin() -> void { send_state(); }
 
-    inline auto receive_and_send() -> void {
+    auto receive_and_send() -> void {
         // calculate net lag
         uint64_t const t0 = SDL_GetPerformanceCounter();
 
@@ -142,7 +142,7 @@ class net final {
   private:
     int fd = 0;
 
-    inline auto send_state() const -> void {
+    auto send_state() const -> void {
         ssize_t const n = send(fd, &next_state, sizeof(next_state), 0);
         if (n == -1) {
             throw exception{strerror(errno)};

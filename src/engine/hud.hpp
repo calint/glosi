@@ -19,7 +19,7 @@ class hud final {
   public:
     uint32_t program_ix = 0;
 
-    inline auto init() -> void {
+    auto init() -> void {
         if (TTF_Init()) {
             throw exception{
                 std::format("cannot initiate ttf: {}", TTF_GetError())};
@@ -78,7 +78,7 @@ class hud final {
                                                       fragment_shader_source);
     }
 
-    inline auto free() -> void {
+    auto free() -> void {
         if (font) {
             TTF_CloseFont(font);
         }
@@ -89,7 +89,7 @@ class hud final {
         glDeleteTextures(1, &texture);
     }
 
-    inline auto load_font(char const* ttf_path, int const size) -> void {
+    auto load_font(char const* ttf_path, int const size) -> void {
         font = TTF_OpenFont(ttf_path, size);
         if (!font) {
             throw exception{std::format("cannot load font '{}': {}", ttf_path,
@@ -97,7 +97,7 @@ class hud final {
         }
     }
 
-    inline auto render() const -> void {
+    auto render() const -> void {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -115,8 +115,8 @@ class hud final {
         glDisable(GL_BLEND);
     }
 
-    inline auto print(char const* text, SDL_Color const color, int const x,
-                      const int y) const -> void {
+    auto print(char const* text, SDL_Color const color, int const x,
+               const int y) const -> void {
 
         SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font, text, color);
 

@@ -15,7 +15,7 @@ class power_up final : public glos::object {
   public:
     uint64_t death_time_ms = 0;
 
-    inline power_up() {
+    power_up() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -33,14 +33,14 @@ class power_up final : public glos::object {
         death_time_ms = glos::frame_context.ms + power_up_lifetime_ms;
     }
 
-    inline ~power_up() override {
+    ~power_up() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
         }
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }
@@ -67,7 +67,7 @@ class power_up final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,

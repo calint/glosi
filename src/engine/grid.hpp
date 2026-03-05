@@ -20,12 +20,12 @@ class grid final {
     std::array<std::array<cell, grid_columns>, grid_rows> cells{};
 
   public:
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {}
+    auto free() -> void {}
 
     // called from engine
-    inline auto update() -> void {
+    auto update() -> void {
         if (threaded_grid) {
 #if defined(MODE_JTHREADS)
             std::vector<std::jthread> workers;
@@ -58,7 +58,7 @@ class grid final {
     }
 
     // called from engine
-    inline auto resolve_collisions() -> void {
+    auto resolve_collisions() -> void {
         if (threaded_grid) {
 #if defined(MODE_JTHREADS)
             std::vector<std::jthread> workers;
@@ -91,7 +91,7 @@ class grid final {
     }
 
     // called from engine
-    inline auto render() const -> void {
+    auto render() const -> void {
         for (auto const& row : cells) {
             for (cell const& c : row) {
                 c.render();
@@ -100,7 +100,7 @@ class grid final {
     }
 
     // called from engine
-    inline auto clear_non_static_entries() -> void {
+    auto clear_non_static_entries() -> void {
         for (auto& row : cells) {
             for (cell& c : row) {
                 c.clear_non_static_entries();
@@ -109,21 +109,21 @@ class grid final {
     }
 
     // called from engine
-    inline auto add(object* o) -> void {
+    auto add(object* o) -> void {
         o->overlaps_cells =
             for_each_cell_object_is_in(o, [o](cell& c) { c.add(o); });
     }
 
-    inline auto add_static(object* o) -> void {
+    auto add_static(object* o) -> void {
         o->overlaps_cells =
             for_each_cell_object_is_in(o, [o](cell& c) { c.add_static(o); });
     }
 
-    inline auto remove_static(object* o) -> void {
+    auto remove_static(object* o) -> void {
         for_each_cell_object_is_in(o, [o](cell& c) { c.remove_static(o); });
     }
 
-    inline auto print() const -> void {
+    auto print() const -> void {
         for (auto const& row : cells) {
             for (cell const& c : row) {
                 printf(" %04u/%04u ", c.objects_count(),
@@ -134,7 +134,7 @@ class grid final {
         printf("------------------------\n");
     }
 
-    inline auto debug_render_grid() const -> void {
+    auto debug_render_grid() const -> void {
         float constexpr gw = grid_cell_size * grid_columns;
         float constexpr gh = grid_cell_size * grid_rows;
         for (float z = -gh / 2; z <= gh / 2; z += grid_cell_size) {
@@ -148,7 +148,7 @@ class grid final {
     }
 
   private:
-    static inline auto clamp(int32_t const i, uint32_t const max) -> uint32_t {
+    static auto clamp(int32_t const i, uint32_t const max) -> uint32_t {
         if (i < 0) {
             return 0;
         }
@@ -159,7 +159,7 @@ class grid final {
     }
 
     // @return true if object overlaps cells
-    inline auto for_each_cell_object_is_in(object* o, auto&& func) -> bool {
+    auto for_each_cell_object_is_in(object* o, auto&& func) -> bool {
         float constexpr gw = grid_cell_size * grid_columns;
         float constexpr gh = grid_cell_size * grid_rows;
 

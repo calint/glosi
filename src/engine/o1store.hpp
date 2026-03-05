@@ -43,7 +43,7 @@ class o1store final {
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
 
   public:
-    inline o1store() {
+    o1store() {
         if (instance_size_B) {
             static_assert(instance_size_B % cache_line_size_B == 0);
             // allocate cache line aligned memory
@@ -87,7 +87,7 @@ class o1store final {
         }
     }
 
-    inline ~o1store() {
+    ~o1store() {
         std::free(all_);
         std::free(alloc_bgn_);
         std::free(free_bgn_);
@@ -96,7 +96,7 @@ class o1store final {
 
     // allocates an instance
     // @return nullptr or throws if instance could not be allocated
-    inline auto allocate_instance() -> type* {
+    auto allocate_instance() -> type* {
         if (thread_safe) {
             acquire_lock();
         }
@@ -125,7 +125,7 @@ class o1store final {
     }
 
     // adds instance to list of instances to be freed with 'apply_free()'
-    inline auto free_instance(type* const inst) -> void {
+    auto free_instance(type* const inst) -> void {
         if (thread_safe) {
             acquire_lock();
         }
@@ -156,7 +156,7 @@ class o1store final {
 
     // deallocates the instances that have been freed and their destructor is
     // called
-    inline auto apply_free(auto&& callback) -> void {
+    auto apply_free(auto&& callback) -> void {
         for (type** it = del_bgn_; it < del_ptr_; ++it) {
             type* inst_deleted = *it;
             callback(inst_deleted);
@@ -172,26 +172,24 @@ class o1store final {
     }
 
     // @return list of allocated instances
-    inline auto allocated_list() const -> type** { return alloc_bgn_; }
+    auto allocated_list() const -> type** { return alloc_bgn_; }
 
     // @return length of list of allocated instances
-    inline auto allocated_list_len() const -> uint32_t {
+    auto allocated_list_len() const -> uint32_t {
         return uint32_t(alloc_ptr_ - alloc_bgn_);
     }
 
     // @return one past the end of allocated instances list
-    inline auto allocated_list_end() const -> type** { return alloc_ptr_; }
+    auto allocated_list_end() const -> type** { return alloc_ptr_; }
 
     // @return the list with all preallocated instances
-    inline auto all_list() const -> type* { return all_; }
+    auto all_list() const -> type* { return all_; }
 
     // @return the length of 'all' list
-    inline auto constexpr all_list_len() const -> size_t {
-        return instance_count;
-    }
+    auto constexpr all_list_len() const -> size_t { return instance_count; }
 
     // @return instance at index 'ix' from 'all' list
-    inline auto instance(size_t const ix) const -> type* {
+    auto instance(size_t const ix) const -> type* {
         if (!instance_size_B) {
             return &all_[ix];
         }
@@ -201,21 +199,19 @@ class o1store final {
     }
 
     // @return the size of allocated heap memory in bytes
-    inline auto constexpr allocated_data_size_B() const -> size_t {
+    auto constexpr allocated_data_size_B() const -> size_t {
         return instance_size_B ? (instance_count * instance_size_B +
                                   3 * instance_count * sizeof(type*))
                                : (instance_count * sizeof(type) +
                                   3 * instance_count * sizeof(type*));
     }
 
-    inline auto acquire_lock() -> void {
+    auto acquire_lock() -> void {
         while (lock.test_and_set(std::memory_order_acquire)) {
         }
     }
 
-    inline auto release_lock() -> void {
-        lock.clear(std::memory_order_release);
-    }
+    auto release_lock() -> void { lock.clear(std::memory_order_release); }
 };
 
 } // namespace glos

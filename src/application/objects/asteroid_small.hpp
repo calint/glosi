@@ -12,7 +12,7 @@ class asteroid_small final : public glos::object {
     static inline uint64_t power_up_soonest_next_spawn_ms = 0;
 
   public:
-    inline asteroid_small() {
+    asteroid_small() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -29,7 +29,7 @@ class asteroid_small final : public glos::object {
         ++asteroids_alive;
     }
 
-    inline ~asteroid_small() override {
+    ~asteroid_small() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
@@ -38,7 +38,7 @@ class asteroid_small final : public glos::object {
         --asteroids_alive;
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }
@@ -48,7 +48,7 @@ class asteroid_small final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,

@@ -8,7 +8,7 @@ class ufo final : public glos::object {
     uint64_t next_fire_ms = 0;
 
   public:
-    inline ufo() {
+    ufo() {
         if (debug_multiplayer) {
             uint32_t const oid = ++object_id;
             // note: 'object_id' increment and assignment to 'oid' is atomic
@@ -27,7 +27,7 @@ class ufo final : public glos::object {
         next_fire_ms = glos::frame_context.ms + ufo_fire_rate_interval_ms;
     }
 
-    inline ~ufo() override {
+    ~ufo() override {
         if (debug_multiplayer) {
             printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
                    glos::frame_context.ms, name.c_str());
@@ -35,7 +35,7 @@ class ufo final : public glos::object {
         --ufos_alive;
     }
 
-    inline auto update() -> bool override {
+    auto update() -> bool override {
         if (!object::update()) {
             return false;
         }
@@ -57,7 +57,7 @@ class ufo final : public glos::object {
         return true;
     }
 
-    inline auto on_collision(object* o) -> bool override {
+    auto on_collision(object* o) -> bool override {
         if (debug_multiplayer) {
             printf("%lu: %lu: %s collision with %s\n",
                    glos::frame_context.frame_num, glos::frame_context.ms,

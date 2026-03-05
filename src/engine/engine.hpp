@@ -75,7 +75,7 @@ static uint32_t glob_ix_bounding_sphere = 0;
 
 class engine final {
   public:
-    inline auto init() -> void {
+    auto init() -> void {
         // set random number generator seed for deterministic behaviour
         srand(random_seed);
 
@@ -182,7 +182,7 @@ void main() {
                metrics.buffered_texture_data);
     }
 
-    inline auto free() -> void {
+    auto free() -> void {
         application_free();
         grid.free();
         objects.free();
@@ -197,7 +197,7 @@ void main() {
         metrics.free();
     }
 
-    inline auto run() -> void {
+    auto run() -> void {
         if (net.enabled) {
             // initiate networking by sending initial signals
             net.begin();
@@ -290,7 +290,7 @@ void main() {
     std::mutex is_rendering_mutex{};
     std::condition_variable is_rendering_cv{};
 
-    inline auto render() -> void {
+    auto render() -> void {
         metrics.render_begin();
         if (!is_render) {
             metrics.render_end();
@@ -339,7 +339,7 @@ void main() {
 
     // in 'threaded_update' runs before render and update is done parallel in
     //  'update_pass_2()'
-    inline auto update_pass_1() -> void {
+    auto update_pass_1() -> void {
 
         grid.clear_non_static_entries();
 
@@ -362,7 +362,7 @@ void main() {
     }
 
     // in 'threaded_update' runs in parallel with rendering
-    inline auto update_pass_2() const -> void {
+    auto update_pass_2() const -> void {
         if (is_print_grid) {
             grid.print();
         }
@@ -422,7 +422,7 @@ void main() {
         }
     }
 
-    inline auto start_update_thread() -> void {
+    auto start_update_thread() -> void {
         update_thread = std::thread([this]() {
             while (true) {
                 {
@@ -456,7 +456,7 @@ void main() {
         });
     }
 
-    inline auto render_thread_loop_body() -> void {
+    auto render_thread_loop_body() -> void {
         // wait for update thread to remove and add objects to grid
         std::unique_lock<std::mutex> lock{is_rendering_mutex};
         is_rendering_cv.wait(lock, [this] { return is_rendering; });
@@ -475,7 +475,7 @@ void main() {
         is_rendering_cv.notify_one();
     }
 
-    inline auto handle_events() -> void {
+    auto handle_events() -> void {
         // poll events
         SDL_Event event{};
         while (SDL_PollEvent(&event)) {
@@ -652,10 +652,10 @@ void main() {
 
 // debugging (highly inefficient) function for rendering world coordinate system
 //  lines
-static inline auto debug_render_wcs_line(glm::vec3 const& from_wcs,
-                                         glm::vec3 const& to_wcs,
-                                         glm::vec4 const& color,
-                                         bool const depth_test) -> void {
+static auto debug_render_wcs_line(glm::vec3 const& from_wcs,
+                                  glm::vec3 const& to_wcs,
+                                  glm::vec4 const& color, bool const depth_test)
+    -> void {
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -699,7 +699,7 @@ static inline auto debug_render_wcs_line(glm::vec3 const& from_wcs,
     shaders.use_program(engine.shader_program_ix);
 }
 
-static inline auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
+static auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     globs.at(glob_ix_bounding_sphere).render(Mmw);
@@ -708,8 +708,8 @@ static inline auto debug_render_bounding_sphere(glm::mat4 const& Mmw) -> void {
 
 // debugging (highly inefficient) function for rendering world coordinate system
 //  points
-static inline auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
-                                           glm::vec4 const& color) -> void {
+static auto debug_render_wcs_points(std::vector<glm::vec3> const& points,
+                                    glm::vec4 const& color) -> void {
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);

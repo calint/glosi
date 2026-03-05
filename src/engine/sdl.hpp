@@ -14,7 +14,7 @@ namespace glos {
 
 class sdl final {
   public:
-    inline auto init() -> void {
+    auto init() -> void {
         SDL_version compiled{};
         SDL_VERSION(&compiled)
 
@@ -32,7 +32,7 @@ class sdl final {
         }
     }
 
-    inline auto free() -> void { SDL_Quit(); }
+    auto free() -> void { SDL_Quit(); }
 } static sdl{};
 
 } // namespace glos

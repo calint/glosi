@@ -15,7 +15,7 @@ namespace glos {
 
 class camera final {
   public:
-    enum class type { LOOK_AT, ANGLE, ORTHOGONAL };
+    enum class type : uint8_t { LOOK_AT, ANGLE, ORTHOGONAL };
 
     glm::vec3 position{0, 50, 0};
     glm::vec3 look_at{0, 0, -.000001f};
@@ -40,11 +40,11 @@ class camera final {
 
     type type = type::ORTHOGONAL;
 
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {}
+    auto free() -> void {}
 
-    inline auto update_matrix_wvp() -> void {
+    auto update_matrix_wvp() -> void {
         switch (type) {
         case type::LOOK_AT: {
             float const aspect_ratio = height == 0 ? 1 : (width / height);

@@ -46,14 +46,14 @@ class glob final {
     //       additional points in 'planes_points' to better define a volume and
     //       points it contains
 
-    inline glob(char const* obj_path, char const* bounding_planes_path) {
+    glob(char const* obj_path, char const* bounding_planes_path) {
         load_object(obj_path);
         if (bounding_planes_path) {
             load_planes(bounding_planes_path);
         }
     }
 
-    inline auto render(glm::mat4 const& Mmw) const -> void {
+    auto render(glm::mat4 const& Mmw) const -> void {
         glUniformMatrix4fv(shaders.umtx_mw, 1, GL_FALSE, glm::value_ptr(Mmw));
         glBindVertexArray(vertex_array_id);
         for (range const& rng : ranges) {
@@ -76,7 +76,7 @@ class glob final {
         ++metrics.rendered_globs;
     }
 
-    inline auto free() const -> void {
+    auto free() const -> void {
         glDeleteBuffers(1, &vertex_buffer_id);
         glDeleteVertexArrays(1, &vertex_array_id);
         metrics.buffered_vertex_data -= size_B;
@@ -85,7 +85,7 @@ class glob final {
 
   private:
     // loads definition of object from and 'obj' file
-    inline auto load_object(std::filesystem::path path) -> void {
+    auto load_object(std::filesystem::path path) -> void {
         printf(" * loading glob from '%s'\n", path.string().c_str());
 
         std::ifstream file{path};
@@ -253,7 +253,7 @@ class glob final {
         metrics.buffered_vertex_data += size_B;
     }
 
-    inline auto load_planes(std::filesystem::path path) -> void {
+    auto load_planes(std::filesystem::path path) -> void {
         // load from blender exported 'obj' file
         printf("   * loading planes from '%s'\n", path.string().c_str());
         std::ifstream file{path};
@@ -322,22 +322,22 @@ class globs final {
     std::vector<glob> store{};
 
   public:
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {
+    auto free() -> void {
         for (glob const& g : store) {
             g.free();
         }
     }
 
-    inline auto load(char const* obj_path, char const* bounding_planes_path)
+    auto load(char const* obj_path, char const* bounding_planes_path)
         -> uint32_t {
 
         store.emplace_back(obj_path, bounding_planes_path);
         return uint32_t(store.size() - 1);
     }
 
-    inline auto at(uint32_t const ix) const -> glob const& { return store[ix]; }
+    auto at(uint32_t const ix) const -> glob const& { return store[ix]; }
 } static globs{};
 
 } // namespace glos

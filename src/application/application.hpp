@@ -23,12 +23,10 @@ static auto create_cubes(uint32_t const num) -> void;
 static auto load_map(std::filesystem::path path) -> void;
 
 // engine interface
-static inline auto application_print_hello() -> void {
-    printf("\nprogram glosi\n\n");
-}
+static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
 
 // engine interface
-static inline auto application_init() -> void {
+static auto application_init() -> void {
     application_init_shaders();
 
     printf("\ntime is %lu ms\n\n", glos::frame_context.ms);
@@ -177,7 +175,7 @@ static inline auto application_init() -> void {
 }
 
 // engine interface
-static inline auto application_on_update_done() -> void {
+static auto application_on_update_done() -> void {
     if (is_performance_test) {
         return;
     }
@@ -212,7 +210,7 @@ static inline auto application_on_update_done() -> void {
 }
 
 // engine interface
-static inline auto application_on_render_done() -> void {
+static auto application_on_render_done() -> void {
     std::array<char, 128> buf;
     int const s = score;
     if (performance_test_type == 0) {
@@ -225,9 +223,9 @@ static inline auto application_on_render_done() -> void {
 }
 
 // engine interface
-static inline auto application_free() -> void {}
+static auto application_free() -> void {}
 
-static inline auto create_asteroids(uint32_t const num) -> void {
+static auto create_asteroids(uint32_t const num) -> void {
     float constexpr v = asteroid_large_speed;
     float constexpr d = game_area_max_x - game_area_min_x;
     for (uint32_t i = 0; i < num; ++i) {
@@ -237,7 +235,7 @@ static inline auto create_asteroids(uint32_t const num) -> void {
     }
 }
 
-static inline auto create_ufo() -> void {
+static auto create_ufo() -> void {
     ufo* u = new (glos::objects.alloc()) ufo{};
     u->position = {-grid_size / 2, 0, -grid_size / 2};
     u->angle = {glm::radians(-65.0f), 0, 0};
@@ -245,7 +243,7 @@ static inline auto create_ufo() -> void {
     u->linear_velocity = {rnd1(ufo_velocity), 0, rnd1(ufo_velocity)};
 }
 
-static inline auto create_cubes(uint32_t const num) -> void {
+static auto create_cubes(uint32_t const num) -> void {
     float constexpr a = cube_angular_velocity;
     float constexpr v = cube_speed;
     float constexpr gx = game_area_max_x - game_area_min_x;
@@ -258,7 +256,7 @@ static inline auto create_cubes(uint32_t const num) -> void {
     }
 }
 
-static inline auto load_static_object_list(std::filesystem::path path) -> void {
+static auto load_static_object_list(std::filesystem::path path) -> void {
     printf(" * loading map from '%s'\n", path.string().c_str());
 
     std::ifstream file{path};
@@ -301,7 +299,7 @@ static inline auto load_static_object_list(std::filesystem::path path) -> void {
     }
 }
 
-static inline auto load_map(std::filesystem::path path) -> void {
+static auto load_map(std::filesystem::path path) -> void {
     printf(" * loading map from '%s'\n", path.string().c_str());
 
     std::ifstream file{path};
@@ -357,7 +355,7 @@ static inline auto load_map(std::filesystem::path path) -> void {
 }
 
 // some additional shaders
-static inline auto application_init_shaders() -> void {
+static auto application_init_shaders() -> void {
     {
         char constexpr const* vtx = R"(
 #version 330 core

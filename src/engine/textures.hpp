@@ -21,7 +21,7 @@ class texture final {
     GLuint id = 0;
     size_t size_B = 0;
 
-    inline auto load(std::string const& path) -> void {
+    auto load(std::string const& path) -> void {
         // load texture
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
@@ -48,9 +48,9 @@ class texture final {
 
 class textures final {
   public:
-    inline auto init() -> void {}
+    auto init() -> void {}
 
-    inline auto free() -> void {
+    auto free() -> void {
         for (auto const& pair : store) {
             glDeleteTextures(1, &pair.second.id);
             metrics.buffered_texture_data -= pair.second.size_B;
@@ -58,7 +58,7 @@ class textures final {
         store.clear();
     }
 
-    inline auto find_id_or_load(std::string const& path) -> GLuint {
+    auto find_id_or_load(std::string const& path) -> GLuint {
         auto it = store.find(path);
         if (it != store.end()) {
             return it->second.id;
