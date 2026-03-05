@@ -72,7 +72,8 @@ class net final {
         server.sin_port = htons(port);
 
         printf("[ net ] connecting to '%s' on port %u\n", host, port);
-        if (connect(fd, (struct sockaddr*)&server, sizeof(server)) < 0) {
+        if (connect(fd, reinterpret_cast<struct sockaddr*>(&server),
+                    sizeof(server)) < 0) {
             throw exception{strerror(errno)};
         }
 

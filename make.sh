@@ -45,7 +45,7 @@ elif [[ "$COMPILER" == "clang" ]]; then
     WARNINGS="-Weverything \
             -Wno-c++98-compat -Wno-float-equal -Wno-covered-switch-default \
             -Wno-padded -Wno-exit-time-destructors -Wno-global-constructors \
-            -Wno-old-style-cast -Wno-weak-vtables -Wno-unsafe-buffer-usage \
+            -Wno-weak-vtables -Wno-unsafe-buffer-usage \
             -Wno-unsafe-buffer-usage-in-libc-call -Wno-unused"
 fi
 

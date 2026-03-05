@@ -58,7 +58,7 @@ class hud final {
 
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                              (GLvoid*)(2 * sizeof(float)));
+                              reinterpret_cast<GLvoid*>(2 * sizeof(float)));
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
