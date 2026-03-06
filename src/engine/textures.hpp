@@ -8,8 +8,8 @@
 #include "exception.hpp"
 #include "metrics.hpp"
 #include <GLES3/gl3.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_surface.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_surface.h>
 #include <cstddef>
 #include <string>
 #include <unordered_map>
@@ -41,7 +41,7 @@ class texture final {
                      surface->pixels);
         glGenerateMipmap(GL_TEXTURE_2D);
         size_B = size_t(surface->w * surface->h) * sizeof(uint32_t);
-        SDL_FreeSurface(surface);
+        SDL_DestroySurface(surface);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 };

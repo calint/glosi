@@ -9,9 +9,10 @@
 #include "exception.hpp"
 #include "shaders.hpp"
 #include <GLES3/gl3.h>
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL_pixels.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <cstdint>
+#include <cstring>
 
 namespace glos {
 
@@ -20,9 +21,9 @@ class hud final {
     uint32_t program_ix = 0;
 
     auto init() -> void {
-        if (TTF_Init()) {
+        if (!TTF_Init()) {
             throw exception{
-                std::format("cannot initiate ttf: {}", TTF_GetError())};
+                std::format("cannot initiate ttf: {}", SDL_GetError())};
         }
 
         GLfloat constexpr quad_vertices[] = {
@@ -90,10 +91,10 @@ class hud final {
     }
 
     auto load_font(char const* ttf_path, int const size) -> void {
-        font = TTF_OpenFont(ttf_path, size);
+        font = TTF_OpenFont(ttf_path, float(size));
         if (!font) {
             throw exception{std::format("cannot load font '{}': {}", ttf_path,
-                                        TTF_GetError())};
+                                        SDL_GetError())};
         }
     }
 
@@ -118,7 +119,8 @@ class hud final {
     auto print(char const* text, SDL_Color const color, int const x,
                const int y) const -> void {
 
-        SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font, text, color);
+        SDL_Surface* text_surface =
+            TTF_RenderText_Blended(font, text, std::strlen(text), color);
 
         if (!text_surface) {
             throw exception{
@@ -129,8 +131,10 @@ class hud final {
         //        SDL_GetPixelFormatName(text_surface->format->format));
         // ARGB8888
 
+        // convert to desired pixel format (SDL3 ConvertSurface takes a
+        // SDL_PixelFormat value, which is just a Uint32 identifier)
         SDL_Surface* converted_surface =
-            SDL_ConvertSurfaceFormat(text_surface, SDL_PIXELFORMAT_RGBA8888, 0);
+            SDL_ConvertSurface(text_surface, SDL_PIXELFORMAT_RGBA8888);
 
         if (!converted_surface) {
             throw exception{
@@ -152,8 +156,8 @@ class hud final {
         // glTexSubImage2D(GL_TEXTURE_2D, 0, GLint(x), GLint(y), 2, 2, GL_RGBA,
         //                 GL_UNSIGNED_BYTE, pixels);
 
-        SDL_FreeSurface(text_surface);
-        SDL_FreeSurface(converted_surface);
+        SDL_DestroySurface(text_surface);
+        SDL_DestroySurface(converted_surface);
     }
 
   private:

@@ -20,10 +20,10 @@
 #include "textures.hpp"
 #include "window.hpp"
 #include <GLES3/gl3.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_keycode.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <arpa/inet.h>
 #include <condition_variable>
 #include <glm/ext/matrix_transform.hpp>
@@ -170,7 +170,7 @@ void main() {
 
         // initiate 'frame_context' with current time from server or local timer
         //  in case 'application_init()' needs current time
-        frame_context = {0, net.enabled ? net.ms : SDL_GetTicks64(), 0};
+        frame_context = {0, net.enabled ? net.ms : SDL_GetTicks(), 0};
 
         // set defaults for metrics
         metrics.fps.calculation_interval_ms = 1000;
@@ -220,7 +220,7 @@ void main() {
         metrics.print_headers(stdout);
         metrics.begin();
 
-        SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE : SDL_FALSE);
+        SDL_SetWindowRelativeMouseMode(window.handle(), is_mouse_mode);
 
         // enter game loop
         while (true) {
@@ -365,7 +365,7 @@ void main() {
         if (net.enabled) {
             frame_context = {frame_num, net.ms, net.dt};
         } else {
-            frame_context = {frame_num, SDL_GetTicks64(), metrics.dt};
+            frame_context = {frame_num, SDL_GetTicks(), metrics.dt};
         }
     }
 
@@ -490,28 +490,21 @@ void main() {
             switch (event.type) {
             default: // unknown
                 break;
-            case SDL_WINDOWEVENT: {
-                switch (event.window.event) {
-                case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                    auto [w, h] = window.get_width_and_height();
-                    camera.width = float(w);
-                    camera.height = float(h);
-                    glViewport(0, 0, w, h);
-                    printf(" * window resize to  %d x %d\n", w, h);
-                    break;
-                }
-                default: // ignored
-                    break;
-                }
+            case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED: {
+                auto [w, h] = window.get_width_and_height();
+                camera.width = float(w);
+                camera.height = float(h);
+                glViewport(0, 0, w, h);
+                printf(" * window resize to  %d x %d\n", w, h);
                 break;
             }
 
-            case SDL_QUIT:
+            case SDL_EVENT_QUIT:
                 printf(" * exit\n");
                 is_running = false;
                 break;
 
-            case SDL_MOUSEMOTION: {
+            case SDL_EVENT_MOUSE_MOTION: {
                 if (event.motion.xrel != 0) {
                     net.next_state.look_angle_y += float(event.motion.xrel) *
                                                    mouse_rad_over_pixels *
@@ -525,42 +518,42 @@ void main() {
                 break;
             }
 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym) {
-                case SDLK_w:
+            case SDL_EVENT_KEY_DOWN:
+                switch (event.key.key) {
+                case SDLK_W:
                     net.next_state.keys |= key_w;
                     break;
-                case SDLK_a:
+                case SDLK_A:
                     net.next_state.keys |= key_a;
                     break;
-                case SDLK_s:
+                case SDLK_S:
                     net.next_state.keys |= key_s;
                     break;
-                case SDLK_d:
+                case SDLK_D:
                     net.next_state.keys |= key_d;
                     break;
-                case SDLK_q:
+                case SDLK_Q:
                     net.next_state.keys |= key_q;
                     break;
-                case SDLK_e:
+                case SDLK_E:
                     net.next_state.keys |= key_e;
                     break;
-                case SDLK_i:
+                case SDLK_I:
                     net.next_state.keys |= key_i;
                     break;
-                case SDLK_j:
+                case SDLK_J:
                     net.next_state.keys |= key_j;
                     break;
-                case SDLK_k:
+                case SDLK_K:
                     net.next_state.keys |= key_k;
                     break;
-                case SDLK_l:
+                case SDLK_L:
                     net.next_state.keys |= key_l;
                     break;
-                case SDLK_u:
+                case SDLK_U:
                     net.next_state.keys |= key_u;
                     break;
-                case SDLK_o:
+                case SDLK_O:
                     net.next_state.keys |= key_o;
                     break;
                 case SDLK_SPACE:
@@ -571,51 +564,50 @@ void main() {
                 }
                 break;
 
-            case SDL_KEYUP:
-                switch (event.key.keysym.sym) {
-                case SDLK_w:
+            case SDL_EVENT_KEY_UP:
+                switch (event.key.key) {
+                case SDLK_W:
                     net.next_state.keys &= ~key_w;
                     break;
-                case SDLK_a:
+                case SDLK_A:
                     net.next_state.keys &= ~key_a;
                     break;
-                case SDLK_s:
+                case SDLK_S:
                     net.next_state.keys &= ~key_s;
                     break;
-                case SDLK_d:
+                case SDLK_D:
                     net.next_state.keys &= ~key_d;
                     break;
-                case SDLK_q:
+                case SDLK_Q:
                     net.next_state.keys &= ~key_q;
                     break;
-                case SDLK_e:
+                case SDLK_E:
                     net.next_state.keys &= ~key_e;
                     break;
-                case SDLK_i:
+                case SDLK_I:
                     net.next_state.keys &= ~key_i;
                     break;
-                case SDLK_j:
+                case SDLK_J:
                     net.next_state.keys &= ~key_j;
                     break;
-                case SDLK_k:
+                case SDLK_K:
                     net.next_state.keys &= ~key_k;
                     break;
-                case SDLK_l:
+                case SDLK_L:
                     net.next_state.keys &= ~key_l;
                     break;
-                case SDLK_u:
+                case SDLK_U:
                     net.next_state.keys &= ~key_u;
                     break;
-                case SDLK_o:
+                case SDLK_O:
                     net.next_state.keys &= ~key_o;
                     break;
                 case SDLK_SPACE:
                     net.next_state.keys &= ~key_space;
                     break;
                 case SDLK_ESCAPE:
-                    is_mouse_mode = is_mouse_mode ? SDL_FALSE : SDL_TRUE;
-                    SDL_SetRelativeMouseMode(is_mouse_mode ? SDL_TRUE
-                                                           : SDL_FALSE);
+                    is_mouse_mode = !is_mouse_mode;
+                    SDL_SetWindowRelativeMouseMode(window.handle(), is_mouse_mode);
                     break;
                 case SDLK_F1:
                     is_print_grid = !is_print_grid;

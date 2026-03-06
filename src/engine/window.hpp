@@ -8,7 +8,7 @@
 
 #include "../application/configuration.hpp"
 #include "exception.hpp"
-#include <SDL2/SDL_video.h>
+#include <SDL3/SDL_video.h>
 #include <utility>
 
 namespace glos {
@@ -23,13 +23,16 @@ class window final {
 
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        sdl_window = SDL_CreateWindow("glos", SDL_WINDOWPOS_CENTERED,
-                                      SDL_WINDOWPOS_CENTERED, window_width,
-                                      window_height, SDL_WINDOW_OPENGL);
+        // SDL3 CreateWindow signature changed: width/height and flags only
+        sdl_window = SDL_CreateWindow("glos", window_width, window_height,
+                                      SDL_WINDOW_OPENGL);
         if (!sdl_window) {
             throw exception{
                 std::format("cannot create window: {}", SDL_GetError())};
         }
+        // center after creating
+        SDL_SetWindowPosition(sdl_window, SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED);
 
         sdl_gl_context = SDL_GL_CreateContext(sdl_window);
         if (!sdl_gl_context) {
@@ -41,7 +44,7 @@ class window final {
     }
 
     auto free() -> void {
-        SDL_GL_DeleteContext(sdl_gl_context);
+        SDL_GL_DestroyContext(sdl_gl_context);
         SDL_DestroyWindow(sdl_window);
     }
 
@@ -54,13 +57,16 @@ class window final {
         return {w, h};
     }
 
+  public:
+    auto handle() const -> SDL_Window* { return sdl_window; }
+
   private:
     SDL_Window* sdl_window = nullptr;
     SDL_GLContext sdl_gl_context = nullptr;
 
     static auto gl_print_context_profile_and_version() -> void {
         int value = 0;
-        if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &value)) {
+        if (!SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &value)) {
             throw exception{
                 std::format("cannot get opengl attribute: {}", SDL_GetError())};
         }
@@ -84,13 +90,13 @@ class window final {
         }
         printf(" (%d)\n", value);
 
-        if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &value)) {
+        if (!SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &value)) {
             throw exception{
                 std::format("cannot get opengl attribute: {}", SDL_GetError())};
         }
         printf("SDL_GL_CONTEXT_MAJOR_VERSION = %d\n", value);
 
-        if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &value)) {
+        if (!SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &value)) {
             throw exception{
                 std::format("cannot get opengl attribute: {}", SDL_GetError())};
         }

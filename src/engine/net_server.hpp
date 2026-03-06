@@ -6,7 +6,7 @@
 // reviewed: 2024-07-08
 
 #include "net.hpp"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 namespace glos {
 
@@ -15,10 +15,8 @@ class net_server final {
     uint16_t port = 8085;
 
     auto init() -> void {
-        if (SDL_Init(SDL_INIT_TIMER)) {
-            throw exception{
-                std::format("cannot initiate sdl timer: {}", SDL_GetError())};
-        }
+        // SDL timer subsystem is initialized by the main sdl object; no need
+        // to reinitialize here.
 
         server_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (server_fd == -1) {
@@ -68,7 +66,7 @@ class net_server final {
         printf(" * sending start\n");
 
         net_init_packet nip{};
-        nip.ms = SDL_GetTicks64();
+        nip.ms = SDL_GetTicks();
         // send the assigned player index and time to clients
         for (uint32_t i = 1; i < net_players + 1; ++i) {
             // send initial packet to clients
@@ -116,7 +114,7 @@ class net_server final {
 
             // using state[0] to broadcast data from server to all players
             state[0].look_angle_x = dt;
-            state[0].keys = SDL_GetTicks64();
+            state[0].keys = SDL_GetTicks();
 
             for (uint32_t i = 1; i < net_players + 1; ++i) {
                 ssize_t const n =

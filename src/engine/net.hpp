@@ -8,7 +8,7 @@
 #include "../application/configuration.hpp"
 #include "exception.hpp"
 #include "metrics.hpp"
-#include <SDL2/SDL_timer.h>
+#include <SDL3/SDL_timer.h>
 #include <arpa/inet.h>
 #include <array>
 #include <cstdint>

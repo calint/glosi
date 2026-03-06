@@ -4,10 +4,10 @@
 # * clang++ 18.1.3
 # * libglm-dev/noble,noble,now 0.9.9.8+ds-7
 # * libtbb-dev/noble,now 2021.11.0-2ubuntu2
-# * libsdl2-dev/noble,now 2.30.0+dfsg-1build3
-# * libsdl2-gfx-dev/noble,now 1.0.4+dfsg-5build1
-# * libsdl2-image-dev/noble,now 2.8.2+dfsg-1build2
-# * libsdl2-ttf-dev/noble,now 2.22.0+dfsg-1
+# * libsdl3-dev (or libsdl2-compat for backward compatibility) in ubuntu
+# * libsdl3-gfx-dev if available
+# * libsdl3-image-dev
+# * libsdl3-ttf-dev
 # * libgl-dev/noble,now 1.7.0-1build1
 #
 # dependencies in arch linux installation:
@@ -51,7 +51,8 @@ fi
 SRC="src/main.cpp"
 CFLAGS="-Wfatal-errors -Werror"
 OPTIMIZATION="-O3"
-LIBS="-ltbb -lGL -lSDL2 -lSDL2_image -lSDL2_ttf"
+# for SDL3 builds link against the new library names
+LIBS="-ltbb -lGL -lSDL3 -lSDL3_image -lSDL3_ttf"
 DEBUG="-g"
 
 if [[ "$1" == "release" ]]; then

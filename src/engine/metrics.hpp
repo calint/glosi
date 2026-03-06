@@ -5,7 +5,7 @@
 // reviewed: 2024-01-10
 // reviewed: 2024-07-08
 
-#include <SDL2/SDL_timer.h>
+#include <SDL3/SDL_timer.h>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -44,7 +44,7 @@ class metrics final {
 
     auto begin() -> void {
         timer_tick_at_start_of_frame = SDL_GetPerformanceCounter();
-        fps.time_at_start_of_interval_ms = SDL_GetTicks64();
+        fps.time_at_start_of_interval_ms = SDL_GetTicks();
     }
 
     auto print_headers(FILE* f) const -> void {
@@ -96,7 +96,7 @@ class metrics final {
         rendered_objects = 0;
         rendered_globs = 0;
         rendered_triangles = 0;
-        ms = SDL_GetTicks64();
+        ms = SDL_GetTicks();
         net_ms = 0;
     }
 
@@ -114,7 +114,7 @@ class metrics final {
             }
         }
 
-        uint64_t const t1 = SDL_GetTicks64();
+        uint64_t const t1 = SDL_GetTicks();
         uint32_t const dt_interval =
             uint32_t(t1 - fps.time_at_start_of_interval_ms);
 

@@ -84,7 +84,7 @@ class ship final : public glos::object {
         if (keys & glos::key_w && fuel > 0) {
             fuel -= fuel_consumption_per_sec * dt;
             linear_velocity +=
-                ship_speed * glm::vec3{-sin(angle.y), 0, -cos(angle.y)} * dt;
+                ship_speed * glm::vec3{-sinf(angle.y), 0, -cosf(angle.y)} * dt;
             glob_ix(glob_ix_ship_engine_on);
         }
         if (keys & glos::key_a) {
