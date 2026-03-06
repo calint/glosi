@@ -2,10 +2,6 @@
 // reviewed: 2024-01-06
 // reviewed: 2024-01-10
 
-//
-//! colors do not get converted correctly. color 'red' works though.
-//
-
 #include "exception.hpp"
 #include "shaders.hpp"
 #include <GLES3/gl3.h>
