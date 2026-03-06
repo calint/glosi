@@ -15,9 +15,8 @@
 # * mesa 1:25.2.3-1
 # * glm 1.0.1
 # * sdl3 3.2.22-1
-# * sdl2-compat 2.32.56-2
-# * sdl2_ttf 2.24.0-2
-# * sdl2_image 2.8.8-1
+# * sdl3_ttf 3.2.2-3
+# * sdl3_image 3.4.0-1
 # * intel-oneapi-tbb 2021.12.0-2
 #
 set -e
