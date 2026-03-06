@@ -1,7 +1,7 @@
 # glosi
 
 experimental 3d multiplayer game framework using simple data layer 2 and legacy
-opengl es 3.2 in c++ 23
+opengl es 3.2 in c++ 26
 
 ## intention
 
