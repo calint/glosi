@@ -17,7 +17,7 @@
 // note: in some cases multithreaded mode is a degradation of performance
 // note: multiplayer mode cannot use 'threaded_grid' because of the
 //       non-deterministic behavior
-static bool constexpr threaded_grid = true;
+static bool constexpr threaded_grid = false;
 static bool constexpr threaded_update = false;
 
 // o1store debugging (assertions should be on in development)
