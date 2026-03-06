@@ -30,14 +30,14 @@ of necessary objects to implement engine
 * `camera` describes how the world is viewed in `window`
   * contains matrix used by `engine` at render to transform world coordinates to
   screen
-* `window` is a double buffer sdl2 opengl window displaying the rendered result
+* `window` is a double buffer sdl3 opengl window displaying the rendered result
 * `shaders` contains the opengl programs used for rendering
 * `hud` is a heads-up-display rendered before the frame
 * `net` and `net_server` handle single and multiplayer modes
   * synchronizes players signals
   * limits frame rate of all players to the slowest client
   * clients must run in a deterministic way thus `threaded_grid` must be off
-* `sdl` handles initiation and shutdown of sdl2
+* `sdl` handles initiation and shutdown of sdl3
 * `metrics` keeps track of frame time and statistics
 * `o1store` template that implements O(1) allocate and free of preallocated objects
 

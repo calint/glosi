@@ -26,14 +26,13 @@ class window final {
 
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        // SDL3 CreateWindow signature changed: width/height and flags only
         sdl_window = SDL_CreateWindow("glos", window_width, window_height,
                                       SDL_WINDOW_OPENGL);
         if (!sdl_window) {
             throw exception{
                 std::format("cannot create window: {}", SDL_GetError())};
         }
-        // center after creating
+
         SDL_SetWindowPosition(sdl_window, SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED);
 

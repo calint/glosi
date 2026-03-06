@@ -1,15 +1,5 @@
 #!/bin/bash
 #
-# dependencies in ubuntu 24.04 installation:
-# * clang++ 18.1.3
-# * libglm-dev/noble,noble,now 0.9.9.8+ds-7
-# * libtbb-dev/noble,now 2021.11.0-2ubuntu2
-# * libsdl3-dev (or libsdl2-compat for backward compatibility) in ubuntu
-# * libsdl3-gfx-dev if available
-# * libsdl3-image-dev
-# * libsdl3-ttf-dev
-# * libgl-dev/noble,now 1.7.0-1build1
-#
 # dependencies in arch linux installation:
 # * clang++ 20.1.8
 # * mesa 1:25.2.3-1

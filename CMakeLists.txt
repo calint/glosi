@@ -6,8 +6,6 @@ set(BUILD_DIR "${CMAKE_SOURCE_DIR}/build")
 file(MAKE_DIRECTORY ${BUILD_DIR})
 set(CMAKE_CXX_STANDARD 26)
 set(OpenGL_GL_PREFERENCE GLVND)
-# SDL3 (replaces SDL2)
-# CMake may provide FindSDL3 modules or use pkg-config. Use SDL3::SDL3 if available.
 find_package(SDL3 REQUIRED)
 find_package(SDL3_image REQUIRED)
 find_package(SDL3_ttf REQUIRED)

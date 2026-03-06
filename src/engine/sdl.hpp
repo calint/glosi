@@ -15,7 +15,6 @@ namespace glos {
 class sdl final {
   public:
     auto init() -> void {
-        // SDL3 provides a numeric version and compile-time macros
         int compiled = SDL_VERSION;
         int linked = SDL_GetVersion();
 

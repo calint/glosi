@@ -32,7 +32,7 @@ opengl es 3 in c++ 26
 * libgl-dev: opengl
 * libglm-dev: opengl math
 * libtbb-dev: parallel unsequenced `for_each`
-* sdl3 related packages (SDL2 compatibility layer may be required for some assets)
+* sdl3 related packages
 * see `make.sh` for details on dependencies (now SDL3)
 
 ## howto run

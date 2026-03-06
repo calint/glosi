@@ -131,8 +131,6 @@ class hud final {
         //        SDL_GetPixelFormatName(text_surface->format->format));
         // ARGB8888
 
-        // convert to desired pixel format (SDL3 ConvertSurface takes a
-        // SDL_PixelFormat value, which is just a Uint32 identifier)
         SDL_Surface* converted_surface =
             SDL_ConvertSurface(text_surface, SDL_PIXELFORMAT_RGBA8888);
 
