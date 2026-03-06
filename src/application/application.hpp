@@ -219,7 +219,7 @@ static auto application_on_render_done() -> void {
     } else {
         sprintf(buf.data(), "%06d", s);
     }
-    glos::hud.print(buf.data(), SDL_Color{255, 0, 0, 255}, 60, 10);
+    glos::hud.print(buf.data(), SDL_Color{255, 0, 255, 255}, 60, 10);
 }
 
 // engine interface

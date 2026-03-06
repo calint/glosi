@@ -132,7 +132,7 @@ class hud final {
         // ARGB8888
 
         SDL_Surface* converted_surface =
-            SDL_ConvertSurface(text_surface, SDL_PIXELFORMAT_RGBA8888);
+            SDL_ConvertSurface(text_surface, SDL_PIXELFORMAT_RGBA32);
 
         if (!converted_surface) {
             throw exception{
