@@ -15,9 +15,6 @@ class net_server final {
     uint16_t port = 8085;
 
     auto init() -> void {
-        // SDL timer subsystem is initialized by the main sdl object; no need
-        // to reinitialize here.
-
         server_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (server_fd == -1) {
             throw exception{"cannot create socket"};

@@ -15,6 +15,9 @@ namespace glos {
 
 class window final {
   public:
+    SDL_Window* sdl_window = nullptr;
+    SDL_GLContext sdl_gl_context = nullptr;
+
     auto init() -> void {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_ES);
@@ -57,13 +60,7 @@ class window final {
         return {w, h};
     }
 
-  public:
-    auto handle() const -> SDL_Window* { return sdl_window; }
-
   private:
-    SDL_Window* sdl_window = nullptr;
-    SDL_GLContext sdl_gl_context = nullptr;
-
     static auto gl_print_context_profile_and_version() -> void {
         int value = 0;
         if (!SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &value)) {

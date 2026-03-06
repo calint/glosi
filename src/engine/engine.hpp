@@ -21,8 +21,8 @@
 #include "window.hpp"
 #include <GLES3/gl3.h>
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL_keycode.h>
+#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <arpa/inet.h>
 #include <condition_variable>
@@ -220,7 +220,7 @@ void main() {
         metrics.print_headers(stdout);
         metrics.begin();
 
-        SDL_SetWindowRelativeMouseMode(window.handle(), is_mouse_mode);
+        SDL_SetWindowRelativeMouseMode(window.sdl_window, is_mouse_mode);
 
         // enter game loop
         while (true) {
@@ -607,7 +607,8 @@ void main() {
                     break;
                 case SDLK_ESCAPE:
                     is_mouse_mode = !is_mouse_mode;
-                    SDL_SetWindowRelativeMouseMode(window.handle(), is_mouse_mode);
+                    SDL_SetWindowRelativeMouseMode(window.sdl_window,
+                                                   is_mouse_mode);
                     break;
                 case SDLK_F1:
                     is_print_grid = !is_print_grid;
