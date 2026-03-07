@@ -85,6 +85,14 @@ static auto application_init() -> void {
         ship* p = new (glos::objects.alloc()) ship{};
         p->position.z = 0;
         p->net_state = &glos::net.states[1];
+
+        cube* c1 = new (glos::objects.alloc()) cube{};
+        c1->position.x = 10;
+        c1->linear_velocity.x = -1;
+
+        cube* c2 = new (glos::objects.alloc()) cube{};
+        c2->position.x = -10;
+        c2->linear_velocity.x = 1;
     }
 }
 
