@@ -15,6 +15,6 @@ class cube final : public glos::object {
         bounding_radius = glob().bounding_radius * scale.x;
         mass = 1;
         collision_bits = cb_cube;
-        collision_mask = cb_cube | cb_static_object;
+        collision_mask = cb_cube;
     }
 };
