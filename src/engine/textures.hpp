@@ -8,8 +8,8 @@
 #include "exception.hpp"
 #include "metrics.hpp"
 #include <GLES3/gl3.h>
-#include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL_surface.h>
+#include <SDL3_image/SDL_image.h>
 #include <cstddef>
 #include <string>
 #include <unordered_map>
@@ -32,12 +32,22 @@ class texture final {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         printf(" * loading texture %u from '%s'\n", id, path.c_str());
-        SDL_Surface* surface = IMG_Load(path.c_str());
-        if (!surface) {
+        SDL_Surface* loaded_surface = IMG_Load(path.c_str());
+        if (!loaded_surface) {
             throw exception{std::format("cannot load image from '{}'", path)};
         }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GLsizei(surface->w),
-                     GLsizei(surface->h), 0, GL_RGB, GL_UNSIGNED_BYTE,
+
+        SDL_Surface* surface =
+            SDL_ConvertSurface(loaded_surface, SDL_PIXELFORMAT_RGBA32);
+        SDL_DestroySurface(loaded_surface);
+
+        if (!surface) {
+            throw exception{
+                std::format("failed to convert surface format {}", path)};
+        }
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GLsizei(surface->w),
+                     GLsizei(surface->h), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                      surface->pixels);
         glGenerateMipmap(GL_TEXTURE_2D);
         size_B = size_t(surface->w * surface->h) * sizeof(uint32_t);
