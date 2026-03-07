@@ -5,71 +5,26 @@
 // reviewed: 2024-07-15
 
 #include "../../engine/camera.hpp"
-#include "power_up.hpp"
-#include "ship_bullet.hpp"
-
-struct bullet_level final {
-    uint32_t fire_interval_ms;
-    uint32_t bullets_per_fire;
-    float bullet_spread;
-};
-
-static bullet_level constexpr bullet_levels[]{
-    {1000, 1, 0}, {500, 1, 0}, {250, 1, 0}, {125, 1, 0}, {500, 3, 2},
-    {250, 3, 2},  {125, 3, 2}, {500, 5, 4}, {250, 5, 4}, {125, 5, 4}};
-
-static uint32_t constexpr bullet_levels_length =
-    sizeof(bullet_levels) / sizeof(bullet_level);
-
-static uint32_t bullet_levels_index = 0;
+#include "../../engine/objects.hpp"
+#include "../state.hpp"
 
 class ship final : public glos::object {
-    static float constexpr fuel_consumption_per_sec = 1.0f;
-    static float constexpr fuel_capacity = 100.0f;
-
-    uint64_t ready_to_fire_at_ms = 0;
-    glm::vec3 previous_position{};
-    glm::vec3 previous_velocity{};
-
   public:
-    float fuel = fuel_capacity;
-
     ship() {
-        if (debug_multiplayer) {
-            uint32_t const oid = ++object_id;
-            // note: 'object_id' increment and assignment to 'oid' is atomic
-            name.append("ship_").append(std::to_string(oid));
-            printf("%lu: %lu: create %s\n", glos::frame_context.frame_num,
-                   glos::frame_context.ms, name.c_str());
-        }
         glob_ix(glob_ix_ship);
         scale = {1.0f, 1.0f, 1.0f};
         bounding_radius = glob().bounding_radius * scale.x;
-        mass = 150;
+        mass = 1;
         collision_bits = cb_hero;
-        collision_mask = cb_asteroid | cb_power_up | cb_ufo | cb_ufo_bullet |
-                         cb_static_object;
-    }
-
-    ~ship() override {
-        if (debug_multiplayer) {
-            printf("%lu: %lu: free %s\n", glos::frame_context.frame_num,
-                   glos::frame_context.ms, name.c_str());
-        }
+        collision_mask = cb_cube | cb_static_object;
     }
 
     auto update() -> bool override {
-        previous_position = position;
-        previous_velocity = linear_velocity;
         if (!object::update()) {
             return false;
         }
 
         float const dt = glos::frame_context.dt;
-
-        linear_velocity.z += 3.0f * dt;
-
-        game_area_roll(position);
 
         angular_velocity = {};
         glob_ix(glob_ix_ship);
@@ -81,20 +36,15 @@ class ship final : public glos::object {
         uint64_t const keys = net_state->keys;
 
         // handle ship controls
-        if (keys & glos::key_w && fuel > 0) {
-            fuel -= fuel_consumption_per_sec * dt;
+        if (keys & glos::key_w) {
             linear_velocity +=
-                ship_speed * glm::vec3{-sinf(angle.y), 0, -cosf(angle.y)} * dt;
-            glob_ix(glob_ix_ship_engine_on);
+                10.f * glm::vec3{-sinf(angle.y), 0, -cosf(angle.y)} * dt;
         }
         if (keys & glos::key_a) {
-            angular_velocity.y = ship_turn_rate;
+            angular_velocity.y = deg_to_rad(120.f);
         }
         if (keys & glos::key_d) {
-            angular_velocity.y = -ship_turn_rate;
-        }
-        if (keys & glos::key_j) {
-            fire();
+            angular_velocity.y = -deg_to_rad(120.f);
         }
         if (keys & glos::key_k) {
             glos::camera.type = glos::camera::type::LOOK_AT;
@@ -110,85 +60,5 @@ class ship final : public glos::object {
         }
 
         return true;
-    }
-
-    auto on_collision(object* o) -> bool override {
-        if (debug_multiplayer) {
-            printf("%lu: %lu: %s collision with %s\n",
-                   glos::frame_context.frame_num, glos::frame_context.ms,
-                   name.c_str(), o->name.c_str());
-        }
-
-        if (typeid(*o) == typeid(power_up)) {
-            score += 100;
-            if (bullet_levels_index < bullet_levels_length - 1) {
-                ++bullet_levels_index;
-            }
-            return true;
-        }
-
-        if (o->glob_ix() == glob_ix_landing_pad) {
-            float const agl = normalize_angle_rad(angle.y);
-            // printf("speed: %f  angle.y: %f\n", length(linear_velocity),
-            // degrees(agl));
-            position = previous_position;
-            linear_velocity.x /= 2;
-            linear_velocity.y /= 2;
-            linear_velocity.z = -linear_velocity.z / 2;
-            angle.y = -agl / 2;
-            if (length(linear_velocity) < 4.0f && agl < glm::radians(25.0f) &&
-                agl > glm::radians(-25.0f)) {
-
-                if (fuel < fuel_capacity) {
-                    fuel += 10.0f * glos::frame_context.dt;
-                }
-                return true;
-            }
-            score -= 10;
-            return true;
-        }
-
-        angle.y += glm::radians(rnd1(45));
-
-        fragment* frg = new (glos::objects.alloc()) fragment{};
-        frg->position = o->position;
-        frg->angular_velocity = glm::vec3{rnd1(bullet_fragment_agl_vel_rnd)};
-        frg->death_time_ms = glos::frame_context.ms + 500;
-
-        score -= 100;
-
-        if (bullet_levels_index > 0) {
-            --bullet_levels_index;
-        }
-
-        return true;
-    }
-
-  private:
-    auto fire() -> void {
-        if (ready_to_fire_at_ms > glos::frame_context.ms) {
-            return;
-        }
-
-        glm::mat4 const& M = updated_Mmw();
-        glm::vec3 const forward_vec = -normalize(glm::vec3{M[2]});
-        // note: M[2] is third column: z-axis
-        // note: forward for object model space is negative z
-
-        bullet_level const& bl = bullet_levels[bullet_levels_index];
-        for (uint32_t i = 0; i < bl.bullets_per_fire; ++i) {
-            ship_bullet* blt = new (glos::objects.alloc()) ship_bullet{};
-            blt->position = position + forward_vec;
-            blt->angle = angle;
-            blt->linear_velocity = ship_bullet_speed * forward_vec;
-            blt->linear_velocity.x += rnd1(bl.bullet_spread);
-            blt->linear_velocity.z += rnd1(bl.bullet_spread);
-        }
-        ready_to_fire_at_ms = glos::frame_context.ms + bl.fire_interval_ms;
-    }
-
-    static auto normalize_angle_rad(float const agl) -> float {
-        return glm::mod(agl + glm::pi<float>(), glm::two_pi<float>()) -
-               glm::pi<float>();
     }
 };

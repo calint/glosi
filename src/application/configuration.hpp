@@ -84,64 +84,13 @@ static uint32_t constexpr objects_count =
 
 // collision bits
 static uint32_t constexpr cb_none = 0;
-static uint32_t constexpr cb_hero = 1u << 0u;
-static uint32_t constexpr cb_hero_bullet = 1u << 1u;
-static uint32_t constexpr cb_asteroid = 1u << 2u;
-static uint32_t constexpr cb_power_up = 1u << 3u;
-static uint32_t constexpr cb_ufo = 1u << 4u;
-static uint32_t constexpr cb_ufo_bullet = 1u << 5u;
-static uint32_t constexpr cb_static_object = 1u << 6u;
-
-// settings
-static uint32_t constexpr asteroids_per_level = 2;
-
-static float constexpr asteroid_large_agl_vel_rnd = deg_to_rad(75.0f);
-static float constexpr asteroid_large_speed = 10;
-static float constexpr asteroid_large_scale = 2;
-static uint32_t constexpr asteroid_large_split = 4;
-static float constexpr asteroid_large_split_speed = 6;
-static float constexpr asteroid_large_split_agl_vel_rnd = deg_to_rad(120.0f);
-
-static float constexpr asteroid_medium_scale = 1.2f;
-static uint32_t constexpr asteroid_medium_split = 4;
-static float constexpr asteroid_medium_split_speed = 6;
-static float constexpr asteroid_medium_split_agl_vel_rnd = deg_to_rad(200.0f);
-
-static float constexpr asteroid_small_scale = 0.75f;
-
-static float constexpr ship_turn_rate = deg_to_rad(120.0f);
-static float constexpr ship_speed = 10;
-static float constexpr ship_bullet_speed = 17;
-
-static float constexpr bullet_fragment_agl_vel_rnd = deg_to_rad(360.0f);
-
-static int32_t constexpr power_up_chance_rem = 5;
-static uint32_t constexpr power_up_lifetime_ms = 30'000;
-static uint32_t constexpr power_up_min_span_interval_ms = 5'000;
-
-static float constexpr ufo_velocity = 15;
-static float constexpr ufo_angle_x_rate = 40.0f;
-static float constexpr ufo_bullet_velocity = 12;
-static uint32_t constexpr ufo_fire_rate_interval_ms = 2'500;
-static uint32_t constexpr ufo_power_ups_at_death = 3;
-static float constexpr ufo_power_up_velocity = 5;
+static uint32_t constexpr cb_hero = 1u << 0;
+static uint32_t constexpr cb_cube = 1u << 1;
+static uint32_t constexpr cb_sphere = 1u << 2;
+static uint32_t constexpr cb_static_object = 1u << 3;
+static uint32_t constexpr cb_tetra = 1u << 4;
 
 // game area based on grid and biggest object
 static float constexpr game_area_half_x = grid_size / 2;
 static float constexpr game_area_half_y = 10; // screen depth
 static float constexpr game_area_half_z = grid_size / 2;
-
-// set game area so the largest object, asteroid_large, just fits outside the
-// screen before rollover
-static float constexpr game_area_min_x =
-    -game_area_half_x - asteroid_large_scale;
-static float constexpr game_area_max_x =
-    game_area_half_x + asteroid_large_scale;
-static float constexpr game_area_min_y =
-    -game_area_half_y - asteroid_large_scale;
-static float constexpr game_area_max_y =
-    game_area_half_y + asteroid_large_scale;
-static float constexpr game_area_min_z =
-    -game_area_half_z - asteroid_large_scale;
-static float constexpr game_area_max_z =
-    game_area_half_z + asteroid_large_scale;
