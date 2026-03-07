@@ -84,7 +84,7 @@ static uint32_t constexpr objects_count =
 
 // collision bits
 static uint32_t constexpr cb_none = 0;
-static uint32_t constexpr cb_hero = 1u << 0;
+static uint32_t constexpr cb_ship = 1u << 0;
 static uint32_t constexpr cb_cube = 1u << 1;
 static uint32_t constexpr cb_sphere = 1u << 2;
 static uint32_t constexpr cb_static_object = 1u << 3;

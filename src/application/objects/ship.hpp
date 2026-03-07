@@ -15,7 +15,7 @@ class ship final : public glos::object {
         scale = {1.0f, 1.0f, 1.0f};
         bounding_radius = glob().bounding_radius * scale.x;
         mass = 1;
-        collision_bits = cb_hero;
+        collision_bits = cb_ship;
         collision_mask = cb_cube | cb_static_object;
     }
 

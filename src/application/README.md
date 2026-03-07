@@ -13,19 +13,11 @@
 * `state.hpp`
   * contains the state of the application and solves circular references
 * `objects/` contains the game objects
-  * `asteroid_large`
-  * `asteroid_medium`
-  * `asteroid_small`
-  * `bullet`
-  * `fragment`
-  * `power_up`
-  * `ship`
-  * `tetra`
   * `cube`
+  * `ship`
   * `sphere`
-  * `ufo`
-  * `ufo_bullet`
-* `utils.hpp` utility functions used by game and game objects
+  * `static_object`
+  * `tetra`
 
 ## notes
 

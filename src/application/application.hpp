@@ -43,22 +43,19 @@ static auto application_init() -> void {
     static_assert(sizeof(tetra) <= objects_instance_size_B);
 
     // load the objects and assign the glob indexes
-    // note: use default program that defines the default attributes and
-    //       uniforms
 
     // stock objects
     glob_ix_cube =
         glos::globs.load("assets/obj/cube.obj", "assets/obj/cube_bp.obj");
-    glob_ix_tetra =
-        glos::globs.load("assets/obj/tetra.obj", "assets/obj/tetra.obj");
-    glob_ix_sphere = glos::globs.load("assets/obj/sphere.obj", nullptr);
-    glob_ix_skydome = glos::globs.load("assets/obj/skydome.obj", nullptr);
-
-    // game objects
     glob_ix_ship = glos::globs.load("assets/obj/asteroids/ship.obj",
                                     "assets/obj/asteroids/ship.obj");
+    glob_ix_sphere = glos::globs.load("assets/obj/sphere.obj", nullptr);
+    glob_ix_tetra =
+        glos::globs.load("assets/obj/tetra.obj", "assets/obj/tetra.obj");
 
+    // game objects
     // the dome
+    glob_ix_skydome = glos::globs.load("assets/obj/skydome.obj", nullptr);
     glos::object* skydome = new (glos::objects.alloc()) glos::object{};
     skydome->is_static = true;
     skydome->glob_ix(glob_ix_skydome);
