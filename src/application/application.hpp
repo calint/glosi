@@ -47,8 +47,6 @@ static auto application_init() -> void {
     // stock objects
     glob_ix_cube =
         glos::globs.load("assets/obj/cube.obj", "assets/obj/cube_bp.obj");
-    glob_ix_ship = glos::globs.load("assets/obj/asteroids/ship.obj",
-                                    "assets/obj/asteroids/ship.obj");
     glob_ix_sphere = glos::globs.load("assets/obj/sphere.obj", nullptr);
     glob_ix_tetra =
         glos::globs.load("assets/obj/tetra.obj", "assets/obj/tetra.obj");

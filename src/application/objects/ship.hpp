@@ -11,7 +11,7 @@
 class ship final : public glos::object {
   public:
     ship() {
-        glob_ix(glob_ix_ship);
+        glob_ix(glob_ix_cube);
         scale = {1.0f, 1.0f, 1.0f};
         bounding_radius = glob().bounding_radius * scale.x;
         mass = 1;
@@ -27,7 +27,6 @@ class ship final : public glos::object {
         float const dt = glos::frame_context.dt;
 
         angular_velocity = {};
-        glob_ix(glob_ix_ship);
 
         if (net_state == nullptr) {
             return true;
