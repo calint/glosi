@@ -392,7 +392,7 @@ class cell final {
 
         // coefficient of restitution (elasticity)
         // 0 = inelastic (objects stick), 1 = elastic (bouncy)
-        float constexpr restitution = 0.5f;
+        float constexpr restitution = 1.0f;
 
         // impulse magnitude calculation using actual inertia tensors
         // j_r = -(1 + e) * (v_r · n) / (m1^-1 + m2^-1 + (I1^-1(r1 × n) × r1 +
