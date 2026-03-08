@@ -54,7 +54,7 @@ class object {
     planes planes{}; // bounding planes (if any)
     std::atomic_flag lock_Mmw = ATOMIC_FLAG_INIT;
     glm::vec3 Mmw_pos{}; // position of current Mmw matrix
-    glm::quat Mmw_ori{}; // angle of current Mmw matrix
+    glm::quat Mmw_ori{}; // orientation of current Mmw matrix
     glm::vec3 Mmw_scl{}; // scale of current Mmw matrix
   public:
     glm::vec3 scale{}; // in meters
