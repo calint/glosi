@@ -94,15 +94,15 @@ static auto application_init() -> void {
 static auto setup1() -> void {
     // single player mode
     auto* o0 = new (glos::objects.alloc()) ship{};
-    o0->position.z = 0;
+    o0->position.z = 4;
     o0->net_state = &glos::net.states[1];
 
     auto* o1 = new (glos::objects.alloc()) cube{};
-    o1->position.x = 10;
+    o1->position.x = 5;
     o1->linear_velocity.x = -1;
 
     auto* o2 = new (glos::objects.alloc()) cube{};
-    o2->position.x = -10;
+    o2->position.x = -5;
     o2->position.y = 0.1f;
     o2->linear_velocity.x = 1;
 
