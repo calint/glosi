@@ -11,8 +11,6 @@
 #include "objects.hpp"
 #include <cstdint>
 #include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
-#include <print>
 
 namespace glos {
 
