@@ -12,7 +12,9 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <iterator>
 #include <print>
+#include <utility>
 
 namespace glos {
 
@@ -318,6 +320,7 @@ class cell final {
 
             if (!o1->is_sphere && !o2->is_sphere) {
                 // both objects are rigid bodies
+
                 bool const o1_handled_o2 =
                     cc.notify1 ? dispatch_collision(o1, o2) : false;
                 bool const o2_handled_o1 =
@@ -330,7 +333,11 @@ class cell final {
                     // any cell
                     handle_rigid_bodies_collision(o1, o2, cc);
                 }
+                continue;
             }
+
+            // todo: implement collision between sphere and rigid body
+            std::unreachable();
         }
     }
 
