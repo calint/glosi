@@ -9,7 +9,10 @@
 
 #include "decouple.hpp"
 #include "objects.hpp"
+#include <cstdint>
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <print>
 
 namespace glos {
 
@@ -33,6 +36,8 @@ class cell final {
         bool notify1 = false;
         bool notify2 = false;
         bool is_collision = false;
+        glm::vec3 normal{}; // normal of collision surface in o1
+        glm::vec3 point{};  // point of collision in o2
     };
 
     std::vector<entry> moving_entries_vector{};
@@ -253,8 +258,31 @@ class cell final {
 
             // both objects are convex volumes bounded by planes
 
-            if (bounding_planes_are_in_collision(o1, o2)) {
+            o1->update_planes_world_coordinates();
+            o2->update_planes_world_coordinates();
+
+            // planes can be update only once per 'resolve_collisions' pass
+            // because bounding plane objects state do not change because there
+            // is no handle collision implementation such as spheres do
+
+            if (std::optional<planes::collision> const col =
+                    o1->planes.is_any_point_in_volume(o2->planes)) {
                 cc.is_collision = true;
+                // swap so that o1 is the plane normal and o2 is the point
+                // according to reference
+                // https://en.wikipedia.org/wiki/Collision_response
+                std::swap(cc.o1, cc.o2);
+                std::swap(cc.notify1, cc.notify2);
+                cc.normal = col->normal;
+                cc.point = col->point;
+                continue;
+            }
+
+            if (std::optional<planes::collision> const col =
+                    o2->planes.is_any_point_in_volume(o1->planes)) {
+                cc.is_collision = true;
+                cc.normal = col->normal;
+                cc.point = col->point;
             }
         }
     }
@@ -276,11 +304,11 @@ class cell final {
                 bool const o2_handled_o1 =
                     cc.notify2 ? dispatch_collision(o2, o1) : false;
 
-                // check if collision has already been handled, possibly on a
-                // different thread in a different cell
+                // check if collision has already been handled, possibly on
+                // a different thread in a different cell
                 if (!o1_handled_o2 && !o2_handled_o1) [[likely]] {
-                    // collision has not been handled during this frame by any
-                    // cell
+                    // collision has not been handled during this frame by
+                    // any cell
                     handle_sphere_collision(o1, o2);
                 }
                 continue;
@@ -350,8 +378,8 @@ class cell final {
     // @return true if collision with 'obj' has already been handled by
     // 'receiver'
     static auto dispatch_collision(object* receiver, object* obj) -> bool {
-        // if object overlaps cells then this code might be called by several
-        // threads at the same time from different cells
+        // if object overlaps cells then this code might be called by
+        // several threads at the same time from different cells
 
         bool const receiver_overlaps_cells = receiver->overlaps_cells;
 
@@ -363,8 +391,8 @@ class cell final {
 
         // only one thread at a time can be here for 'receiver'
 
-        // if both objects overlap cells then the same collision is detected and
-        // dispatched in multiple cells
+        // if both objects overlap cells then the same collision is detected
+        // and dispatched in multiple cells
         if (receiver_overlaps_cells && obj->overlaps_cells &&
             receiver->is_collision_handled_and_if_not_add(obj)) {
             // collision already dispatched for this 'receiver' and 'obj'
@@ -403,9 +431,9 @@ class cell final {
         o1->update_planes_world_coordinates();
         o2->update_planes_world_coordinates();
 
-        // planes can be update only once per 'resolve_collisions' pass because
-        // bounding plane objects state do not change because there is no handle
-        // collision implementation such as spheres do
+        // planes can be update only once per 'resolve_collisions' pass
+        // because bounding plane objects state do not change because there
+        // is no handle collision implementation such as spheres do
 
         return planes::are_in_collision(o1->planes, o2->planes);
     }

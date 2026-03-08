@@ -52,6 +52,7 @@ static auto application_init() -> void {
         glos::globs.load("assets/obj/tetra.obj", "assets/obj/tetra.obj");
 
     // game objects
+
     // the dome
     glob_ix_skydome = glos::globs.load("assets/obj/skydome.obj", nullptr);
     glos::object* skydome = new (glos::objects.alloc()) glos::object{};
@@ -64,6 +65,7 @@ static auto application_init() -> void {
     glos::background_color = {0, 0, 0};
 
     // setup light and camera
+
     glos::ambient_light = normalize(glm::vec3{1, 1, 1});
 
     glos::camera.type = glos::camera::type::ORTHOGONAL;

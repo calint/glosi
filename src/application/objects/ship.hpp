@@ -42,6 +42,9 @@ class ship final : public glos::object {
         if (keys & glos::key_w) {
             linear_acceleration = 10.0f * forward;
         }
+        if (keys & glos::key_s) {
+            linear_velocity = {};
+        }
         if (keys & glos::key_a) {
             angular_velocity.y = deg_to_rad(120.f);
         }

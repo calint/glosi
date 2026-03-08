@@ -6,6 +6,7 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-31
 
+#include <optional>
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "decouple.hpp"
@@ -13,6 +14,8 @@
 #include <atomic>
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <print>
 #include <vector>
 
 namespace glos {
@@ -31,6 +34,11 @@ class planes final {
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
 
   public:
+    struct collision final {
+        glm::vec3 normal;
+        glm::vec3 point;
+    };
+
     bool invalidated = true;
 
     // points and normals are in model coordinates
@@ -137,20 +145,41 @@ class planes final {
 
     // assumes 'this' points and 'pns' planes are updated to world coordinate
     // system
-    // @return true if any point in this is behind all planes in 'pns'
-    auto is_any_point_in_volume(planes const& pns) const -> bool {
-        return std::ranges::any_of(world_points,
-                                   [&pns](glm::vec4 const& point) {
-                                       return pns.is_point_in_volume(point);
-                                   });
+    // @return collision if any point in this is behind all planes in 'pns'
+    auto is_any_point_in_volume(planes const& pns) const
+        -> std::optional<collision> {
+
+        for (glm::vec4 const& point : world_points) {
+            if (std::optional<glm::vec3> const normal =
+                    pns.is_point_in_volume(point)) {
+                return collision{glm::vec3{*normal}, point};
+            }
+        }
+
+        return std::nullopt;
     }
 
     // assumes updated planes to world coordinate system
-    auto is_point_in_volume(glm::vec4 const& point) const -> bool {
-        return std::ranges::all_of(world_planes,
-                                   [&point](glm::vec4 const& plane) {
-                                       return glm::dot(plane, point) <= 0;
-                                   });
+    // @return the normal of the closest plane to point
+    auto is_point_in_volume(glm::vec4 const& point) const
+        -> std::optional<glm::vec3> {
+
+        float closest_distance = std::numeric_limits<float>::lowest();
+        glm::vec3 closest_normal{};
+
+        for (glm::vec4 const& plane : world_planes) {
+            float const distance = glm::dot(plane, point);
+            if (distance > 0) {
+                // outside bounding volume
+                return std::nullopt;
+            }
+            if (distance > closest_distance) {
+                closest_distance = distance;
+                closest_normal = plane;
+            }
+        }
+
+        return closest_normal;
     }
 
     // works in cases where the sphere is much smaller than the convex volume
