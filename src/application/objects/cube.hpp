@@ -23,7 +23,7 @@ class cube final : public glos::object {
         std::printf("collision between %p and %p\n",
                     static_cast<void const*>(this),
                     static_cast<void const*>(obj));
-        return false;
+        return true;
     }
 
     [[nodiscard]]

@@ -12,7 +12,6 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <print>
 #include <utility>
 
 namespace glos {
@@ -342,10 +341,102 @@ class cell final {
 
     static auto handle_rigid_bodies_collision(object* o1, object* o2,
                                               collision const& cc) -> void {
-        std::print("o1: {} {}\no2: {} {}\no1nml: {}\no2pt: {}\n",
-                   static_cast<void const*>(o1), typeid(*o1).name(),
-                   static_cast<void const*>(o2), typeid(*o2).name(),
-                   glm::to_string(cc.normal), glm::to_string(cc.point));
+        // synchronize objects that overlap cells
+        bool const o1_overlaps_cells = o1->overlaps_cells;
+        bool const o2_overlaps_cells = o2->overlaps_cells;
+
+        if (threaded_grid && o1_overlaps_cells) {
+            o1->acquire_lock();
+        }
+        if (threaded_grid && o2_overlaps_cells) {
+            o2->acquire_lock();
+        }
+
+        // Impulse-based collision response from Wikipedia
+        // https://en.wikipedia.org/wiki/Collision_response
+
+        // contact normal points from o1 towards o2
+        glm::vec3 const normal = cc.normal;
+
+        // offset from center of mass to contact point
+        glm::vec3 const r1 = cc.point - o1->position;
+        glm::vec3 const r2 = cc.point - o2->position;
+
+        // get world-space inverse inertia tensors for both objects
+        glm::mat3 const InvI1w = o1->updated_InvIw();
+        glm::mat3 const InvI2w = o2->updated_InvIw();
+
+        // velocity at contact point: v_p = v + ω × r
+        glm::vec3 const v_p1 =
+            o1->linear_velocity + glm::cross(o1->angular_velocity, r1);
+        glm::vec3 const v_p2 =
+            o2->linear_velocity + glm::cross(o2->angular_velocity, r2);
+
+        // relative velocity at contact point
+        glm::vec3 const relative_velocity = v_p2 - v_p1;
+
+        // relative velocity along contact normal
+        float const relative_velocity_along_normal =
+            glm::dot(relative_velocity, normal);
+
+        // if objects are separating, no collision response needed
+        if (relative_velocity_along_normal >= 0) {
+            if (threaded_grid && o2_overlaps_cells) {
+                o2->release_lock();
+            }
+            if (threaded_grid && o1_overlaps_cells) {
+                o1->release_lock();
+            }
+            return;
+        }
+
+        // coefficient of restitution (elasticity)
+        // 0 = inelastic (objects stick), 1 = elastic (bouncy)
+        float constexpr restitution = 0.5f;
+
+        // impulse magnitude calculation using actual inertia tensors
+        // j_r = -(1 + e) * (v_r · n) / (m1^-1 + m2^-1 + (I1^-1(r1 × n) × r1 +
+        // I2^-1(r2 × n) × r2) · n)
+
+        // compute rotational components using inertia tensors
+        glm::vec3 const r1_cross_n = glm::cross(r1, normal);
+        glm::vec3 const r2_cross_n = glm::cross(r2, normal);
+
+        glm::vec3 const inertia_term1 = glm::cross(InvI1w * r1_cross_n, r1);
+        glm::vec3 const inertia_term2 = glm::cross(InvI2w * r2_cross_n, r2);
+
+        float const rotational_term =
+            glm::dot(inertia_term1 + inertia_term2, normal);
+        float const inv_mass_sum = 1.0f / o1->mass + 1.0f / o2->mass;
+
+        float const impulse_magnitude = -(1.0f + restitution) *
+                                        relative_velocity_along_normal /
+                                        (inv_mass_sum + rotational_term);
+
+        // impulse vector
+        glm::vec3 const impulse = impulse_magnitude * normal;
+
+        // apply impulse to linear velocities
+        // v'_1 = v_1 - j_r / m1
+        // v'_2 = v_2 + j_r / m2
+        o1->linear_velocity -= impulse / o1->mass;
+        o2->linear_velocity += impulse / o2->mass;
+
+        // apply impulse to angular velocities
+        // ω'_1 = ω_1 - I_1^-1 (r_1 × j_r)
+        // ω'_2 = ω_2 + I_2^-1 (r_2 × j_r)
+        glm::vec3 const torque1 = glm::cross(r1, impulse);
+        glm::vec3 const torque2 = glm::cross(r2, impulse);
+
+        o1->angular_velocity -= InvI1w * torque1;
+        o2->angular_velocity += InvI2w * torque2;
+
+        if (threaded_grid && o2_overlaps_cells) {
+            o2->release_lock();
+        }
+        if (threaded_grid && o1_overlaps_cells) {
+            o1->release_lock();
+        }
     }
 
     static auto handle_sphere_collision(object* o1, object* o2) -> void {

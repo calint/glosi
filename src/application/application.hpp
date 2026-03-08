@@ -95,6 +95,7 @@ static auto application_init() -> void {
 
         auto* o2 = new (glos::objects.alloc()) cube{};
         o2->position.x = -10;
+        o2->position.y = 0.5f;
         o2->linear_velocity.x = 1;
 
         // the vector from the center of the cube to its corner
