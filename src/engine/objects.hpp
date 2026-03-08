@@ -65,9 +65,7 @@ class object {
   private:
     glm::mat3 InvIw{}; // world inverted inertia matrix
     std::atomic_flag lock_InvIw = ATOMIC_FLAG_INIT;
-    glm::vec3 InvIw_pos{}; // position of current matrix
-    glm::quat InvIw_ori{}; // orientation of current matrix
-    glm::vec3 InvIw_scl{}; // scale of current matrix
+    glm::quat InvIw_ori{}; // orientation of current inverted inertiamatrix
     // -- cell::render
     uint32_t rendered_at_tick = 0; // used by 'cell' to avoid rendering twice
     uint32_t glob_ix_ = 0;         // index in globs store
@@ -176,8 +174,7 @@ class object {
             }
         }
 
-        if (position == InvIw_pos && orientation == InvIw_ori &&
-            scale == InvIw_scl) {
+        if (orientation == InvIw_ori) {
             if (synchronize) {
                 lock_InvIw.clear(std::memory_order_release);
             }
@@ -185,9 +182,7 @@ class object {
         }
 
         // save the state of the matrix
-        InvIw_pos = position;
         InvIw_ori = orientation;
-        InvIw_scl = scale;
 
         // make the inverted world inertia matrix
 
