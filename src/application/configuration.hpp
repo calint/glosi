@@ -76,7 +76,7 @@ static bool constexpr debug_multiplayer = false;
 
 // maximum size of any object instance in bytes
 // note: must be multiple of 'cache_line_size_B'
-static size_t constexpr objects_instance_size_B = 512;
+static size_t constexpr objects_instance_size_B = 1024;
 
 // number of preallocated objects
 static uint32_t constexpr objects_count =

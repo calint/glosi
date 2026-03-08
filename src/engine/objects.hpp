@@ -60,6 +60,14 @@ class object {
     glm::vec3 scale{}; // in meters
   private:
     glm::mat4 Mmw{}; // model -> world matrix
+  public:
+    glm::mat3 InvIm{}; // model inertia matrix
+  private:
+    glm::mat3 InvIw{}; // world inverted inertia matrix
+    std::atomic_flag lock_InvIw = ATOMIC_FLAG_INIT;
+    glm::vec3 InvIw_pos{}; // position of current matrix
+    glm::quat InvIw_ori{}; // orientation of current matrix
+    glm::vec3 InvIw_scl{}; // scale of current matrix
     // -- cell::render
     uint32_t rendered_at_tick = 0; // used by 'cell' to avoid rendering twice
     uint32_t glob_ix_ = 0;         // index in globs store
@@ -157,6 +165,41 @@ class object {
         }
 
         return Mmw;
+    }
+
+    auto updated_InvIw() -> glm::mat3 const& {
+
+        bool constexpr synchronize = threaded_grid;
+
+        if (synchronize) {
+            while (lock_InvIw.test_and_set(std::memory_order_acquire)) {
+            }
+        }
+
+        if (position == InvIw_pos && orientation == InvIw_ori &&
+            scale == InvIw_scl) {
+            if (synchronize) {
+                lock_InvIw.clear(std::memory_order_release);
+            }
+            return InvIw;
+        }
+
+        // save the state of the matrix
+        InvIw_pos = position;
+        InvIw_ori = orientation;
+        InvIw_scl = scale;
+
+        // make the inverted world inertia matrix
+
+        glm::mat3 const rot = glm::mat3_cast(orientation);
+
+        InvIw = rot * InvIm * glm::transpose(rot);
+
+        if (synchronize) {
+            lock_InvIw.clear(std::memory_order_release);
+        }
+
+        return InvIw;
     }
 
     auto glob_ix(uint32_t const i) -> void {
