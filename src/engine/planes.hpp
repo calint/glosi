@@ -69,23 +69,27 @@ class planes final {
 
             // glm::mat3 const N = glm::transpose(glm::inverse(glm::mat3(Mmw)));
 
-            // bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
-            bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
+            glm::mat3 N{glm::mat3_cast(ori)};
 
-            glm::mat3 const N =
-                is_uniformly_scaled
-                    ? glm::mat3_cast(ori)
-                    : glm::mat3_cast(ori) *
-                          glm::mat3(glm::scale(glm::mat4{1.0f}, 1.0f / scl));
+            bool const is_uniformly_scaled = scl.x == scl.y && scl.y == scl.z;
+            if (!is_uniformly_scaled) {
+                // apply inverse scale directly to basis vectors
+                N[0] *= (1.0f / scl.x);
+                N[1] *= (1.0f / scl.y);
+                N[2] *= (1.0f / scl.z);
+            }
 
             world_planes.clear();
             world_planes.reserve(normals.size());
+            bool const is_scaled = scl.x != 1 || scl.y != 1 || scl.z != 1;
             for (glm::vec3 const& normal : normals) {
-                // glm::vec3 const world_normal =
-                //     is_scaled ? glm::normalize(N * normal) : N * normal;
+                glm::vec3 const world_normal =
+                    is_scaled ? glm::normalize(N * normal) : N * normal;
                 // note: normal needs to be normalized when the model is scaled
+                //       for plane equation multiplied by point to give
+                //       Euclidian distance
 
-                glm::vec3 const world_normal = N * normal;
+                // glm::vec3 const world_normal = N * normal;
                 // note: distorts normals when scaled but in this case only the
                 //       information if it is behind or in front of a plane is
                 //       needed
