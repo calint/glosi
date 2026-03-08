@@ -10,6 +10,7 @@
 #include "objects/sphere.hpp"
 #include "objects/static_object.hpp"
 #include "objects/tetra.hpp"
+#include <glm/gtx/quaternion.hpp>
 
 // forward declarations
 static auto application_init_shaders() -> void;
@@ -92,9 +93,19 @@ static auto application_init() -> void {
         o1->position.x = 10;
         o1->linear_velocity.x = -1;
 
-        auto* o2 = new (glos::objects.alloc()) tetra{};
+        auto* o2 = new (glos::objects.alloc()) cube{};
         o2->position.x = -10;
         o2->linear_velocity.x = 1;
+
+        // the vector from the center of the cube to its corner
+        glm::vec3 const corner_dir =
+            glm::normalize(glm::vec3{1.0f, 1.0f, 1.0f});
+
+        // the world x-axis
+        glm::vec3 const x_axis = glm::vec3{1.0f, 0.0f, 0.0f};
+
+        // calculate the rotation that aligns the corner to the x-axis
+        o2->orientation = glm::rotation(corner_dir, x_axis);
     }
 }
 
