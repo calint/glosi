@@ -283,6 +283,7 @@ class cell final {
                 cc.is_collision = true;
                 cc.normal = col->normal;
                 cc.point = col->point;
+                continue;
             }
         }
     }
