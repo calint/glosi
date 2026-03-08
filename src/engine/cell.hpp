@@ -142,12 +142,11 @@ class cell final {
                                            o);
     }
 
-    auto remove_static(object* o) -> void {
-        auto it = std::find_if(static_entries_vector.begin(),
-                               static_entries_vector.end(),
-                               [o](entry const& ce) { return ce.object == o; });
+    auto remove_static(object const* o) -> void {
+        auto const it =
+            std::ranges::find(static_entries_vector, o, &entry::object);
         assert(it != static_entries_vector.end());
-        std::swap(*it, static_entries_vector.back());
+        *it = std::move(static_entries_vector.back());
         static_entries_vector.pop_back();
     }
 
