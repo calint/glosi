@@ -27,6 +27,7 @@ class ship final : public glos::object {
         float const dt = glos::frame_context.dt;
 
         angular_velocity = {};
+        linear_acceleration = {};
 
         if (net_state == nullptr) {
             return true;
@@ -39,7 +40,7 @@ class ship final : public glos::object {
 
         // handle ship controls
         if (keys & glos::key_w) {
-            linear_velocity += 10.0f * forward * dt;
+            linear_acceleration = 10.0f * forward;
         }
         if (keys & glos::key_a) {
             angular_velocity.y = deg_to_rad(120.f);
