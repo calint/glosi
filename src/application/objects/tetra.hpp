@@ -15,6 +15,6 @@ class tetra final : public glos::object {
         bounding_radius = glob().bounding_radius * scale.x;
         mass = 1;
         collision_bits = cb_tetra;
-        collision_mask = cb_none;
+        collision_mask = cb_cube;
     }
 };

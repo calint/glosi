@@ -12,7 +12,6 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <iterator>
 #include <print>
 #include <utility>
 
@@ -343,8 +342,9 @@ class cell final {
 
     static auto handle_rigid_bodies_collision(object* o1, object* o2,
                                               collision const& cc) -> void {
-        std::print("o1: {}\no2: {}\no1nml: {}\no2pt: {}\n",
-                   static_cast<void const*>(o1), static_cast<void const*>(o2),
+        std::print("o1: {} {}\no2: {} {}\no1nml: {}\no2pt: {}\n",
+                   static_cast<void const*>(o1), typeid(*o1).name(),
+                   static_cast<void const*>(o2), typeid(*o2).name(),
                    glm::to_string(cc.normal), glm::to_string(cc.point));
     }
 

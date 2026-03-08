@@ -84,17 +84,17 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        ship* p = new (glos::objects.alloc()) ship{};
-        p->position.z = 0;
-        p->net_state = &glos::net.states[1];
+        auto* o0 = new (glos::objects.alloc()) ship{};
+        o0->position.z = 0;
+        o0->net_state = &glos::net.states[1];
 
-        cube* c1 = new (glos::objects.alloc()) cube{};
-        c1->position.x = 10;
-        c1->linear_velocity.x = -1;
+        auto* o1 = new (glos::objects.alloc()) cube{};
+        o1->position.x = 10;
+        o1->linear_velocity.x = -1;
 
-        cube* c2 = new (glos::objects.alloc()) cube{};
-        c2->position.x = -10;
-        c2->linear_velocity.x = 1;
+        auto* o2 = new (glos::objects.alloc()) tetra{};
+        o2->position.x = -10;
+        o2->linear_velocity.x = 1;
     }
 }
 
