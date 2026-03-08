@@ -11,6 +11,8 @@
 #include "objects.hpp"
 #include <cstdint>
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <print>
 
 namespace glos {
 
@@ -314,14 +316,29 @@ class cell final {
 
             // both objects are not spheres
 
-            if (cc.notify1) {
-                dispatch_collision(o1, o2);
-            }
+            if (!o1->is_sphere && !o2->is_sphere) {
+                // both objects are rigid bodies
+                bool const o1_handled_o2 =
+                    cc.notify1 ? dispatch_collision(o1, o2) : false;
+                bool const o2_handled_o1 =
+                    cc.notify2 ? dispatch_collision(o2, o1) : false;
 
-            if (cc.notify2) {
-                dispatch_collision(o2, o1);
+                // check if collision has already been handled, possibly on
+                // a different thread in a different cell
+                if (!o1_handled_o2 && !o2_handled_o1) [[likely]] {
+                    // collision has not been handled during this frame by
+                    // any cell
+                    handle_rigid_bodies_collision(o1, o2, cc);
+                }
             }
         }
+    }
+
+    static auto handle_rigid_bodies_collision(object* o1, object* o2,
+                                              collision const& cc) -> void {
+        std::print("o1: {}\no2: {}\no1nml: {}\no2pt: {}\n",
+                   static_cast<void const*>(o1), static_cast<void const*>(o2),
+                   glm::to_string(cc.normal), glm::to_string(cc.point));
     }
 
     static auto handle_sphere_collision(object* o1, object* o2) -> void {
