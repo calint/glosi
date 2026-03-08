@@ -152,7 +152,7 @@ class planes final {
         for (glm::vec4 const& point : world_points) {
             if (std::optional<glm::vec3> const normal =
                     pns.is_point_in_volume(point)) {
-                return collision{glm::vec3{*normal}, point};
+                return collision{*normal, point};
             }
         }
 
@@ -165,7 +165,7 @@ class planes final {
         -> std::optional<glm::vec3> {
 
         float closest_distance = std::numeric_limits<float>::lowest();
-        glm::vec3 closest_normal{};
+        glm::vec3 closest_normal = {};
 
         for (glm::vec4 const& plane : world_planes) {
             float const distance = glm::dot(plane, point);
