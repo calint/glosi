@@ -15,6 +15,13 @@ class cube final : public glos::object {
         bounding_radius = glob().bounding_radius * scale.x;
         mass = 1;
         collision_bits = cb_cube;
-        collision_mask = cb_cube;
+        collision_mask = cb_cube | cb_ship;
+    }
+
+    bool on_collision(object* obj) override {
+        std::printf("collision between %p and %p\n",
+                    static_cast<void const*>(this),
+                    static_cast<void const*>(obj));
+        return false;
     }
 };
