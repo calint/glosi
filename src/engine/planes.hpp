@@ -25,7 +25,7 @@ class planes final {
     std::vector<glm::vec4> world_planes{}; // A*X + B*Y + C*Z + D = 0
     // the components used in the cached world points and planes
     glm::vec3 Mmw_pos{};
-    glm::vec3 Mmw_agl{};
+    glm::quat Mmw_ori{};
     glm::vec3 Mmw_scl{};
     //
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
@@ -38,11 +38,11 @@ class planes final {
     auto update_model_to_world(std::vector<glm::vec4> const& points,
                                std::vector<glm::vec3> const& normals,
                                glm::mat4 const& Mmw, glm::vec3 const& pos,
-                               glm::vec3 const& agl, glm::vec3 const& scl)
+                               glm::quat const& ori, glm::vec3 const& scl)
         -> void {
 
         bool const inv_agl_scl =
-            invalidated || Mmw_agl != agl || Mmw_scl != scl;
+            invalidated || Mmw_ori != ori || Mmw_scl != scl;
 
         if (!inv_agl_scl && pos == Mmw_pos) {
             // cached world points and normals are valid
@@ -74,9 +74,9 @@ class planes final {
 
             glm::mat3 const N =
                 is_uniformly_scaled
-                    ? glm::eulerAngleXYZ(agl.x, agl.y, agl.z)
-                    : glm::scale(glm::eulerAngleXYZ(agl.x, agl.y, agl.z),
-                                 1.0f / scl);
+                    ? glm::mat3_cast(ori)
+                    : glm::mat3_cast(ori) *
+                          glm::mat3(glm::scale(glm::mat4{1.0f}, 1.0f / scl));
 
             world_planes.clear();
             world_planes.reserve(normals.size());
@@ -96,7 +96,7 @@ class planes final {
                 //       updated when 'world_points' change
             }
             // save the state of the cache
-            Mmw_agl = agl;
+            Mmw_ori = ori;
             Mmw_scl = scl;
         }
 

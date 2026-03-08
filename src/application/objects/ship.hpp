@@ -34,10 +34,12 @@ class ship final : public glos::object {
 
         uint64_t const keys = net_state->keys;
 
+        glm::vec3 const forward{orientation * glm::vec3{0.0f, 0.0f, -1.0f}};
+        angular_velocity.y = 0.0f;
+
         // handle ship controls
         if (keys & glos::key_w) {
-            linear_velocity +=
-                10.f * glm::vec3{-sinf(angle.y), 0, -cosf(angle.y)} * dt;
+            linear_velocity += 10.0f * forward * dt;
         }
         if (keys & glos::key_a) {
             angular_velocity.y = deg_to_rad(120.f);

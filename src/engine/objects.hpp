@@ -12,6 +12,7 @@
 #include "net.hpp"
 #include "o1store.hpp"
 #include "planes.hpp"
+#include <glm/gtc/quaternion.hpp>
 
 namespace glos {
 
@@ -37,10 +38,10 @@ class object {
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
     uint32_t updated_at_tick = 0; // used by cell to avoid updating twice
   public:
-    glm::vec3 acceleration{};     // in meters/second^2
-    glm::vec3 linear_velocity{};  // in meters/second
-    glm::vec3 angular_velocity{}; // in radians/second
-    glm::vec3 angle{};            // in radians
+    glm::vec3 linear_acceleration{}; // in meters/second^2
+    glm::vec3 linear_velocity{};     // in meters/second
+    glm::quat orientation{};         // dimensionless
+    glm::vec3 angular_velocity{};    // in radians/second
   private:
     std::vector<object const*> handled_collisions{};
     bool is_dead = false; // used by 'cell' to avoid events to dead objects
@@ -53,7 +54,7 @@ class object {
     planes planes{}; // bounding planes (if any)
     std::atomic_flag lock_Mmw = ATOMIC_FLAG_INIT;
     glm::vec3 Mmw_pos{}; // position of current Mmw matrix
-    glm::vec3 Mmw_agl{}; // angle of current Mmw matrix
+    glm::quat Mmw_ori{}; // angle of current Mmw matrix
     glm::vec3 Mmw_scl{}; // scale of current Mmw matrix
   public:
     glm::vec3 scale{}; // in meters
@@ -95,16 +96,20 @@ class object {
     // note: only one thread at a time is active in this section
     virtual auto update() -> bool {
         float const dt = frame_context.dt;
-        linear_velocity += acceleration * dt;
+        linear_velocity += linear_acceleration * dt;
         position += linear_velocity * dt;
-        angle += angular_velocity * dt;
+
+        glm::quat const omega_q = {0.0f, angular_velocity.x, angular_velocity.y,
+                                   angular_velocity.z};
+        glm::quat const dq = (omega_q * orientation) * 0.5f;
+        orientation = glm::normalize(orientation + (dq * dt));
 
         if (is_debug_object_planes_normals) {
             // note: update planes for the normals to be rendered at 'render()'
             glm::mat4 const& M = updated_Mmw();
             class glob const& g = glob();
             planes.update_model_to_world(g.planes_points, g.planes_normals, M,
-                                         position, angle, scale);
+                                         position, orientation, scale);
         }
 
         return true;
@@ -130,7 +135,7 @@ class object {
             }
         }
 
-        if (position == Mmw_pos && angle == Mmw_agl && scale == Mmw_scl) {
+        if (position == Mmw_pos && orientation == Mmw_ori && scale == Mmw_scl) {
             if (synchronize) {
                 lock_Mmw.clear(std::memory_order_release);
             }
@@ -139,12 +144,11 @@ class object {
 
         // save the state of the matrix
         Mmw_pos = position;
-        Mmw_agl = angle;
+        Mmw_ori = orientation;
         Mmw_scl = scale;
         // make a new matrix
         glm::mat4 const Ms = glm::scale(glm::mat4(1), Mmw_scl);
-        glm::mat4 const Mr =
-            glm::eulerAngleXYZ(Mmw_agl.x, Mmw_agl.y, Mmw_agl.z);
+        glm::mat4 const Mr = glm::mat4_cast(Mmw_ori);
         glm::mat4 const Mt = glm::translate(glm::mat4(1), Mmw_pos);
         Mmw = Mt * Mr * Ms;
 
@@ -194,7 +198,7 @@ class object {
 
         glm::mat4 const& M = updated_Mmw();
         planes.update_model_to_world(g.planes_points, g.planes_normals, M,
-                                     Mmw_pos, Mmw_agl, Mmw_scl);
+                                     Mmw_pos, Mmw_ori, Mmw_scl);
 
         if (synchronize) {
             planes.release_lock();
