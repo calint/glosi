@@ -20,6 +20,8 @@ static auto setup3() -> void;
 static auto setup4() -> void;
 static auto setup5() -> void;
 static auto setup6() -> void;
+static auto setup7() -> void;
+static auto setup8() -> void;
 
 // engine interface
 static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
@@ -91,7 +93,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup6();
+        setup8();
     }
 }
 
@@ -196,6 +198,40 @@ static auto setup6() -> void {
 
     auto* o2 = new (glos::objects.alloc()) cube{};
     o2->is_static(true);
+}
+
+static auto setup7() -> void {
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->position.x = 5;
+    o1->linear_velocity.x = -1;
+
+    // the vector from the center of the cube to its corner
+    glm::vec3 const corner_dir = glm::normalize(glm::vec3{1.0f, 1.0f, 1.0f});
+
+    // the world x-axis
+    glm::vec3 const x_axis = glm::vec3{1.0f, 0.0f, 0.0f};
+
+    // calculate the rotation that aligns the corner to the x-axis
+    o1->orientation = glm::rotation(corner_dir, x_axis);
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+}
+
+static auto setup8() -> void {
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->is_static(true);
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->position = {0, 0, -2.05f};
+    o2->linear_velocity = {0, 0, 0.1f};
+
+    auto* o3 = new (glos::objects.alloc()) cube{};
+    o3->position = {0, 0, -4.10f};
+    o3->linear_velocity = {0, 0, 0.1f};
+
+    auto* o4 = new (glos::objects.alloc()) cube{};
+    o4->position = {0, 0, -6.15f};
+    o4->linear_velocity = {0, 0, 0.1f};
 }
 
 // engine interface
