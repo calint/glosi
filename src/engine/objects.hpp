@@ -151,7 +151,9 @@ class object {
         Mmw_pos = position;
         Mmw_ori = orientation;
         Mmw_scl = scale;
+
         // make a new matrix
+        // todo: insert scale and position without multiplying matrixes
         glm::mat4 const Ms = glm::scale(glm::mat4(1), Mmw_scl);
         glm::mat4 const Mr = glm::mat4_cast(Mmw_ori);
         glm::mat4 const Mt = glm::translate(glm::mat4(1), Mmw_pos);

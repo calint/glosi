@@ -50,10 +50,10 @@ class planes final {
                                glm::quat const& ori, glm::vec3 const& scl)
         -> void {
 
-        bool const inv_agl_scl =
+        bool const inv_ori_scl =
             invalidated || Mmw_ori != ori || Mmw_scl != scl;
 
-        if (!inv_agl_scl && pos == Mmw_pos) {
+        if (!inv_ori_scl && pos == Mmw_pos) {
             // cached world points and normals are valid
             return;
         }
@@ -68,7 +68,7 @@ class planes final {
             world_points.emplace_back(world_point);
         }
 
-        if (inv_agl_scl) {
+        if (inv_ori_scl) {
             // normals are not in sync with Mmw
 
             // the generalized solution is based on Polar Decomposition theorem
