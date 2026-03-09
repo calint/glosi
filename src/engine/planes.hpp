@@ -175,8 +175,7 @@ class planes final {
                 return std::nullopt;
             }
 
-            // select the plane that is most likely in collision considering
-            // corners
+            // select the plane that is most likely the impact point
             glm::vec3 const normal = plane;
             float const normal_dot_velocity = glm::dot(normal, velocity);
             if (normal_dot_velocity < min_normal_dot_velocity) {
