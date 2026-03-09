@@ -31,8 +31,7 @@ class object {
     uint32_t collision_mask = 0; // ...
   private:
     bool overlaps_cells = false; // used by grid to flag cell overlap
-  public:
-    bool is_static = false; // immovable object
+    bool is_static_ = false;     // immovable object
   private:
     // -- cell::update
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
@@ -61,9 +60,9 @@ class object {
   private:
     glm::mat4 Mmw{}; // model -> world matrix
   public:
-    glm::mat3 InvIm{}; // model inertia matrix
+    glm::mat3 invIm{}; // model inertia matrix
   private:
-    glm::mat3 InvIw{}; // world inverted inertia matrix
+    glm::mat3 invIw{}; // world inverted inertia matrix
     float invMass = 0;
     std::atomic_flag lock_InvIw = ATOMIC_FLAG_INIT;
     glm::quat InvIw_ori{}; // orientation of current inverted inertiamatrix
@@ -179,7 +178,7 @@ class object {
             if (synchronize) {
                 lock_InvIw.clear(std::memory_order_release);
             }
-            return InvIw;
+            return invIw;
         }
 
         // save the state of the matrix
@@ -189,13 +188,13 @@ class object {
 
         glm::mat3 const rot = glm::mat3_cast(orientation);
 
-        InvIw = rot * InvIm * glm::transpose(rot);
+        invIw = rot * invIm * glm::transpose(rot);
 
         if (synchronize) {
             lock_InvIw.clear(std::memory_order_release);
         }
 
-        return InvIw;
+        return invIw;
     }
 
     auto glob_ix(uint32_t const i) -> void {
@@ -211,12 +210,20 @@ class object {
 
     auto mass(float const m) -> void {
         mass_ = m;
-        if (m > 0) {
-            invMass = 1 / m;
-        }
+        invMass = m > 0 ? 1 / m : 0;
     }
 
     auto mass() const -> float { return mass_; }
+
+    auto is_static(bool const b) {
+        is_static_ = b;
+        if (b) {
+            mass(0);
+            invIm = {};
+        }
+    }
+
+    auto is_static() const { return is_static_; }
 
   private:
     // called from 'cell' in thread safe way

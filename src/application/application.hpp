@@ -18,6 +18,8 @@ static auto setup1() -> void;
 static auto setup2() -> void;
 static auto setup3() -> void;
 static auto setup4() -> void;
+static auto setup5() -> void;
+static auto setup6() -> void;
 
 // engine interface
 static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
@@ -61,7 +63,7 @@ static auto application_init() -> void {
     // the dome
     glob_ix_skydome = glos::globs.load("assets/obj/skydome.obj", nullptr);
     glos::object* skydome = new (glos::objects.alloc()) glos::object{};
-    skydome->is_static = true;
+    skydome->is_static(true);
     skydome->glob_ix(glob_ix_skydome);
     float const skydome_scale = length(glm::vec2{grid_size / 2, grid_size / 2});
     skydome->bounding_radius = skydome_scale;
@@ -89,7 +91,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup4();
+        setup6();
     }
 }
 
@@ -167,6 +169,33 @@ static auto setup4() -> void {
 
     // calculate the rotation that aligns the corner to the x-axis
     o2->orientation = glm::rotation(corner_dir, x_axis);
+}
+
+static auto setup5() -> void {
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->position.x = 5;
+    o1->linear_velocity.x = -1;
+
+    // the vector from the center of the cube to its corner
+    glm::vec3 const corner_dir = glm::normalize(glm::vec3{1.0f, 1.0f, 1.0f});
+
+    // the world x-axis
+    glm::vec3 const x_axis = glm::vec3{1.0f, 0.0f, 0.0f};
+
+    // calculate the rotation that aligns the corner to the x-axis
+    o1->orientation = glm::rotation(corner_dir, x_axis);
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->is_static(true);
+}
+
+static auto setup6() -> void {
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->position.x = 5;
+    o1->linear_velocity.x = -1;
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->is_static(true);
 }
 
 // engine interface

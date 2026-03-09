@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <print>
 #include <utility>
 
 namespace glos {
@@ -265,8 +266,9 @@ class cell final {
             // is no handle collision implementation such as spheres do
 
             if (std::optional<planes::collision> const col =
-                    o1->planes.is_any_point_in_volume(o2->planes,
-                                                      o1->linear_velocity)) {
+                    o1->planes.is_any_point_in_volume(
+                        o2->planes,
+                        o1->linear_velocity - o2->linear_velocity)) {
                 cc.is_collision = true;
                 // swap so that o1 is the plane normal and o2 is the point
                 // according to reference
@@ -275,19 +277,16 @@ class cell final {
                 std::swap(cc.notify1, cc.notify2);
                 cc.normal = col->normal;
                 cc.point = col->point;
-                // std::print("1. normal: {}\n", glm::to_string(cc.normal));
-                // std::print("1. velocity: {}\n",
-                //            glm::to_string(o1->linear_velocity));
                 continue;
             }
 
             if (std::optional<planes::collision> const col =
-                    o2->planes.is_any_point_in_volume(o1->planes,
-                                                      o2->linear_velocity)) {
+                    o2->planes.is_any_point_in_volume(
+                        o1->planes,
+                        o2->linear_velocity - o1->linear_velocity)) {
                 cc.is_collision = true;
                 cc.normal = col->normal;
                 cc.point = col->point;
-                // std::print("2. normal: {}\n", glm::to_string(cc.normal));
                 continue;
             }
         }
@@ -358,8 +357,8 @@ class cell final {
             o2->acquire_lock();
         }
 
-        // Impulse-based collision response from Wikipedia
-        // https://en.wikipedia.org/wiki/Collision_response
+        // impulse-based collision response from
+        // https://en.wikipedia.org/wiki/collision_response
 
         // contact normal points from o1 towards o2
         glm::vec3 const normal = cc.normal;
@@ -399,7 +398,7 @@ class cell final {
         // coefficient of restitution (elasticity)
         // 0 = inelastic (objects stick), 1 = elastic (bouncy)
         // float constexpr restitution = 1.0f;
-        float constexpr restitution = 0.5f;
+        float constexpr restitution = 1.0f;
 
         // impulse magnitude calculation using actual inertia tensors
         // j_r = -(1 + e) * (v_r · n) / (m1^-1 + m2^-1 + (I1^-1(r1 × n) × r1 +

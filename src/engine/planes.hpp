@@ -15,6 +15,8 @@
 #include <atomic>
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <print>
 #include <vector>
 
 namespace glos {
@@ -176,7 +178,7 @@ class planes final {
             }
 
             // select the plane that is most likely the impact point
-            glm::vec3 const normal = plane;
+            glm::vec3 const normal = glm::vec3{plane};
             float const normal_dot_velocity = glm::dot(normal, velocity);
             if (normal_dot_velocity < min_normal_dot_velocity) {
                 min_normal_dot_velocity = normal_dot_velocity;

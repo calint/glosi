@@ -14,7 +14,7 @@ class cube final : public glos::object {
         scale = {1.f, 1.f, 1.f};
         bounding_radius = glob().bounding_radius * scale.x;
         mass(1);
-        InvIm = calculate_InvIm(mass(), scale);
+        invIm = calculate_invIm(mass(), scale);
         collision_bits = cb_cube;
         collision_mask = cb_cube | cb_ship | cb_tetra;
     }
@@ -27,7 +27,7 @@ class cube final : public glos::object {
     }
 
     [[nodiscard]]
-    static auto calculate_InvIm(float const m, glm::vec3 const& s)
+    static auto calculate_invIm(float const m, glm::vec3 const& s)
         -> glm::mat3 {
 
         // a mass of 0 or infinity indicates a static object
