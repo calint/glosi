@@ -59,12 +59,12 @@ class object {
   private:
     glm::mat4 Mmw{}; // model -> world matrix
   public:
-    glm::mat3 invIm{}; // model inertia matrix
+    glm::mat3 invIm{}; // model inverted inertia tensor
   private:
-    glm::mat3 invIw{}; // world inverted inertia matrix
+    glm::mat3 invIw{}; // world inverted inertia tensor
     float invMass = 0;
     std::atomic_flag lock_invIw = ATOMIC_FLAG_INIT;
-    glm::quat invIw_ori{}; // orientation of current inverted inertiamatrix
+    glm::quat invIw_ori{}; // current world inverted inertia tensor orientation
     // -- cell::render
     uint32_t rendered_at_tick = 0; // used by 'cell' to avoid rendering twice
     uint32_t glob_ix_ = 0;         // index in globs store
