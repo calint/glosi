@@ -13,8 +13,8 @@ class cube final : public glos::object {
         glob_ix(glob_ix_cube);
         scale = {1.f, 1.f, 1.f};
         bounding_radius = glob().bounding_radius * scale.x;
-        mass = 1;
-        InvIm = calculate_InvIm(mass, scale);
+        mass(1);
+        InvIm = calculate_InvIm(mass(), scale);
         collision_bits = cb_cube;
         collision_mask = cb_cube | cb_ship | cb_tetra;
     }

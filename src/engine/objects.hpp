@@ -48,8 +48,8 @@ class object {
   public:
     // -- cell::resolve_collisions: spheres
     bool is_sphere = false; // true if object can be considered a sphere
-    float mass = 0;         // in kg
   private:
+    float mass_ = 0; // in kg
     // -- cell::resolve_collisions: planes
     planes planes{}; // bounding planes (if any)
     std::atomic_flag lock_Mmw = ATOMIC_FLAG_INIT;
@@ -64,6 +64,7 @@ class object {
     glm::mat3 InvIm{}; // model inertia matrix
   private:
     glm::mat3 InvIw{}; // world inverted inertia matrix
+    float invMass = 0;
     std::atomic_flag lock_InvIw = ATOMIC_FLAG_INIT;
     glm::quat InvIw_ori{}; // orientation of current inverted inertiamatrix
     // -- cell::render
@@ -207,6 +208,15 @@ class object {
     auto glob_ix() const -> uint32_t { return glob_ix_; }
 
     auto glob() const -> glob const& { return globs.at(glob_ix_); }
+
+    auto mass(float const m) -> void {
+        mass_ = m;
+        if (m > 0) {
+            invMass = 1 / m;
+        }
+    }
+
+    auto mass() const -> float { return mass_; }
 
   private:
     // called from 'cell' in thread safe way

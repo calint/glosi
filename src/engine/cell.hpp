@@ -414,7 +414,7 @@ class cell final {
 
         float const rotational_term =
             glm::dot(inertia_term1 + inertia_term2, normal);
-        float const inv_mass_sum = 1.0f / o1->mass + 1.0f / o2->mass;
+        float const inv_mass_sum = o1->invMass + o2->invMass;
 
         float const impulse_magnitude = -(1.0f + restitution) *
                                         relative_velocity_along_normal /
@@ -426,8 +426,8 @@ class cell final {
         // apply impulse to linear velocities
         // v'_1 = v_1 - j_r / m1
         // v'_2 = v_2 + j_r / m2
-        o1->linear_velocity -= impulse / o1->mass;
-        o2->linear_velocity += impulse / o2->mass;
+        o1->linear_velocity -= impulse * o1->invMass;
+        o2->linear_velocity += impulse * o2->invMass;
 
         // apply impulse to angular velocities
         // ω'_1 = ω_1 - I_1^-1 (r_1 × j_r)
@@ -482,10 +482,10 @@ class cell final {
         float constexpr restitution = 1;
         float const impulse = (1.0f + restitution) *
                               relative_velocity_along_collision_normal /
-                              (o1->mass + o2->mass);
+                              (o1->mass_ + o2->mass_);
 
-        o1->linear_velocity += impulse * o2->mass * collision_normal;
-        o2->linear_velocity -= impulse * o1->mass * collision_normal;
+        o1->linear_velocity += impulse * o2->mass_ * collision_normal;
+        o2->linear_velocity -= impulse * o1->mass_ * collision_normal;
 
         if (threaded_grid && o2_overlaps_cells) {
             o2->release_lock();

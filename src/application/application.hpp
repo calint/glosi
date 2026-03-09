@@ -17,6 +17,7 @@ static auto application_init_shaders() -> void;
 static auto setup1() -> void;
 static auto setup2() -> void;
 static auto setup3() -> void;
+static auto setup4() -> void;
 
 // engine interface
 static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
@@ -88,7 +89,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup3();
+        setup4();
     }
 }
 
@@ -142,6 +143,30 @@ static auto setup3() -> void {
     auto* o2 = new (glos::objects.alloc()) cube{};
     o2->position.x = -5;
     o2->linear_velocity.x = 1;
+}
+
+static auto setup4() -> void {
+    // single player mode
+    auto* o0 = new (glos::objects.alloc()) ship{};
+    o0->position.z = 4;
+    o0->net_state = &glos::net.states[1];
+
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->position.x = 5;
+    o1->linear_velocity.x = -1;
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->position.x = -5;
+    o2->linear_velocity.x = 1;
+
+    // the vector from the center of the cube to its corner
+    glm::vec3 const corner_dir = glm::normalize(glm::vec3{1.0f, 1.0f, 1.0f});
+
+    // the world x-axis
+    glm::vec3 const x_axis = glm::vec3{1.0f, 0.0f, 0.0f};
+
+    // calculate the rotation that aligns the corner to the x-axis
+    o2->orientation = glm::rotation(corner_dir, x_axis);
 }
 
 // engine interface
