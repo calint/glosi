@@ -16,6 +16,7 @@
 static auto application_init_shaders() -> void;
 static auto setup1() -> void;
 static auto setup2() -> void;
+static auto setup3() -> void;
 
 // engine interface
 static auto application_print_hello() -> void { printf("\nprogram glosi\n\n"); }
@@ -87,7 +88,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup1();
+        setup3();
     }
 }
 
@@ -126,6 +127,21 @@ static auto setup2() -> void {
     auto* o3 = new (glos::objects.alloc()) cube{};
     o3->position.z = 6.0f;
     o3->linear_acceleration.z = -1;
+}
+
+static auto setup3() -> void {
+    // single player mode
+    auto* o0 = new (glos::objects.alloc()) ship{};
+    o0->position.z = 4;
+    o0->net_state = &glos::net.states[1];
+
+    auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->position.x = 5;
+    o1->linear_velocity.x = -1;
+
+    auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->position.x = -5;
+    o2->linear_velocity.x = 1;
 }
 
 // engine interface

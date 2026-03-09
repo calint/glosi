@@ -6,6 +6,7 @@
 // reviewed: 2024-07-08
 // reviewed: 2024-07-31
 
+#include <limits>
 #include <optional>
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -144,12 +145,13 @@ class planes final {
     // assumes 'this' points and 'pns' planes are updated to world coordinate
     // system
     // @return collision if any point in this is behind all planes in 'pns'
-    auto is_any_point_in_volume(planes const& pns) const
+    auto is_any_point_in_volume(planes const& pns,
+                                glm::vec3 const& velocity) const
         -> std::optional<collision> {
 
         for (glm::vec4 const& point : world_points) {
             if (std::optional<glm::vec3> const normal =
-                    pns.is_point_in_volume(point)) {
+                    pns.is_point_in_volume(point, velocity)) {
                 return collision{*normal, point};
             }
         }
@@ -158,12 +160,13 @@ class planes final {
     }
 
     // assumes updated planes to world coordinate system
-    // @return the normal of the closest plane to point
-    auto is_point_in_volume(glm::vec4 const& point) const
+    // @return the normal of the plane colliding with point
+    auto is_point_in_volume(glm::vec4 const& point,
+                            glm::vec3 const& velocity) const
         -> std::optional<glm::vec3> {
 
-        float closest_distance = std::numeric_limits<float>::lowest();
-        glm::vec3 closest_normal = {};
+        float min_normal_dot_velocity = std::numeric_limits<float>::max();
+        glm::vec3 plane_normal = {};
 
         for (glm::vec4 const& plane : world_planes) {
             float const distance = glm::dot(plane, point);
@@ -171,13 +174,18 @@ class planes final {
                 // outside bounding volume
                 return std::nullopt;
             }
-            if (distance > closest_distance) {
-                closest_distance = distance;
-                closest_normal = plane;
+
+            // select the plane that is most likely in collision considering
+            // corners
+            glm::vec3 const normal = plane;
+            float const normal_dot_velocity = glm::dot(normal, velocity);
+            if (normal_dot_velocity < min_normal_dot_velocity) {
+                min_normal_dot_velocity = normal_dot_velocity;
+                plane_normal = normal;
             }
         }
 
-        return closest_normal;
+        return plane_normal;
     }
 
     // works in cases where the sphere is much smaller than the convex volume
@@ -288,14 +296,6 @@ class planes final {
     }
 
     auto release_lock() -> void { lock.clear(std::memory_order_release); }
-
-    // tests whether any point in 'pns1' is within the volume defined by 'pns2'
-    // and vice versa
-    static auto are_in_collision(planes const& pns1, planes const& pns2)
-        -> bool {
-        return pns1.is_any_point_in_volume(pns2) ||
-               pns2.is_any_point_in_volume(pns1);
-    }
 };
 
 } // namespace glos
