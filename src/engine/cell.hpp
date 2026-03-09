@@ -368,8 +368,8 @@ class cell final {
         glm::vec3 const r2 = cc.point - o2->position;
 
         // get world-space inverse inertia tensors for both objects
-        glm::mat3 const InvI1w = o1->updated_InvIw();
-        glm::mat3 const InvI2w = o2->updated_InvIw();
+        glm::mat3 const InvI1w = o1->updated_invIw();
+        glm::mat3 const InvI2w = o2->updated_invIw();
 
         // velocity at contact point: v_p = v + ω × r
         glm::vec3 const v_p1 =

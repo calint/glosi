@@ -32,7 +32,6 @@ class object {
   private:
     bool overlaps_cells = false; // used by grid to flag cell overlap
     bool is_static_ = false;     // immovable object
-  private:
     // -- cell::update
     std::atomic_flag lock = ATOMIC_FLAG_INIT;
     uint32_t updated_at_tick = 0; // used by cell to avoid updating twice
@@ -64,8 +63,8 @@ class object {
   private:
     glm::mat3 invIw{}; // world inverted inertia matrix
     float invMass = 0;
-    std::atomic_flag lock_InvIw = ATOMIC_FLAG_INIT;
-    glm::quat InvIw_ori{}; // orientation of current inverted inertiamatrix
+    std::atomic_flag lock_invIw = ATOMIC_FLAG_INIT;
+    glm::quat invIw_ori{}; // orientation of current inverted inertiamatrix
     // -- cell::render
     uint32_t rendered_at_tick = 0; // used by 'cell' to avoid rendering twice
     uint32_t glob_ix_ = 0;         // index in globs store
@@ -165,24 +164,24 @@ class object {
         return Mmw;
     }
 
-    auto updated_InvIw() -> glm::mat3 const& {
+    auto updated_invIw() -> glm::mat3 const& {
 
         bool constexpr synchronize = threaded_grid;
 
         if (synchronize) {
-            while (lock_InvIw.test_and_set(std::memory_order_acquire)) {
+            while (lock_invIw.test_and_set(std::memory_order_acquire)) {
             }
         }
 
-        if (orientation == InvIw_ori) {
+        if (orientation == invIw_ori) {
             if (synchronize) {
-                lock_InvIw.clear(std::memory_order_release);
+                lock_invIw.clear(std::memory_order_release);
             }
             return invIw;
         }
 
         // save the state of the matrix
-        InvIw_ori = orientation;
+        invIw_ori = orientation;
 
         // make the inverted world inertia matrix
 
@@ -191,7 +190,7 @@ class object {
         invIw = rot * invIm * glm::transpose(rot);
 
         if (synchronize) {
-            lock_InvIw.clear(std::memory_order_release);
+            lock_invIw.clear(std::memory_order_release);
         }
 
         return invIw;
