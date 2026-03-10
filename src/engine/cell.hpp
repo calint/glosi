@@ -34,11 +34,11 @@ class cell final {
     struct collision final {
         object* o1 = nullptr;
         object* o2 = nullptr;
+        glm::vec3 normal{}; // normal of collision surface in o1
+        glm::vec3 point{};  // point of collision in o2
         bool notify1 = false;
         bool notify2 = false;
         bool is_collision = false;
-        glm::vec3 normal{}; // normal of collision surface in o1
-        glm::vec3 point{};  // point of collision in o2
     };
 
     std::vector<entry> moving_entries_vector{};
@@ -193,8 +193,9 @@ class cell final {
                 bool const notify2 = e2.collision_mask & e1.collision_bits;
                 if ((notify1 || notify2) &&
                     bounding_spheres_are_in_collision(e1, e2)) {
-                    check_collisions_vector.emplace_back(e1.object, e2.object,
-                                                         notify1, notify2);
+                    check_collisions_vector.emplace_back(
+                        e1.object, e2.object, glm::vec3{}, glm::vec3{}, notify1,
+                        notify2);
                 }
             }
         }
@@ -212,8 +213,9 @@ class cell final {
                 bool const notify2 = e2.collision_mask & e1.collision_bits;
                 if ((notify1 || notify2) &&
                     bounding_spheres_are_in_collision(e1, e2)) {
-                    check_collisions_vector.emplace_back(e1.object, e2.object,
-                                                         notify1, notify2);
+                    check_collisions_vector.emplace_back(
+                        e1.object, e2.object, glm::vec3{}, glm::vec3{}, notify1,
+                        notify2);
                 }
             }
         }
