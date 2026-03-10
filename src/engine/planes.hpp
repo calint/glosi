@@ -170,7 +170,7 @@ class planes final {
         float best_score = std::numeric_limits<float>::lowest();
         glm::vec3 best_normal = glm::vec3{};
 
-        // weights to balance geometric depth vs temporal intent
+        // weights to balance distance vs normal dot velocity
         float const w_depth = 0.2f;
         float const w_vel = 0.8f;
 
