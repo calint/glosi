@@ -164,29 +164,41 @@ class planes final {
     // assumes updated planes to world coordinate system
     // @return the normal of the plane colliding with point
     auto is_point_in_volume(glm::vec4 const& point,
-                            glm::vec3 const& velocity) const
+                            glm::vec3 const& relative_velocity) const
         -> std::optional<glm::vec3> {
 
-        float min_normal_dot_velocity = std::numeric_limits<float>::max();
-        glm::vec3 plane_normal = {};
+        float best_score = std::numeric_limits<float>::lowest();
+        glm::vec3 best_normal = glm::vec3{};
+
+        // weights to balance geometric depth vs temporal intent
+        float const w_depth = 0.2f;
+        float const w_vel = 0.8f;
 
         for (glm::vec4 const& plane : world_planes) {
             float const distance = glm::dot(plane, point);
+
             if (distance > 0) {
-                // outside bounding volume
+                // point is outside volume
                 return std::nullopt;
             }
 
-            // select the plane that is most likely the impact point
             glm::vec3 const normal = glm::vec3{plane};
-            float const normal_dot_velocity = glm::dot(normal, velocity);
-            if (normal_dot_velocity < min_normal_dot_velocity) {
-                min_normal_dot_velocity = normal_dot_velocity;
-                plane_normal = normal;
+
+            // how much is the velocity 'hitting' this normal
+            // note: negate because the normal points out and velocity points in
+            float const alignment = -glm::dot(normal, relative_velocity);
+
+            // combined score
+            // distance is negative, so closer to 0 is a higher score;
+            float const score = (distance * w_depth) + (alignment * w_vel);
+
+            if (score > best_score) {
+                best_score = score;
+                best_normal = normal;
             }
         }
 
-        return plane_normal;
+        return best_normal;
     }
 
     // works in cases where the sphere is much smaller than the convex volume
