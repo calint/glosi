@@ -186,6 +186,12 @@ class object {
         invIw_ori = orientation;
 
         // make the inverted world inertia matrix
+        // local relation: L_local = I_local * ω_local
+        // rotate vectors: L_world = R L_local, ω_world = R ω_local
+        // substitute ω_local = R^T ω_world
+        // => L_world = R I_local R^T ω_world
+        // identify: I_world = R I_local R^T
+        // therefore: I_world^-1 = R I_local^-1 R^T
 
         glm::mat3 const rot = glm::mat3_cast(orientation);
 
