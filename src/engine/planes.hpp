@@ -148,12 +148,12 @@ class planes final {
     // system
     // @return collision if any point in this is behind all planes in 'pns'
     auto is_any_point_in_volume(planes const& pns,
-                                glm::vec3 const& velocity) const
+                                glm::vec3 const& relative_velocity) const
         -> std::optional<collision> {
 
         for (glm::vec4 const& point : world_points) {
             if (std::optional<glm::vec3> const normal =
-                    pns.is_point_in_volume(point, velocity)) {
+                    pns.is_point_in_volume(point, relative_velocity)) {
                 return collision{*normal, point};
             }
         }

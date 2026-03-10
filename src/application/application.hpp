@@ -93,7 +93,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup3();
+        setup4();
     }
 }
 
