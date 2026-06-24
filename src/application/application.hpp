@@ -93,7 +93,7 @@ static auto application_init() -> void {
         // multiplayer mode
     } else {
         // single player mode
-        setup4();
+        setup6();
     }
 }
 
@@ -156,10 +156,12 @@ static auto setup4() -> void {
     o0->net_state = &glos::net.states[1];
 
     auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->name = "right";
     o1->position.x = 5;
     o1->linear_velocity.x = -1;
 
     auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->name = "left";
     o2->position.x = -5;
     o2->linear_velocity.x = 1;
 
@@ -193,10 +195,12 @@ static auto setup5() -> void {
 
 static auto setup6() -> void {
     auto* o1 = new (glos::objects.alloc()) cube{};
+    o1->name = "right";
     o1->position.x = 5;
     o1->linear_velocity.x = -1;
 
     auto* o2 = new (glos::objects.alloc()) cube{};
+    o2->name = "static";
     o2->is_static(true);
 }
 

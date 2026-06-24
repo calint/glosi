@@ -58,7 +58,8 @@ static float constexpr sphere_speed = 10;
 static float constexpr grid_size = is_performance_test ? 3200 : 40;
 // square side in e.g. meters
 
-static uint32_t constexpr grid_rows = is_performance_test ? 16 : 4;
+// static uint32_t constexpr grid_rows = is_performance_test ? 16 : 4;
+static uint32_t constexpr grid_rows = 1;
 static uint32_t constexpr grid_columns = grid_rows;
 static float constexpr grid_cell_size = grid_size / grid_rows;
 

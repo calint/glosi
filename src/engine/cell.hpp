@@ -9,10 +9,11 @@
 
 #include "decouple.hpp"
 #include "objects.hpp"
+#include "planes.hpp"
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
-// #include <print>
+#include <print>
 #include <utility>
 
 namespace glos {
@@ -31,19 +32,27 @@ class cell final {
     // entry in list of objects whose bounding spheres are in collision. if not
     // both spheres further processed to check for collision using bounding
     // planes
-    struct collision final {
+    struct sphere_collision final {
         object* o1 = nullptr;
         object* o2 = nullptr;
-        glm::vec3 normal{}; // normal of collision surface in o1
-        glm::vec3 point{};  // point of collision in o2
         bool notify1 = false;
         bool notify2 = false;
-        bool is_collision = false;
+    };
+
+    struct point_normal_collision final {
+        object* o1 = nullptr;
+        object* o2 = nullptr;
+        glm::vec3 point{};  // point of collision in o2
+        glm::vec3 normal{}; // normal of collision surface in o1
+        bool notify1 = false;
+        bool notify2 = false;
     };
 
     std::vector<entry> moving_entries_vector{};
     std::vector<entry> static_entries_vector{};
-    std::vector<collision> check_collisions_vector{};
+    std::vector<sphere_collision> check_collisions_vector{};
+    std::vector<sphere_collision> sphere_collisions_vector{};
+    std::vector<point_normal_collision> point_normal_collisions{};
 
     auto update_objects_in_vector(std::vector<entry> const& vec) const -> void {
         uint32_t const frame_num = uint32_t(frame_context.frame_num);
@@ -193,9 +202,8 @@ class cell final {
                 bool const notify2 = e2.collision_mask & e1.collision_bits;
                 if ((notify1 || notify2) &&
                     bounding_spheres_are_in_collision(e1, e2)) {
-                    check_collisions_vector.emplace_back(
-                        e1.object, e2.object, glm::vec3{}, glm::vec3{}, notify1,
-                        notify2);
+                    check_collisions_vector.emplace_back(e1.object, e2.object,
+                                                         notify1, notify2);
                 }
             }
         }
@@ -213,9 +221,8 @@ class cell final {
                 bool const notify2 = e2.collision_mask & e1.collision_bits;
                 if ((notify1 || notify2) &&
                     bounding_spheres_are_in_collision(e1, e2)) {
-                    check_collisions_vector.emplace_back(
-                        e1.object, e2.object, glm::vec3{}, glm::vec3{}, notify1,
-                        notify2);
+                    check_collisions_vector.emplace_back(e1.object, e2.object,
+                                                         notify1, notify2);
                 }
             }
         }
@@ -223,7 +230,10 @@ class cell final {
 
     // called from one thread
     auto process_check_collisions_vector() -> void {
-        for (collision& cc : check_collisions_vector) {
+        sphere_collisions_vector.clear();
+        point_normal_collisions.clear();
+
+        for (sphere_collision& cc : check_collisions_vector) {
             // bounding spheres are in collision
             object* o1 = cc.o1;
             object* o2 = cc.o2;
@@ -232,7 +242,7 @@ class cell final {
             bool const o2_is_sphere = o2->is_sphere;
 
             if (o1_is_sphere && o2_is_sphere) {
-                cc.is_collision = true;
+                sphere_collisions_vector.emplace_back(cc);
                 continue;
             }
 
@@ -243,7 +253,7 @@ class cell final {
                 o2->update_planes_world_coordinates();
                 if (o2->planes.are_in_collision_with_sphere(
                         o1->position, o1->bounding_radius)) {
-                    cc.is_collision = true;
+                    std::unreachable(); // todo
                 }
                 continue;
             }
@@ -253,7 +263,7 @@ class cell final {
                 o1->update_planes_world_coordinates();
                 if (o1->planes.are_in_collision_with_sphere(
                         o2->position, o2->bounding_radius)) {
-                    cc.is_collision = true;
+                    std::unreachable(); // todo
                 }
                 continue;
             }
@@ -263,44 +273,46 @@ class cell final {
             o1->update_planes_world_coordinates();
             o2->update_planes_world_coordinates();
 
-            // planes can be update only once per 'resolve_collisions' pass
-            // because bounding plane objects state do not change because there
-            // is no handle collision implementation such as spheres do
+            {
+                std::vector<planes::collision> const cols =
+                    o1->planes.points_planes_collisions(
+                        o2->planes, o1->linear_velocity - o2->linear_velocity);
 
-            if (std::optional<planes::collision> const col =
-                    o1->planes.is_any_point_in_volume(
-                        o2->planes,
-                        o1->linear_velocity - o2->linear_velocity)) {
-                cc.is_collision = true;
-                // swap so that o1 is the plane normal and o2 is the point
-                // according to reference
-                // https://en.wikipedia.org/wiki/Collision_response
-                std::swap(cc.o1, cc.o2);
-                std::swap(cc.notify1, cc.notify2);
-                cc.normal = col->normal;
-                cc.point = col->point;
-                continue;
+                for (planes::collision const& col : cols) {
+                    // swap so that o1 is the plane normal and o2 is the point
+                    // according to reference
+                    // https://en.wikipedia.org/wiki/Collision_response
+                    point_normal_collisions.emplace_back(
+                        cc.o2, cc.o1, col.point, col.normal, cc.notify2,
+                        cc.notify1);
+                }
+
+                if (!cols.empty()) {
+                    continue;
+                }
             }
 
-            if (std::optional<planes::collision> const col =
-                    o2->planes.is_any_point_in_volume(
-                        o1->planes,
-                        o2->linear_velocity - o1->linear_velocity)) {
-                cc.is_collision = true;
-                cc.normal = col->normal;
-                cc.point = col->point;
-                continue;
+            {
+                std::vector<planes::collision> const cols =
+                    o2->planes.points_planes_collisions(
+                        o1->planes, o2->linear_velocity - o1->linear_velocity);
+
+                for (planes::collision const& col : cols) {
+                    point_normal_collisions.emplace_back(
+                        cc.o1, cc.o2, col.point, col.normal, cc.notify1,
+                        cc.notify2);
+                }
+
+                if (!cols.empty()) {
+                    continue;
+                }
             }
         }
     }
 
     // called from one thread
     auto handle_check_collisions_vector() const -> void {
-        for (collision const& cc : check_collisions_vector) {
-            if (!cc.is_collision) {
-                continue;
-            }
-
+        for (sphere_collision const& cc : sphere_collisions_vector) {
             // objects are in collision
             object* o1 = cc.o1;
             object* o2 = cc.o2;
@@ -318,36 +330,37 @@ class cell final {
                     // any cell
                     handle_sphere_collision(o1, o2);
                 }
-                continue;
             }
+        }
 
-            // both objects are not spheres
-
-            if (!o1->is_sphere && !o2->is_sphere) {
-                // both objects are rigid bodies
+        // both objects are not spheres
+        for (uint32_t i = 0; i < 4; ++i) {
+            for (point_normal_collision const& pnc : point_normal_collisions) {
+                object* o1 = pnc.o1;
+                object* o2 = pnc.o2;
 
                 bool const o1_handled_o2 =
-                    cc.notify1 ? dispatch_collision(o1, o2) : false;
+                    pnc.notify1 ? dispatch_collision(o1, o2) : false;
                 bool const o2_handled_o1 =
-                    cc.notify2 ? dispatch_collision(o2, o1) : false;
+                    pnc.notify2 ? dispatch_collision(o2, o1) : false;
 
                 // check if collision has already been handled, possibly on
                 // a different thread in a different cell
-                if (!o1_handled_o2 && !o2_handled_o1) [[likely]] {
-                    // collision has not been handled during this frame by
-                    // any cell
-                    handle_rigid_bodies_collision(o1, o2, cc);
-                }
-                continue;
-            }
+                std::print("cell: {}    o1: {}    o2: {}    n: {}    p: {}\n",
+                           static_cast<void const*>(this), o1->name, o2->name,
+                           glm::to_string(pnc.normal),
+                           glm::to_string(pnc.point));
 
-            // todo: implement collision between sphere and rigid body
-            std::unreachable();
+                // collision has not been handled during this frame by
+                // any cell
+                handle_rigid_bodies_collision(o1, o2, pnc.normal, pnc.point);
+            }
         }
     }
 
     static auto handle_rigid_bodies_collision(object* o1, object* o2,
-                                              collision const& cc) -> void {
+                                              glm::vec3 const& normal,
+                                              glm::vec3 const& point) -> void {
         // synchronize objects that overlap cells
         bool const o1_overlaps_cells = o1->overlaps_cells;
         bool const o2_overlaps_cells = o2->overlaps_cells;
@@ -363,11 +376,10 @@ class cell final {
         // https://en.wikipedia.org/wiki/collision_response
 
         // contact normal points from o1 towards o2
-        glm::vec3 const normal = cc.normal;
 
         // offset from center of mass to contact point
-        glm::vec3 const r1 = cc.point - o1->position;
-        glm::vec3 const r2 = cc.point - o2->position;
+        glm::vec3 const r1 = point - o1->position;
+        glm::vec3 const r2 = point - o2->position;
 
         // get world-space inverse inertia tensors for both objects
         glm::mat3 const InvI1w = o1->updated_invIw();
@@ -403,8 +415,8 @@ class cell final {
         float constexpr restitution = 1.0f;
 
         // impulse magnitude calculation using actual inertia tensors
-        // j_r = -(1 + e) * (v_r · n) / (m1^-1 + m2^-1 + (I1^-1(r1 × n) × r1 +
-        // I2^-1(r2 × n) × r2) · n)
+        // j_r = -(1 + e) * (v_r · n) / (m1^-1 + m2^-1 + (I1^-1(r1 × n) × r1
+        // + I2^-1(r2 × n) × r2) · n)
 
         // compute rotational components using inertia tensors
         glm::vec3 const r1_cross_n = glm::cross(r1, normal);

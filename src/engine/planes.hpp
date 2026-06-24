@@ -16,7 +16,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/string_cast.hpp>
-// #include <print>
+#include <print>
 #include <vector>
 
 namespace glos {
@@ -36,8 +36,8 @@ class planes final {
 
   public:
     struct collision final {
-        glm::vec3 normal;
         glm::vec3 point;
+        glm::vec3 normal;
     };
 
     bool invalidated = true;
@@ -154,11 +154,28 @@ class planes final {
         for (glm::vec4 const& point : world_points) {
             if (std::optional<glm::vec3> const normal =
                     pns.is_point_in_volume(point, relative_velocity)) {
-                return collision{*normal, point};
+                return collision{point, *normal};
             }
         }
 
         return std::nullopt;
+    }
+
+    // points in this vs planes in `pns`
+    auto points_planes_collisions(planes const& pns,
+                                  glm::vec3 const& relative_velocity) const
+        -> std::vector<collision> {
+
+        std::vector<collision> collisions{};
+
+        for (glm::vec4 const& point : world_points) {
+            if (std::optional<glm::vec3> const normal =
+                    pns.is_point_in_volume(point, relative_velocity)) {
+                collisions.emplace_back(point, *normal);
+            }
+        }
+
+        return collisions;
     }
 
     // assumes updated planes to world coordinate system
@@ -171,8 +188,10 @@ class planes final {
         glm::vec3 best_normal = glm::vec3{};
 
         // weights to balance distance vs normal dot velocity
-        float const w_depth = 0.2f;
-        float const w_vel = 0.8f;
+        // float const w_depth = 0.2f;
+        // float const w_vel = 0.8f;
+        float const w_depth = 0;
+        float const w_vel = 1;
 
         for (glm::vec4 const& plane : world_planes) {
             float const distance = glm::dot(plane, point);
